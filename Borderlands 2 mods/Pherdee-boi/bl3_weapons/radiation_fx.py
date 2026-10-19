@@ -23,6 +23,7 @@ from pathlib import Path
 import unrealsdk
 from unrealsdk.unreal import UObject
 
+from . import assets
 from .core import log, now
 
 PX = "FX_WEP_Explosions_Fluid_Px.Particles"
@@ -38,8 +39,8 @@ GAS_MATERIALS = ("Mat_SlagExplosionSmoke", "Mat_Trans_Smoke")  # the emitters of
 GAS_ALPHA = 0.5  # how much of its opacity the cloud keeps (their AlphaOverLife is scaled by it)
 BUBBLE_MAT = "FX_Shared_Smoke.Materials.Generic_Smoke_Puff_NoToD_Mati"  # another neutral smoke material instance: its opacity art is borrowed
 BUBBLE_SLOT = "Opc_GP"
-BUBBLE_PNG = Path(__file__).parent / "art" / "radiation_bubble.png"
-GAS_PNG = Path(__file__).parent / "art" / "radiation_gas.png"  # a soft round puff for the gas (the stock cloud texture's edges showed as faint squares)
+BUBBLE_PNG = assets.DIR / "art" / "radiation_bubble.png"
+GAS_PNG = assets.DIR / "art" / "radiation_gas.png"  # a soft round puff for the gas (the stock cloud texture's edges showed as faint squares)
 BUBBLE_EMITTERS = "Mat_SlagSmokeVariant2"  # the emitters (by material name) whose puffs become bubbles
 BUBBLE_SIZE = (2.5, 6.0)  # start size range (the emitters grow it up to 2x)
 BUBBLE_COUNT = 24  # bubbles from an emitter that spreads them (the others keep their count)

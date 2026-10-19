@@ -24,6 +24,7 @@ import unrealsdk
 from mods_base import hook
 from unrealsdk.hooks import Type
 
+from ... import assets
 from ..core import maps, particles
 
 PACKAGE = "RadiationFX_SF"
@@ -53,7 +54,7 @@ BUBBLE_LIFE = 3.6                                              # s
 BUBBLE_GLOW = 3.0                                              # their brightness (slag's own is about 75: white)
 
 _HERE = Path(__file__).resolve()
-ART = (_HERE.parents[2] / "art",)   # bl3_weapons/art: drop a PNG of the same name there to change a look
+ART = (assets.DIR / "art",)   # bl3_weapons/art: drop a PNG of the same name there to change a look
 
 
 def _art(name: str) -> Path | None:
@@ -298,7 +299,7 @@ def explosion_system() -> Any:
     return _find("ParticleSystem", SYSTEM.format(SIZES["medium"]))
 
 
-GEIGER = (_HERE.parents[2] / "art" / "explosion_geiger.wav",)   # a Geiger counter over the blast: this mod's, then the player's own (wins)
+GEIGER = (assets.DIR / "art" / "explosion_geiger.wav",)   # a Geiger counter over the blast: this mod's, then the player's own (wins)
 _geiger_event: Any = None
 _geiger_tried = False
 

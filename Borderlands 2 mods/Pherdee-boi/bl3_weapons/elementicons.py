@@ -29,6 +29,7 @@ from mods_base import get_pc, hook
 from unrealsdk.hooks import Block, Type
 from unrealsdk.unreal import UObject
 
+from . import assets
 from .core import log
 
 CARD_MOVIE = "SharedWillowComponents.SharedWillowComponents"
@@ -39,7 +40,7 @@ TITLE_FRAME, ROW_FRAME = "radiation", "elementRadiation"
 TITLE_BOX = (-370, 370, -336, 404)
 ROW_BOX = (-207, 207, -214, 200)
 ICON_RGB = (214, 231, 25)  # the placeholder's colour
-ART = Path(__file__).parent / "art"  # where the player's own pictures go
+ART = assets.DIR / "art"  # where the player's own pictures go
 TITLE_PNG, ROW_PNG = "radiation_icon.png", "radiation_icon_row.png"
 _RF_ROOTSET = 0x4000
 

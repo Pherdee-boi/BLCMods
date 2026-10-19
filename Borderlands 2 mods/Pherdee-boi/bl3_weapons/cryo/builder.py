@@ -38,6 +38,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from .. import assets
+
 TPS_APP_ID = "261640"
 TPS_MARKER = Path("WillowGame/CookedPCConsole/Startup.upk")      # TPS's base game: what cryo is cut from
 TPS_EXE = Path("Binaries/Win32/BorderlandsPreSequel.exe")
@@ -78,7 +80,7 @@ class ConverterMissing(FileNotFoundError):
 def tools_dir() -> Path:
     """The converter: shipped inside the mod (`cryo/convert`) or the repo's `tools/` (development)."""
     here = Path(__file__).resolve().parent
-    for candidate in (here / "convert", here.parents[1] / "tools"):
+    for candidate in (assets.DIR / "cryo" / "convert", here.parents[1] / "tools"):
         if (candidate / "icefx.py").is_file():
             return candidate
     raise ConverterMissing(f"the mod's folder is incomplete: {here / 'convert'} (the converter) is missing; the release "

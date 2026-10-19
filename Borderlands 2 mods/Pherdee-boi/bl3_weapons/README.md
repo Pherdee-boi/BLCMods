@@ -21,11 +21,16 @@ Single player and co-op (every player needs the mod).
 - Borderlands 2 (Steam, PC) with the [Willow2 Mod Manager](https://github.com/bl-sdk/willow2-mod-manager) (v3.8 or newer).
 - For **cryo to work fully:** a copy of Borderlands: The Pre-Sequel installed on the same PC (see "Cryo and The Pre-Sequel" below). Everything else,
   radiation included, does not need it.
+- Optional, for the **Geiger-counter sound** of radiation explosions: the [Willow Audio Loader (blaudio)](https://github.com/juso40/Willow-Audio-Loader)
+  by juso, installed as its own mod. Without it everything works, the blast just has no Geiger sound.
 
 ## Install
-1. Extract the zip into the Borderlands 2 folder's `sdk_mods` folder, so that `sdk_mods\bl3_weapons\__init__.py` exists.
+1. Put `bl3_weapons.sdkmod` into the Borderlands 2 folder's `sdk_mods` folder (do not unpack it).
 2. Start the game. The mod switches itself on the first time. If a message says cryo's files were built, restart the game once.
 3. Options are in the Mods menu → BL3 Weapons. The Weapon Mode key can be changed under Keybinds.
+
+On first start the mod copies its pictures, the Geiger sound and cryo's build scripts to `sdk_mods\settings\bl3_weapons_files`. To change a radiation
+picture, put a PNG with the same name into the `art` folder there (see `ASSETS.md`); it is kept when the mod updates.
 
 ## Cryo and The Pre-Sequel
 Cryo's ice effects, snowflake icon and translated texts are built from **your own copy** of Borderlands: The Pre-Sequel the first time you start the game

@@ -48,7 +48,7 @@ def _read(name: str) -> dict[str, Any] | None:
 def stands_aside() -> bool:
     """True when the Aurelia mod is installed (its folder is beside this one) and not switched off in the MODS menu: it has everything cryo
     has, and two copies of the same objects and hooks would fight."""
-    if not (Path(__file__).resolve().parent.parent.parent / "aurelia" / "__init__.py").is_file():
+    if not (SETTINGS_DIR.parent / "aurelia" / "__init__.py").is_file():
         return False
     settings = _read("aurelia.json")
     return not (settings is not None and settings.get("enabled") is False)
