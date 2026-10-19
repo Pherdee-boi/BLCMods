@@ -24,10 +24,11 @@ Single player and co-op (every player needs the mod).
   still work).
 - For **cryo to work fully:** a copy of Borderlands: The Pre-Sequel installed on the same PC (see "Cryo and The Pre-Sequel" below). Everything else,
   radiation included, does not need it.
-- Works beside the **Aurelia** mod (Grim Reader's The Pre-Sequel Baroness): Aurelia then supplies cryo and this mod's own cryo steps aside; everything else,
-  radiation included, works as usual.
 - Optional, for the **Geiger-counter sound** of radiation explosions: the [Willow Audio Loader (blaudio)](https://github.com/juso40/Willow-Audio-Loader)
   by juso, installed as its own mod. Without it everything works, the blast just has no Geiger sound.
+
+**The Aurelia mod is not required.** This mod works without it and with it: when Aurelia (Grim Reader's The Pre-Sequel Baroness) is installed and on,
+Aurelia supplies cryo, this mod's own cryo steps aside, and everything else, radiation included, works as usual.
 
 ## Install
 1. Put `bl3_weapons.sdkmod` into the Borderlands 2 folder's `sdk_mods` folder (do not unpack it).
