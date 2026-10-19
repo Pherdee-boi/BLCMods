@@ -52,7 +52,7 @@ mod = build_mod(
     commands=[heartshatter.command_heartshatter, radiation.command_radiation, *cryo.PARTS["commands"]],
     hooks=[clock_tick, *vladof.HOOKS, *bandit.HOOKS, *anoint.HOOKS, *torgue.HOOKS, *jakobs.HOOKS, *hyperion.HOOKS, *dahl.HOOKS, *tediore.HOOKS, *indicator.HOOKS, *card.HOOKS, *beams.HOOKS, *sights.HOOKS, *gear.HOOKS, *relics.HOOKS, *heartshatter.HOOKS, *radiation.HOOKS, *elementicons.HOOKS, *backups.HOOKS, *radgear.HOOKS, *cryo.PARTS["hooks"]],
     on_disable=lambda: (vladof.reset(), beams.reset(), dahl.reset(), tediore.restore(), bandit.restore_ammo(), hyperion.reset(), indicator.reset(), torgue.restore(), relics.reset(), sights.reset(), radiation.reset(), (cryo.PARTS["on_disable"] or (lambda: None))()),
-    on_enable=lambda: (radiation.safe_build(), sights._patch_safe()),
+    on_enable=lambda: (radiation.safe_build(), sights._patch_safe(), (cryo.PARTS["on_enable"] or (lambda: None))()),
 )
 
 # mods_base only enables a mod that was enabled last session, and a fresh install has no settings file yet: enable it once here.

@@ -105,7 +105,7 @@ def _radiation_beside_aurelia() -> list[Any]:
 ASIDE = stands_aside()
 if ASIDE:
     _log("stands aside: the Aurelia mod is installed and has cryo in it. Switch Aurelia off (or remove it) to use this mod.")
-    PARTS: dict[str, Any] = {"options": [], "hooks": _radiation_beside_aurelia(), "commands": [], "on_disable": None}
+    PARTS: dict[str, Any] = {"options": [], "hooks": _radiation_beside_aurelia(), "commands": [], "on_enable": None, "on_disable": None}
 else:
 
     # In this order: a feature's modules register with the ones before it as they are imported (listeners on cryo's events, the particle
@@ -200,6 +200,22 @@ else:
 
     SECTIONS = (GroupedOption("Cryo", cryo.OPTIONS, description="The Pre-Sequel's element in Borderlands 2."),)
 
+    def tell_enforcer(enabled: bool) -> None:
+        """Enforcer (the Wilhelm character mod, which has a skill that freezes) asks "is the Cryo mod on?" by the name of a mod and, failing that, by the
+        "enabled" of a `Cryo.json` in the settings folder. Cryo is part of BL3 Weapons now and no mod has that name, so that file says it, in step with
+        this mod: on while it is on, off when it is switched off. (Other keys already in the file stay.)"""
+        try:
+            data = _read("Cryo.json") or {}
+            if data.get("enabled") is enabled:
+                return
+            data["enabled"] = enabled
+            (SETTINGS_DIR / "Cryo.json").write_text(json.dumps(data, indent=4), encoding="utf-8")
+        except (OSError, ValueError) as ex:
+            _log(f"Cryo.json (for Enforcer) not written: {ex}")
+
+    def _on_enable() -> None:
+        tell_enforcer(True)
+
     def _on_disable() -> None:
         """Switched off in the MODS menu. The SDK has just turned off every listed hook, the console command and the options' callbacks;
         here goes what those hooks kept going, so that from now on nothing of the mod runs: the ticks that are turned on by hand while there
@@ -207,6 +223,7 @@ else:
         until it is restarted: cryo's objects and the lists they are in."""
         waiting = 0
         freed = 0
+        tell_enforcer(False)
         for label, step in (("materials", core.particles.stop), ("queued looks", core.later.stop), ("gun lists", cryo.guns.stop)):
             try:
                 step()
@@ -232,5 +249,6 @@ else:
         "options": [*SECTIONS, *install.OPTIONS],
         "hooks": [on_main_menu, _setup_on_arrival, *install.HOOKS, *cryo.HOOKS, *core.HOOKS],  # (radfx.HOOKS are in cryo.HOOKS)
         "commands": [cryo_command],
+        "on_enable": _on_enable,
         "on_disable": _on_disable,
     }

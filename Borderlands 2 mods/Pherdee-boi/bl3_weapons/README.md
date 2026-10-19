@@ -30,6 +30,10 @@ Single player and co-op (every player needs the mod).
 **The Aurelia mod is not required.** This mod works without it and with it: when Aurelia (Grim Reader's The Pre-Sequel Baroness) is installed and on,
 Aurelia supplies cryo, this mod's own cryo steps aside, and everything else, radiation included, works as usual.
 
+**Works with Enforcer** (the Wilhelm character mod, which has a skill that freezes enemies with cryo): Enforcer looks for a "Cryo" mod, so BL3 Weapons keeps
+a small `sdk_mods\settings\Cryo.json` (`"enabled": true/false`) in step with itself, and Wilhelm's Cold War freezes as long as this mod's cryo is on. Without
+it (or without cryo's files) Enforcer falls back to slag.
+
 ## Install
 1. Put `bl3_weapons.sdkmod` into the Borderlands 2 folder's `sdk_mods` folder (do not unpack it).
 2. Start the game. The mod switches itself on the first time. If a message says cryo's files were built, restart the game once.

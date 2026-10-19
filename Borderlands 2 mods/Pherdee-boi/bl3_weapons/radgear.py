@@ -350,7 +350,7 @@ def on_grenade_hit(obj: UObject, args, *_: object) -> None:
         log("radiation grenade failed: " + traceback.format_exc()[-300:])
 
 
-ELEMENT_WORDS = re.compile(r"\b(Acid|Corrosive|Shock|Fire|Incendiary|Slag|Explosive|Cryo|Ice|Frost|Asidy|Burnin|Lectrik)\b", re.IGNORECASE)  # (the last three: Bandit grenades\' own spellings)
+ELEMENT_WORDS = re.compile(r"\b(Acid|Corrosive|Shock|Fire|Incendiary|Slag|Explosive|Cryo|Ice|Frost|Asidy|Burnin|Lectrik|Sluj)\b", re.IGNORECASE)  # (the last three: Bandit grenades\' own spellings)
 
 
 def radiation_name(item: UObject, name: str) -> str:
