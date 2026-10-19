@@ -19,6 +19,9 @@ Single player and co-op (every player needs the mod).
 
 ## Requirements
 - Borderlands 2 (Steam, PC) with the [Willow2 Mod Manager](https://github.com/bl-sdk/willow2-mod-manager) (v3.8 or newer).
+- For **radiation's gas, bubbles and smoke** (the cloud on an irradiated enemy and the explosions): the [Willow Texture Loader (texloader)](https://github.com/juso40/Willow-Texture-Loader)
+  by juso, installed as its own mod. Without it those are not drawn (radiation's damage, drops, yellow muzzle flashes and tracers, card icons and names all
+  still work).
 - For **cryo to work fully:** a copy of Borderlands: The Pre-Sequel installed on the same PC (see "Cryo and The Pre-Sequel" below). Everything else,
   radiation included, does not need it.
 - Works beside the **Aurelia** mod (Grim Reader's The Pre-Sequel Baroness): Aurelia then supplies cryo and this mod's own cryo steps aside; everything else,

@@ -5,7 +5,7 @@ Made by Pherdee with Claude (Anthropic's AI, through Claude Code). MIT licence (
 
 | Mod | What it is | Download |
 |---|---|---|
-| [`bl3_weapons`](bl3_weapons) | BL3 gun mechanics (Maliwan element switch, Vladof underbarrel, Torgue, Dahl, Tediore, Hyperion, Jakobs, Bandit, anointments, relics) plus the **radiation** and **cryo** elements. Cryo needs a copy of Borderlands: The Pre-Sequel installed to work fully. | [BL3 Weapons 0.64.2](https://github.com/Pherdee-boi/BLCMods/releases/tag/bl3-weapons-v0.64.2) |
+| [`bl3_weapons`](bl3_weapons) | BL3 gun mechanics (Maliwan element switch, Vladof underbarrel, Torgue, Dahl, Tediore, Hyperion, Jakobs, Bandit, anointments, relics) plus the **radiation** and **cryo** elements. Needs the Willow Texture Loader (texloader) for radiation's gas and bubbles; cryo needs a copy of Borderlands: The Pre-Sequel installed to work fully. | [BL3 Weapons 0.64.3](https://github.com/Pherdee-boi/BLCMods/releases/tag/bl3-weapons-v0.64.3) |
 | [`adventure_guide`](adventure_guide) | a sixth status-menu tab listing bosses, special enemies, vendors and chests with the legendaries / uniques they drop (beta) | [Adventure Guide 0.9.0](https://github.com/Pherdee-boi/BLCMods/releases/tag/adventure-guide-v0.9.0) |
 | [`bl3_movement`](bl3_movement) | BL3 slide and ground slam | [BL3 Movement 0.8.0](https://github.com/Pherdee-boi/BLCMods/releases/tag/bl3-movement-v0.8.0) |
 

@@ -261,7 +261,10 @@ def load() -> str:
 
 
 def ready(size: str = "medium") -> bool:
-    """True when this size's gas has its material (the compile queue has been through it)."""
+    """True when this size's gas is dressed (its pictures loaded: texloader) and has its material (the compile queue has been through it). Undressed, the
+    copies of slag's explosion draw as red smoke."""
+    if SYSTEM.format(SIZES[size]) not in _dressed:
+        return False
     system = _find("ParticleSystem", SYSTEM.format(SIZES[size]))
     if system is None or system.Emitters[0] is None:
         return False
@@ -271,7 +274,9 @@ def ready(size: str = "medium") -> bool:
 
 
 def impact_ready() -> bool:
-    """True when the bullet impact's smoke has its material."""
+    """True when the bullet impact's smoke is dressed and has its material."""
+    if IMPACT not in _dressed:
+        return False
     system = _find("ParticleSystem", IMPACT)
     if system is None or system.Emitters[0] is None:
         return False
