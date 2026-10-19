@@ -166,11 +166,13 @@ def _tell(report: builder.Report) -> None:
     parts = []
     # Cryo's texts in the game's other languages need no restart: the game reads them when it loads the packages, and
     # the build has written them by then. Nothing but those written: nothing to tell.
-    restart = report.built + report.pending > report.texts
+    restart = report.built + report.pending > report.texts + report.radfx
+    if report.radfx:
+        parts.append("Radiation's effects are built. Restart Borderlands 2 to see them.")
     if report.texts and not restart:
         _log(f"build: cryo's texts in the game's other languages are in place ({report.texts} files); no restart needed")
     if restart:
-        parts.append(f"Cryo's files are built from your copy of The Pre-Sequel ({report.built + report.pending} files). "
+        parts.append(f"Cryo's files are built from your copy of The Pre-Sequel ({report.built + report.pending - report.radfx} files). "
                      "Restart Borderlands 2 to use cryo.")
     if report.failed:
         parts.append(_failure(report))

@@ -1,6 +1,6 @@
 [project]
 name = "bl3_weapons"
-version = "0.64.1"
+version = "0.64.2"
 authors = [{ name = "Pherdee" }, { name = "Grim Reader" }, { name = "Claude" }]
 
 [tool.sdkmod]

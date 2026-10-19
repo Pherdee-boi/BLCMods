@@ -461,6 +461,7 @@ class Report:
     pending: int = 0
     same: int = 0                        # made again and found byte for byte the file in place: nothing was replaced
     texts: int = 0                       # of `built`: text files (her texts in the game's other languages)
+    radfx: int = 0                       # of `built` and `pending`: the radiation effects' package (the one output that needs no TPS)
     blocked: list[str] = field(default_factory=list)
     failed: list[str] = field(default_factory=list)
     errors: dict[str, str] = field(default_factory=dict)      # failed output -> why
@@ -561,10 +562,12 @@ def build(bl2: Path, tps: Path | None = None, adopt: bool = False, streaming: st
                 record["mtime_ns"] = path.stat().st_mtime_ns
                 report.built += 1
                 report.texts += target.recipe in TEXT_RECIPES
+                report.radfx += target.recipe == "radfx"
                 done = "built"
             else:
                 record["pending"] = True
                 report.pending += 1
+                report.radfx += target.recipe == "radfx"
                 done = "waits for a restart"
         except Exception as ex:  # noqa: BLE001 - one bad output must not stop the rest
             _discard(tmp)

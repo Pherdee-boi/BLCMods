@@ -107,9 +107,12 @@ return float4(rgb, 1.0);
 # average), a dotted line around every puff, plain against a dark map (the user, 2026-10-03). They read with the
 # coordinate's own slope (`gx`, `gy`), which has no jump; and a puff fades out over the last eighth before its
 # cell's border, where the sheet's neighbouring puff (or its far edge, wrapped) would still draw a faint line.
+# Without TPS's copies of the two textures (and BL2's own where no map has them) the shader would not build and radiation's gas, bubbles and smoke, which are
+# looks of it and bring their own Tex0 (look 1 never reads Tex1), would stay off: a plain white square stands in.
+WHITE = "|EngineResources.WhiteSquareTexture"
 SPRITE_TRAN = shaders.Shader(
     name="SpriteTran", blend=shaders.TRANSLUCENT,
-    textures=(("Tex0", SNOW_DUST), ("Tex1", tpsports.carried("FX_ENV_Weather.Textures.Snow_Dissipate_Mask"))),
+    textures=(("Tex0", SNOW_DUST + WHITE), ("Tex1", tpsports.carried("FX_ENV_Weather.Textures.Snow_Dissipate_Mask") + WHITE)),
     code=_COMMON + """float3 rgb = vc.rgb * Tint.rgb;
 float a = 0;
 if (Look < 0.5) {
