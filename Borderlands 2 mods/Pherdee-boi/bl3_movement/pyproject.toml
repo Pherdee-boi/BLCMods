@@ -1,0 +1,9 @@
+[project]
+name = "bl3_movement"
+version = "0.8.0"
+authors = [{ name = "Pherdee" }, { name = "Claude" }]
+
+[tool.sdkmod]
+license = "MIT"
+name = "BL3 Movement"
+supported_games = ["BL2"]

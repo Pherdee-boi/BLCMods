@@ -1,0 +1,5136 @@
+[
+ {
+  "dlc": "Borderlands 2",
+  "zone": "Arid Nexus - Badlands",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Bone Head 2.0",
+    "pool": "GD_Itempools.Runnables.Pool_Bonehead2",
+    "drops": [
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Unique.SMG_Bandit_3_BoneShredder",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Saturn",
+    "pool": "GD_Itempools.Runnables.Pool_Talos",
+    "drops": [
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Legendary.Sniper_Hyperion_5_Invader",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Unique.RL_Maliwan_3_TheHive",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "Arid Nexus - Boneyard",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Hunter Hellquist",
+    "pool": "GD_Itempools.Runnables.Pool_HunterHellquist",
+    "drops": [
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Impact_05_Legendary",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "Bloodshot Stronghold",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Dan",
+    "pool": "GD_Itempools.Runnables.Pool_TMNT",
+    "drops": [
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_StormFront",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Lee",
+    "pool": "GD_Itempools.Runnables.Pool_TMNT",
+    "drops": [
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_StormFront",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Mick",
+    "pool": "GD_Itempools.Runnables.Pool_TMNT",
+    "drops": [
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_StormFront",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Ralph",
+    "pool": "GD_Itempools.Runnables.Pool_TMNT",
+    "drops": [
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_StormFront",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "Caustic Caverns",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Blue",
+    "pool": "GD_Itempools.Runnables.Pool_Blue",
+    "drops": [
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Juggernaut_05_Legendary",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Ultimate Badass Varkid",
+    "pool": "GD_Itempools.Runnables.Pool_UltimateBadassVarkid",
+    "drops": [
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_Quasar",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Vermivorous the Invincible",
+    "pool": "GD_Itempools.Runnables.Pool_Verm",
+    "drops": [
+     {
+      "path": "GD_ClassMods.A_Item_Merc.ClassMod_Merc_Z_LegendaryBerserker",
+      "cls": "ClassModBalanceDefinition",
+      "gen": "GD_ItemGrades.ClassMods.BalDef_ClassMod_Mercenary_05_Legendary"
+     },
+     {
+      "path": "GD_ClassMods.A_Item_Assassin.ClassMod_Assassin_Z_LegendaryHunter",
+      "cls": "ClassModBalanceDefinition",
+      "gen": "GD_ItemGrades.ClassMods.BalDef_ClassMod_Assassin_05_Legendary"
+     },
+     {
+      "path": "GD_Tulip_ClassMods.A_Item_Mechromancer.ClassMod_Mechromancer_Z_LegendaryMechro",
+      "cls": "ClassModBalanceDefinition",
+      "gen": "GD_Tulip_ItemGrades.ClassMods.BalDef_ClassMod_Mechromancer_05_Legendary"
+     },
+     {
+      "path": "GD_ClassMods.A_Item_Siren.ClassMod_Siren_Z_LegendarySiren",
+      "cls": "ClassModBalanceDefinition",
+      "gen": "GD_ItemGrades.ClassMods.BalDef_ClassMod_Siren_05_Legendary"
+     },
+     {
+      "path": "GD_ClassMods.A_Item_Soldier.ClassMod_Soldier_Z_LegendarySoldier",
+      "cls": "ClassModBalanceDefinition",
+      "gen": "GD_ItemGrades.ClassMods.BalDef_ClassMod_Soldier_05_Legendary"
+     },
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_NastySurprise",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Unique.RL_Maliwan_Alien_Norfleet",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "End of the Line",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Wilhelm",
+    "pool": "GD_Itempools.Runnables.Pool_Wilhelm",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Hyperion_5_LogansGun",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_RollingThunder",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "Eridium Blight",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "King Mong",
+    "pool": "GD_Itempools.Runnables.Pool_KingMong",
+    "drops": [
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Legendary.RL_Bandit_5_BadaBoom",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "Frostburn Canyon",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Incinerator Clayton",
+    "pool": "GD_Itempools.Runnables.Pool_Clayton",
+    "drops": [
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Legendary.RL_Maliwan_5_Pyrophobia",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Scorch",
+    "pool": "GD_Itempools.Runnables.Pool_Scorch",
+    "drops": [
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Maliwan_5_HellFire",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Spycho",
+    "pool": "GD_Itempools.Runnables.Pool_MonsterMash",
+    "drops": [
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Chimera_05_Legendary",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "Lynchwood",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Dukino's Mom",
+    "pool": "GD_Itempools.Runnables.Pool_SkagzillaMom",
+    "drops": [
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Legendary.RL_Vladof_5_Mongol",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Mad Dog",
+    "pool": "GD_Itempools.Runnables.Pool_MadameVonBartlesby",
+    "drops": [
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Tediore_5_BabyMaker",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "The Sheriff of Lynchwood",
+    "pool": "GD_Itempools.Runnables.Pool_Sheriff",
+    "drops": [
+     {
+      "path": "GD_Artifacts.A_Item_Unique.A_Sheriff",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Unique.Pistol_Jakobs_3_Law",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "Opportunity",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Foreman Jasper",
+    "pool": "GD_Itempools.Runnables.Pool_Foreman",
+    "drops": [
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Nova_Singularity",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "Sanctuary",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Michael Mamaril",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Legendary.AR_Torgue_5_KerBlaster",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Legendary.AR_Bandit_5_Madhouse",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Legendary.AR_Vladof_5_Sherdifier",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Legendary.AR_Dahl_5_Veruc",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Unique.AR_Jakobs_3_Stomper",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Moxxi",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Unique.SMG_Maliwan_3_BadTouch",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Unique.SMG_Maliwan_3_GoodTouch",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "SanctuaryAir",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Barlo Gutter",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "Sawtooth Cauldron",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Mortar",
+    "pool": "GD_Itempools.Runnables.Pool_Mortar",
+    "drops": [
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_Pandemic",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "Southern Shelf",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Bewm",
+    "pool": "GD_Itempools.Runnables.Pool_Boomboom",
+    "drops": [
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_BonusPackage",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Big Bertha",
+    "pool": "GD_Itempools.Runnables.Pool_Boomboom",
+    "drops": [
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_BonusPackage",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Captain Flynt",
+    "pool": "GD_Itempools.Runnables.Pool_CaptFlynt,GD_Itempools.Runnables.Pool_CaptFlyntTinderbox",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Maliwan_5_ThunderballFists",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Unique.Pistol_Bandit_3_Tenderbox",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Knuckle Dragger",
+    "pool": "GD_Itempools.Runnables.Pool_Knuckledragger",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Dahl_5_Hornet",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "Southern Shelf - Bay",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Midgemong",
+    "pool": "GD_Itempools.Runnables.Pool_WarMong",
+    "drops": [
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Legendary.AR_Torgue_5_KerBlaster",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "Southpaw Steam & Power",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Assassin Oney",
+    "pool": "GD_Itempools.Runnables.Pool_AssassinOney,GD_Itempools.Runnables.Pool_FourAssassins",
+    "drops": [
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Dahl_5_Emperor",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Unique.Pistol_Jakobs_3_Judge",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Assassin Reeth",
+    "pool": "GD_Itempools.Runnables.Pool_AssassinReeth,GD_Itempools.Runnables.Pool_FourAssassins",
+    "drops": [
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Dahl_5_Emperor",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Unique.Sniper_Hyperion_3_FremingtonsEdge",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Assassin Rouf",
+    "pool": "GD_Itempools.Runnables.Pool_AssassinRouf,GD_Itempools.Runnables.Pool_FourAssassins",
+    "drops": [
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Dahl_5_Emperor",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Unique.SG_Bandit_3_Dog",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Assassin Wot",
+    "pool": "GD_Itempools.Runnables.Pool_AssassinWot,GD_Itempools.Runnables.Pool_FourAssassins",
+    "drops": [
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Dahl_5_Emperor",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Unique.SMG_Hyperion_3_Commerce",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "Terramorphous Peak",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Terramorphous the Invincible",
+    "pool": "GD_Itempools.Runnables.Pool_Terramorphous",
+    "drops": [
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_FlameSpurt",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Artifacts.A_Item_Unique.A_Terramorphous",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Roid_ThresherRaid",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Legendary.Sniper_Dahl_5_Pitchfork",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_ItemGrades.ClassMods.BalDef_ClassMod_Assassin_06_SlayerOfTerramorphous",
+      "cls": "ClassModBalanceDefinition"
+     },
+     {
+      "path": "GD_Tulip_ItemGrades.ClassMods.BalDef_ClassMod_Mechromancer_06_SlayerOfTerramorphous",
+      "cls": "ClassModBalanceDefinition"
+     },
+     {
+      "path": "GD_ItemGrades.ClassMods.BalDef_ClassMod_Mercenary_06_SlayerOfTerramorphous",
+      "cls": "ClassModBalanceDefinition"
+     },
+     {
+      "path": "GD_Lilac_ClassMods.BalanceDefs.BalDef_ClassMod_Psycho_06_SlayerOfTerramorphous",
+      "cls": "ClassModBalanceDefinition"
+     },
+     {
+      "path": "GD_ItemGrades.ClassMods.BalDef_ClassMod_Siren_06_SlayerOfTerramorphous",
+      "cls": "ClassModBalanceDefinition"
+     },
+     {
+      "path": "GD_ItemGrades.ClassMods.BalDef_ClassMod_Soldier_06_SlayerOfTerramorphous",
+      "cls": "ClassModBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Unique.SG_Bandit_3_Teeth",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "The Bunker",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "BNK-3R",
+    "pool": "GD_Itempools.Runnables.Pool_Bunker",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Hyperion_5_Bitch",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Absorption_05_LegendaryNormal",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "The Dust",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Gettle",
+    "pool": "GD_Itempools.Runnables.Pool_Gettle",
+    "drops": [
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Legendary.Sniper_Vladof_5_Lyudmila",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Jimbo & Tector Hodunk",
+    "pool": "GD_Itempools.Runnables.Pool_TectorHodunk",
+    "drops": [
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Bandit_5_Slagga",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "McNally",
+    "pool": "GD_Itempools.Runnables.Pool_McNally",
+    "drops": [
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Legendary.AR_Jakobs_5_HammerBuster",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Mick Zaford",
+    "pool": "GD_Itempools.Runnables.Pool_MickZaford",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Jakobs_5_Maggie",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Mobley",
+    "pool": "GD_Itempools.Runnables.Pool_Mobley",
+    "drops": [
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Legendary.AR_Dahl_5_Veruc",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "The Black Queen",
+    "pool": "GD_Itempools.Runnables.Pool_BlackQueen",
+    "drops": [
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Legendary.RL_Torgue_5_Nukem",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "The Fridge",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Laney White",
+    "pool": "GD_Itempools.Runnables.Pool_Laney",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Bandit_5_Gub",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Rakkman",
+    "pool": "GD_Itempools.Runnables.Pool_RakkMan",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Tediore_5_Gunerang",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Smash-Head",
+    "pool": "GD_Itempools.Runnables.Pool_BigBoy",
+    "drops": [
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Bandit_5_SledgesShotgun",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "The Highlands - Extraction Plant",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Henry",
+    "pool": "GD_Itempools.Runnables.Pool_Henry",
+    "drops": [
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Standard_05_Legendary",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "The Highlands - Outwash",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Old Slappy",
+    "pool": "GD_Itempools.Runnables.Pool_OldSlappy",
+    "drops": [
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Jakobs_5_Striker",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "The Holy Spirits",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Bagman",
+    "pool": "GD_Itempools.Runnables.Pool_Bagman",
+    "drops": [
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Booster_PotOGold",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "Three Horns Divide",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Savage Lee",
+    "pool": "GD_Itempools.Runnables.Pool_SavageLee",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Torgue_5_Calla",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "Three Horns Valley",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Doc Mercy",
+    "pool": "GD_Itempools.Runnables.Pool_MrMercy",
+    "drops": [
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons.AR_Bandit_3_Rare_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Vladof_5_Infinity",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "Tundra Express",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Madame Von Bartlesby",
+    "pool": "GD_Itempools.Runnables.Pool_MadameVonBartlesby",
+    "drops": [
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Tediore_5_BabyMaker",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "Vault of the Warrior",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "The Warrior",
+    "pool": "GD_Itempools.Runnables.Pool_Warrior",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Hyperion_5_ConferenceCall",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_Leech",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Torgue_5_Flakker",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Spike_Acid_05_Legendary",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Legendary.Sniper_Maliwan_5_Volcano",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "Wildlife Exploitation Preserve",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Pimon",
+    "pool": "GD_Itempools.Runnables.Pool_Pimon",
+    "drops": [
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Absorption_05_LegendaryShock",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Son of Mothrakk",
+    "pool": "GD_Itempools.Runnables.Pool_SonOfMothrakk",
+    "drops": [
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Legendary.Sniper_Jakobs_5_Skullmasher",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Tumbaa",
+    "pool": "GD_Itempools.Runnables.Pool_Tumba",
+    "drops": [
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Tediore_5_Deliverance",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "Special Enemies",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Badass Creeper",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Unique.Sniper_Hyperion_3_Longbow",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Unique.SG_Tediore_3_Blockhead",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Crazed Marauder",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Hyperion Sniper",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Zaford Grunt",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "Mission Rewards",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "A Real Boy: Human",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Unique.Pistol_Hyperion_3_Fibber",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Animal Rights",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Unique.Sniper_Jakobs_3_Tresspasser",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Bandit Slaughter: Round 5",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Unique.AR_Vladof_3_Hail",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Bearer of Bad News",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Unique.AR_Dahl_3_Scorpio",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Best Mother's Day Ever",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Roid_04_LoveThumper",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "BFFs",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Roid_Order",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Clan War: End of the Rainbow",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Unique.SG_Jakobs_3_Triquetra",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Clan War: Wakey Wakey",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Absorption_Equitas",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Unique.Pistol_Vladof_3_Veritas",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Clan War: Zafords vs. Hodunks",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Unique.SMG_Maliwan_3_Chulainn",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Unique.SG_Torgue_3_Landscaper",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Creature Slaughter: Round 5",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Unique.RL_Torgue_3_Creamer",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Cult Following: The Enkindling",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Nova_Phoenix",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Demon Hunter",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Unique.Sniper_Jakobs_3_Buffalo",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Hell Hath No Fury",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_GrenadeMods.A_Item_Custom.GM_KissOfDeath",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Hungry Like the Skag",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Unique.AR_Jakobs_3_Stomper",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Hyperion Contract #873",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Unique.Sniper_Hyperion_3_Morningstar",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Hyperion Slaughter: Round 5",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Unique.Sniper_Maliwan_3_ChereAmie",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Note for Self-Person",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Unique.RL_Bandit_3_Roaster",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Out of Body Experience",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Absorption_1340",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Unique.SG_Hyperion_3_Shotgun1340",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Positive Self Image",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Artifacts.A_Item_Unique.A_Afterburner",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Rakkaholics Anonymous",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Unique.Pistol_Maliwan_3_Rubi",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Unique.Sniper_Dahl_3_Sloth",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Safe and Sound",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Unique.SG_Hyperion_3_HeartBreaker",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Artifacts.A_Item_Unique.A_Opportunity",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Showdown",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Artifacts.A_Item_Unique.A_Deputy",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Slap-Happy",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Unique.SG_Tediore_3_Octo",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Splinter Group",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Unique.SG_Bandit_3_RokSalt",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "The Bane",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Unique.SMG_Hyperion_3_Bane",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "The Chosen One",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Unique.AR_Torgue_3_EvilSmasher",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "The Good, the Bad, and the Mordecai",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Artifacts.A_Item_Unique.A_Endowment",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "The Lost Treasure",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Unique.Pistol_Dahl_3_Dahlminator",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "The Overlooked: This Is Only a Test",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Nova_Explosive_DeadlyBloom",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "The Pretty Good Train Robbery",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_GrenadeMods.A_Item_Custom.GM_FusterCluck",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Uncle Teddy",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Unique.Pistol_Hyperion_3_LadyFist",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Unique.SG_Jakobs_3_TidalWave",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Won't Get Fooled Again",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Unique.Pistol_Jakobs_3_Law",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "You Are Cordially Invited: Tea Party",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Unique.Pistol_Dahl_3_Teapot",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "Vendors",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Seraph Crystal Vendor",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Orchid_RaidWeapons.SMG.Actualizer.Orchid_Seraph_Actualizer_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Iris_SeraphItems.Crossfire.Iris_Seraph_GrenadeMod_Crossfire_Balance",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Sage_RaidWeapons.Pistol.Sage_Seraph_Infection_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Sage_RaidWeapons.AssaultRifle.Sage_Seraph_LeadStorm_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Iris_SeraphItems.MeteorShower.Iris_Seraph_GrenadeMod_MeteorShower_Balance",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Iris_SeraphItems.Pun-chee.Iris_Seraph_Shield_Pun-chee_Balance",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.AssaultRifle.Seraphim.Orchid_Seraph_Seraphim_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Iris_SeraphItems.Sponge.Iris_Seraph_Shield_Sponge_Balance",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "Other Sources",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Pack bonus item (Game of the Year / Collector's Edition)",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_GrenadeMods.A_Item_Custom.GM_SkyRocket",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Pack bonus item (Mechromancer Pack / Collector's Edition)",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Artifacts.A_Item_Unique.A_VaultHunter",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "World Drops",
+  "group": "generic",
+  "bosses": [
+   {
+    "name": "E-tech Weapons",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons.AR_Bandit_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons.AR_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons.AR_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Tediore_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Launchers.A_Weapons.RL_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons.SMG_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons.SMG_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons.SMG_Bandit_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons.SMG_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons.SMG_Tediore_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Launchers.A_Weapons.RL_Bandit_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Bandit_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons.SG_Bandit_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons.SG_Tediore_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons.SG_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Launchers.A_Weapons.RL_Tediore_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Launchers.A_Weapons.RL_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Legendary Grenade Mods",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_BonusPackage",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_BouncingBonny",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_Fastball",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_FireBee",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_Leech",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_NastySurprise",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_Pandemic",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_Quasar",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_RollingThunder",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_StormFront",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Legendary Shields",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Nova_Singularity",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Juggernaut_05_Legendary",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Spike_Acid_05_Legendary",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Chimera_05_Legendary",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Impact_05_Legendary",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Standard_05_Legendary",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Absorption_05_LegendaryNormal",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Absorption_05_LegendaryShock",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Booster_05_Legendary",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Legendary Weapons",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Tediore_5_BabyMaker",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Legendary.RL_Bandit_5_BadaBoom",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Hyperion_5_Bitch",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Legendary.RL_Tediore_5_Bunny",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Hyperion_5_ConferenceCall",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Tediore_5_Deliverance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Dahl_5_Emperor",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Torgue_5_Flakker",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Bandit_5_Gub",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Tediore_5_Gunerang",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Legendary.AR_Jakobs_5_HammerBuster",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Maliwan_5_HellFire",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Dahl_5_Hornet",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Vladof_5_Infinity",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Legendary.Sniper_Hyperion_5_Invader",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Legendary.AR_Torgue_5_KerBlaster",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Hyperion_5_LogansGun",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Legendary.Sniper_Vladof_5_Lyudmila",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Legendary.AR_Bandit_5_Madhouse",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Jakobs_5_Maggie",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Legendary.RL_Vladof_5_Mongol",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Legendary.RL_Torgue_5_Nukem",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Legendary.Sniper_Dahl_5_Pitchfork",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Legendary.RL_Maliwan_5_Pyrophobia",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Legendary.AR_Vladof_5_Sherdifier",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Legendary.Sniper_Jakobs_5_Skullmasher",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Bandit_5_Slagga",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Bandit_5_SledgesShotgun",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Jakobs_5_Striker",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Maliwan_5_ThunderballFists",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Torgue_5_Calla",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Legendary.AR_Dahl_5_Veruc",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Legendary.Sniper_Maliwan_5_Volcano",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Unique Shields",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Standard_CrackedSash",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Nova_Explosive_DeadlyBloom",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Borderlands 2",
+  "zone": "Chests & Machines",
+  "group": "generic",
+  "bosses": [
+   {
+    "name": "Cardboard Boxes",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Coolers",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Dumpsters",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Loot Spawner",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Unique.SMG_Dahl_3_Lascaux",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Red Chests",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Safes",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Slot Machine",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Snowman's Head",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Unique.Pistol_Bandit_3_Tenderbox",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Storage Lockers",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Vending Machines",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "What's In The Box?",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Unique.Pistol_Dahl_3_GwensHead",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Pirate's Booty",
+  "zone": "Hayter's Folly (Raid)",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Master Gee the Invincible",
+    "pool": "GD_Orchid_ItemPools.Raid.Pool_Orchid_Raid3_Legendary,GD_Orchid_ItemPools.Raid.Pool_Orchid_Raid3_PinkWeapons",
+    "drops": [
+     {
+      "path": "GD_Orchid_RaidWeapons.RPG.Ahab.Orchid_Seraph_Ahab_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.Shield.Anshin.Orchid_Seraph_Anshin_Shield_Balance",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.sniper.Patriot.Orchid_Seraph_Patriot_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.AssaultRifle.Seraphim.Orchid_Seraph_Seraphim_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Hyperion_5_Bitch",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Tediore_5_Gunerang",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Legendary.Sniper_Dahl_5_Pitchfork",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_StormFront",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Jakobs_5_Striker",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Impact_05_Legendary",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Pirate's Booty",
+  "zone": "Magnys Lighthouse",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Lil' Sis",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Orchid_BossWeapons.Pistol.Pistol_Maliwan_3_LittleEvie",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Pirate's Booty",
+  "zone": "Oasis",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "No-Beard",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Orchid_BossWeapons.AssaultRifle.AR_Jakobs_3_Stinkpot",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Pirate's Booty",
+  "zone": "The Leviathan's Lair",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Captain Scarlett",
+    "pool": "GD_Orchid_ItemPools.Boss.Pool_Orchid_PirateQueen",
+    "drops": [
+     {
+      "path": "GD_Orchid_BossWeapons.Pistol.Pistol_Jakobs_ScarletsGreed",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Pirate's Booty",
+  "zone": "Washburne Refinery",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Hyperius the Invincible",
+    "pool": "GD_Orchid_ItemPools.Raid.Pool_Orchid_Raid1_Legendary,GD_Orchid_ItemPools.Raid.Pool_Orchid_Raid1_PinkWeapons",
+    "drops": [
+     {
+      "path": "GD_Orchid_RaidWeapons.SMG.Actualizer.Orchid_Seraph_Actualizer_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.Pistol.Devastator.Orchid_Seraph_Devastator_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.Shotgun.Spitter.Orchid_Seraph_Spitter_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.SMG.Tattler.Orchid_Seraph_Tattler_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Dahl_5_Hornet",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Unique.RL_Maliwan_Alien_Norfleet",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Legendary.RL_Maliwan_5_Pyrophobia",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Legendary.AR_Vladof_5_Sherdifier",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Bandit_5_SledgesShotgun",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Booster_05_Legendary",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_GrenadeMods.A_Item_Custom.GM_KissOfDeath",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Pirate's Booty",
+  "zone": "Special Enemies",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Badass Pirate",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Gunner",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Pirate's Booty",
+  "zone": "Mission Rewards",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Don't Copy That Floppy",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Orchid_BossWeapons.SniperRifles.Sniper_Maliwan_3_Pimpernel",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Just Desserts for Desert Deserters",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Orchid_BossWeapons.Shotgun.SG_Bandit_3_JollyRoger",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Message In A Bottle",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Orchid_GrenadeMods.A_Item_Custom.GM_Blade",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Message in a Bottle",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Orchid_Shields.A_Item_Custom.S_BladeShield",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_BossWeapons.Shotgun.SG_Jakobs_3_OrphanMaker",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_Artifacts.A_Item_Unique.A_Blade",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_BossWeapons.AssaultRifle.AR_Vladof_3_Rapier",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Whoops",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Orchid_BossWeapons.SMG.SMG_Dahl_3_SandHawk",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Pirate's Booty",
+  "zone": "Vendors",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Seraph Crystal Vendor",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Orchid_RaidWeapons.SMG.Actualizer.Orchid_Seraph_Actualizer_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.RPG.Ahab.Orchid_Seraph_Ahab_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_Artifacts.A_Item_Unique.A_SeraphBloodRelic",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.Pistol.Devastator.Orchid_Seraph_Devastator_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.Shield.Anshin.Orchid_Seraph_Anshin_Shield_Balance",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.sniper.Patriot.Orchid_Seraph_Patriot_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.Shotgun.Spitter.Orchid_Seraph_Spitter_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.AssaultRifle.Seraphim.Orchid_Seraph_Seraphim_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.SMG.Tattler.Orchid_Seraph_Tattler_Balance",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Pirate's Booty",
+  "zone": "Other Sources",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Other / special",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Orchid_BossWeapons.Launcher.RL_Torgue_3_12Pounder",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_BossWeapons.Pistol.Pistol_Jakobs_ScarletsGreed",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Raid drop: Orchid Raid Weapons",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Orchid_RaidWeapons.SMG.Actualizer.Orchid_Seraph_Actualizer_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.RPG.Ahab.Orchid_Seraph_Ahab_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.Pistol.Devastator.Orchid_Seraph_Devastator_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.Shield.Anshin.Orchid_Seraph_Anshin_Shield_Balance",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.sniper.Patriot.Orchid_Seraph_Patriot_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.Shotgun.Spitter.Orchid_Seraph_Spitter_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.AssaultRifle.Seraphim.Orchid_Seraph_Seraphim_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.SMG.Tattler.Orchid_Seraph_Tattler_Balance",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Bloody Harvest",
+  "zone": "Hallowed Hollow",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Clark the Combusted Cryptkeeper",
+    "pool": "GD_Itempools.Runnables.Pool_Clayton",
+    "drops": [
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Legendary.RL_Maliwan_5_Pyrophobia",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Sully the Blacksmith",
+    "pool": "GD_Itempools.Runnables.Pool_MonsterMash,GD_Itempools.Runnables.Pool_Scorch",
+    "drops": [
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Maliwan_5_HellFire",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Chimera_05_Legendary",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Wattle Gobbler",
+  "zone": "Gluttony Gulch",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Annie, Tribute of Lynchwood",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Rose, Tribute of Opportunity",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons.AR_Bandit_3_Rare_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Torgue's Grandma",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Unique.Pistol_Jakobs_3_Law",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Mercenary Day",
+  "zone": "Vendors",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Mercenary Day Vending Machines",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Campaign of Carnage",
+  "zone": "Arena",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Badassasarus",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Iris_Weapons.Shotguns.SG_Hyperion_3_SlowHand",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Piston",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Iris_Weapons.Shotguns.SG_Hyperion_3_SlowHand",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Campaign of Carnage",
+  "zone": "Pyro Pete's Bar",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Pyro Pete the Invincible",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Campaign of Carnage",
+  "zone": "Special Enemies",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Enforcer",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Lootsploder",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Campaign of Carnage",
+  "zone": "Mission Rewards",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Everybody Wants to be Wanted",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Iris_Weapons.AssaultRifles.AR_Vladof_3_Kitten",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Walking the Dog",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Iris_Weapons.AssaultRifles.AR_Torgue_3_BoomPuppy",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Campaign of Carnage",
+  "zone": "Vendors",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Seraph Crystal Vendor",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Iris_SeraphItems.BigBoomBlaster.Iris_Seraph_Shield_Booster_Balance",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Iris_SeraphItems.Crossfire.Iris_Seraph_GrenadeMod_Crossfire_Balance",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Iris_SeraphItems.ONegative.Iris_Seraph_GrenadeMod_ONegative_Balance",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Iris_SeraphItems.Hoplite.Iris_Seraph_Shield_Juggernaut_Balance",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Iris_SeraphItems.MeteorShower.Iris_Seraph_GrenadeMod_MeteorShower_Balance",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Iris_SeraphItems.Might.Iris_Seraph_Artifact_Might_Balance",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Iris_SeraphItems.Pun-chee.Iris_Seraph_Shield_Pun-chee_Balance",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Iris_SeraphItems.Sponge.Iris_Seraph_Shield_Sponge_Balance",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Torgue Token Vendor",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_BonusPackage",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Torgue_5_Flakker",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Legendary.AR_Torgue_5_KerBlaster",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Legendary.RL_Torgue_5_Nukem",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_RollingThunder",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Torgue_5_Calla",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Iris_Weapons.Pistols.Pistol_Torgue_3_PocketRocket",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Campaign of Carnage",
+  "zone": "World Drops",
+  "group": "generic",
+  "bosses": [
+   {
+    "name": "E-tech Weapons",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons.SMG_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons.SMG_Bandit_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Bandit_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Legendary Weapons",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Bandit_5_Gub",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Maliwan_5_HellFire",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Legendary.Sniper_Vladof_5_Lyudmila",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Bandit_5_Slagga",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Maliwan_5_ThunderballFists",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Legendary.Sniper_Maliwan_5_Volcano",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Unique Weapons",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Iris_Weapons.SniperRifles.Sniper_Jakobs_3_Cobra",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Campaign of Carnage",
+  "zone": "Chests & Machines",
+  "group": "generic",
+  "bosses": [
+   {
+    "name": "Angel Bikers",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons.SMG_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons.SMG_Bandit_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Bandit_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons.SG_Bandit_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons.SG_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Hyperion_5_Bitch",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Hyperion_5_ConferenceCall",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Bandit_5_Gub",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Legendary.Sniper_Hyperion_5_Invader",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Hyperion_5_LogansGun",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Legendary.Sniper_Dahl_5_Pitchfork",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Bandit_5_Slagga",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Bandit_5_SledgesShotgun",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Iris_Weapons.SniperRifles.Sniper_Jakobs_3_Cobra",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Torgue Bikers",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons.AR_Bandit_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Bandit_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons.SG_Bandit_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons.SG_Tediore_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons.SG_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Hyperion_5_ConferenceCall",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Tediore_5_Deliverance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Torgue_5_Flakker",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Bandit_5_Gub",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Legendary.AR_Torgue_5_KerBlaster",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Legendary.AR_Bandit_5_Madhouse",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Bandit_5_SledgesShotgun",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Jakobs_5_Striker",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Torgue_5_Calla",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Torgue Slot Machine",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Wedding Day Massacre",
+  "zone": "Special Enemies",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Loot Leprechaun",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Zaford Blade",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Zaford Groomsman",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Zaford Grunt",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Hammerlock's Hunt",
+  "zone": "Candlerakk's Crag",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Bloodtail",
+    "pool": "GD_Sage_ItemPools.Runnables.Pool_NowYouSeeIt_Creature",
+    "drops": [
+     {
+      "path": "GD_Sage_Weapons.AssaultRifle.AR_Jakobs_3_DamnedCowboy",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Rouge",
+    "pool": "GD_Sage_ItemPools.Runnables.Pool_BigFeet_Creature",
+    "drops": [
+     {
+      "path": "GD_Sage_Weapons.Shotgun.SG_Jakobs_3_Hydra",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Voracidous the Invincible",
+    "pool": "GD_Sage_ItemPools.Raid.Pool_Sage_Raid_Legendary,GD_Sage_ItemPools.Raid.Pool_Sage_Raid_PinkWeapons",
+    "drops": [
+     {
+      "path": "GD_Sage_RaidWeapons.sniper.Sage_Seraph_HawkEye_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Sage_RaidWeapons.Pistol.Sage_Seraph_Infection_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Sage_RaidWeapons.Shotgun.Sage_Seraph_Interfacer_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Sage_RaidWeapons.AssaultRifle.Sage_Seraph_LeadStorm_Balance",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Hammerlock's Hunt",
+  "zone": "H.S.S. Terminus",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Jackenstein",
+    "pool": "GD_Sage_ItemPools.Runnables.Pool_Sage_FinalBoss",
+    "drops": [
+     {
+      "path": "GD_Sage_Weapons.SMG.SMG_Hyperion_3_YellowJacket",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Hammerlock's Hunt",
+  "zone": "Hunter's Grotto",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Arizona",
+    "pool": "GD_Sage_ItemPools.Runnables.Pool_Sage_DrifterNamed",
+    "drops": [
+     {
+      "path": "GD_Sage_Weapons.SniperRifles.Sniper_Jakobs_3_ElephantGun",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Bulstoss",
+    "pool": "GD_Sage_ItemPools.Runnables.Pool_AcquiredTaste_Creature",
+    "drops": [
+     {
+      "path": "GD_Sage_Weapons.Pistols.Pistol_Jakobs_3_Rex",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Dexiduous the Invincible",
+    "pool": "GD_Sage_ItemPools.Raid.Pool_Sage_Raid_Legendary,GD_Sage_ItemPools.Runnables.Pool_Sage_DrifterRaid,GD_Sage_ItemPools.Raid.Pool_Sage_Raid_PinkWeapons",
+    "drops": [
+     {
+      "path": "GD_Sage_RaidWeapons.sniper.Sage_Seraph_HawkEye_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Sage_RaidWeapons.Pistol.Sage_Seraph_Infection_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Sage_RaidWeapons.Shotgun.Sage_Seraph_Interfacer_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Sage_RaidWeapons.AssaultRifle.Sage_Seraph_LeadStorm_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Sage_Weapons.AssaultRifle.AR_Bandit_3_Chopper",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Hammerlock",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Sage_Weapons.SniperRifles.Sniper_Jakobs_3_ElephantGun",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "The Bulwark",
+    "pool": "GD_Sage_ItemPools.Runnables.Pool_PallingAround_Creature",
+    "drops": [
+     {
+      "path": "GD_Sage_Shields.A_Item_Custom.S_BucklerShield",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Hammerlock's Hunt",
+  "zone": "Scylla's Grove",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Rakkanoth",
+    "pool": "GD_Itempools.Runnables.Pool_SonOfMothrakk",
+    "drops": [
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Legendary.Sniper_Jakobs_5_Skullmasher",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Hammerlock's Hunt",
+  "zone": "Special Enemies",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Badass Savage",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Sage_RaidWeapons.sniper.Sage_Seraph_HawkEye_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Sage_RaidWeapons.Pistol.Sage_Seraph_Infection_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Sage_RaidWeapons.Shotgun.Sage_Seraph_Interfacer_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Sage_RaidWeapons.AssaultRifle.Sage_Seraph_LeadStorm_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Sage_Weapons.Shotgun.SG_Jakobs_3_Twister",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Hammerlock's Hunt",
+  "zone": "Vendors",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Seraph Crystal Vendor",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Sage_Artifacts.A_Item.A_SeraphBreath",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Fight for Sanctuary",
+  "zone": "Dahl Abandon",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Lt. Bolson",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Anemone_GrenadeMods.A_Item_Legendary.GM_Antifection",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Anemone_Weapons.Rocket_Launcher.WorldBurn.RL_Torgue_5_WorldBurn",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Fight for Sanctuary",
+  "zone": "Helios Fallen",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Lt. Tetra",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Anemone_Weapons.A_Weapons.AR_Bandit_3_Rare_Alien_Green",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Uranus",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Anemone_GrenadeMods.A_Item_Legendary.GM_StormFront",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Fight for Sanctuary",
+  "zone": "Mt. Scarab Research Center",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Cassius",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Anemone_GrenadeMods.A_Item_Legendary.GM_Antifection",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Fight for Sanctuary",
+  "zone": "The Burrows",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Lt. Angvar",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Bandit_5_Gub",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Tediore_5_Gunerang",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Dahl_5_Hornet",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Vladof_5_Infinity",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Hyperion_5_LogansGun",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Jakobs_5_Maggie",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Maliwan_5_ThunderballFists",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Torgue_5_Calla",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Sand Worm Queen",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Anemone_Weapons.AssaultRifle.AR_Dahl_6_Toothpick",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Fight for Sanctuary",
+  "zone": "Special Enemies",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Badass Sniper",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Sand Worm",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Anemone_Weapons.AssaultRifle.AR_Dahl_6_Toothpick",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Fight for Sanctuary",
+  "zone": "Mission Rewards",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "BFFFs",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Anemone_Weapons.A_Weapons_Unique.Sniper_Jakobs_3_Morde_Lt",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Chief Executive Overlord",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Anemone_Weapons.Shotgun.Overcompensator.SG_Hyperion_6_Overcompensator",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Echoes of the Past",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Anemone_Weapons.A_Weapons_Legendary.Pistol_Dahl_5_Hector_Hornet",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Paradise Found",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Anemone_Relics.A_Item_Unique.A_Sheriff",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Fight for Sanctuary",
+  "zone": "Other Sources",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Other / special",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Anemone_Weapons.A_Weapons_Legendary.SMG_Maliwan_5_HellFire",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Anemone_Weapons.Shotguns.SG_Torgue_3_SwordSplosion_Unico",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Anemone_Weapons.A_Weapons_Legendary.Pistol_Vladof_5_Infinity_DD",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Anemone_Weapons.Testing_Resist_100.100_Fire",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Anemone_Weapons.Rocket_Launcher.RL_Maliwan_5_Pyrophobia",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Fight for Sanctuary",
+  "zone": "World Drops",
+  "group": "generic",
+  "bosses": [
+   {
+    "name": "New Pandora Troops",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons.AR_Bandit_3_Rare_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Anemone_Weapons.A_Weapons.AR_Bandit_3_Rare_Alien_Slag",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Anemone_Weapons.A_Weapons.AR_Bandit_3_Rare_Alien_Shock",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Bandit_5_Gub",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Tediore_5_Gunerang",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Dahl_5_Hornet",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Vladof_5_Infinity",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Hyperion_5_LogansGun",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Jakobs_5_Maggie",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Maliwan_5_ThunderballFists",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Torgue_5_Calla",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Unique.SG_Bandit_3_Dog",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Pearlescent Shields",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Anemone_Balance_Treasure.Shields.ItemGrade_Gear_Shield_Worming",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Pearlescent Weapons",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Anemone_Weapons.SMG.SMG_Tediore_6_Infection_Cleaner",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Fight for Sanctuary",
+  "zone": "Chests & Machines",
+  "group": "generic",
+  "bosses": [
+   {
+    "name": "Dahl Epic Chests",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Anemone_Weapons.sniper.Sniper_Jakobs_6_Chaude_Mama",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Anemone_Weapons.Shotgun.Overcompensator.SG_Hyperion_6_Overcompensator",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Digistruct Epic Crates",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Anemone_ItemPools.Shields.ItemGrade_Gear_Shield_Nova_Singularity_Peak",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Anemone_Relics.A_Item_Unique.A_Deputy",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Anemone_Weapons.AssaultRifle.PeakOpener.AR_Torgue_5_PeakOpener",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Red Chests",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "The Brothers' Pile",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Anemone_Weapons.AssaultRifle.Brothers.AR_Jakobs_5_Brothers",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Toilet Midgets",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Dragon Keep",
+  "zone": "Dragon Keep",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Butt Stallion",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_GrenadeMods.A_Item.GM_ChainLightning",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Hyperion_5_ConferenceCall",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_Leech",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_GrenadeMods.A_Item.GM_FireStorm",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Torgue_5_Flakker",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Spike_Acid_05_Legendary",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Legendary.AR_Torgue_5_KerBlaster",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Impact_05_Legendary",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Legendary.Sniper_Maliwan_5_Volcano",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_GrenadeMods.A_Item.GM_Fireball",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_GrenadeMods.A_Item.GM_LightningBolt",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_GrenadeMods.A_Item.GM_MagicMissile",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Chubby Bones",
+    "pool": "GD_Itempools.Runnables.Pool_ChubbieUniques,GD_Itempools.Runnables.Pool_MrMercy",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Vladof_5_Infinity",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Dragon Keep",
+  "zone": "Lair of Infinite Agony",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Sorcerer's Daughter",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Hyperion_5_Bitch",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Bandit_5_Slagga",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Legendary.AR_Dahl_5_Veruc",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Dragon Keep",
+  "zone": "Mines of Avarice",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Gold Golem",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Tediore_5_Deliverance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Vladof_5_Infinity",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Bandit_5_SledgesShotgun",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Greedtooth",
+    "pool": "GD_Itempools.Runnables.Pool_Knuckledragger",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Dahl_5_Hornet",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Dragon Keep",
+  "zone": "Murderlin's Temple",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Warlord Slog",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Aster_Weapons.AssaultRifles.AR_Bandit_3_Ogre",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Dragon Keep",
+  "zone": "The Forest",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Arguk the Butcher",
+    "pool": "GD_Itempools.Runnables.Pool_Bonehead2",
+    "drops": [
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Unique.SMG_Bandit_3_BoneShredder",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Treant",
+    "pool": "GD_Itempools.Runnables.Pool_HunterHellquist",
+    "drops": [
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Impact_05_Legendary",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Dragon Keep",
+  "zone": "The Winged Storm",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "The Ancient Dragons of Destruction",
+    "pool": "GD_Aster_ItemPools.Raid.Pool_Aster_Raid1_Uniques",
+    "drops": [
+     {
+      "path": "GD_Aster_ItemGrades.Shields.Aster_Seraph_Blockade_Shield_Balance",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_RaidWeapons.Shotguns.Aster_Seraph_Omen_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_RaidWeapons.Pistols.Aster_Seraph_Stinger_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Dragon Keep",
+  "zone": "Mission Rewards",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Critical Fail",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Aster_Weapons.SMGs.SMG_Maliwan_3_Crit",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Magic Slaughter: Badass Round",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Magic Slaughter: Round 5",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Aster_Weapons.SMGs.SMG_Bandit_3_Orc",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "The Sword in The Stoner",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Aster_Weapons.Shotguns.SG_Torgue_3_SwordSplosion",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Dragon Keep",
+  "zone": "Vendors",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Seraph Crystal Vendor",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Aster_ItemGrades.Shields.Aster_Seraph_Antagonist_Shield_Balance",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_RaidWeapons.SMGs.Aster_Seraph_Florentine_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_RaidWeapons.AssaultRifles.Aster_Seraph_Seeker_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Artifacts.A_Item_Unique.A_SeraphShadow",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Dragon Keep",
+  "zone": "Other Sources",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Other / special",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Aster_Weapons.Pistols.Pistol_Maliwan_3_GrogNozzle",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Raid drop: Aster Raid1 Uniques",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Aster_ItemGrades.Shields.Aster_Seraph_Blockade_Shield_Balance",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_RaidWeapons.Shotguns.Aster_Seraph_Omen_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_RaidWeapons.Pistols.Aster_Seraph_Stinger_Balance",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Dragon Keep",
+  "zone": "World Drops",
+  "group": "generic",
+  "bosses": [
+   {
+    "name": "Dragon Keep Mages",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Aster_GrenadeMods.A_Item.GM_ChainLightning",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_GrenadeMods.A_Item.GM_FireStorm",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_GrenadeMods.A_Item.GM_MagicMissileRare",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_GrenadeMods.A_Item.GM_Fireball",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_GrenadeMods.A_Item.GM_LightningBolt",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_GrenadeMods.A_Item.GM_MagicMissile",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Gemstone Weapons",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Aster_Weapons.Pistols.Pistol_Maliwan_4_Aquamarine",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.SMGs.SMG_Maliwan_4_Aquamarine",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.Snipers.SR_Maliwan_4_Aquamarine",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.AssaultRifles.AR_Jakobs_4_Citrine",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.Pistols.Pistol_Jakobs_4_Citrine",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.Shotguns.SG_Jakobs_4_Citrine",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.Snipers.SR_Jakobs_4_Citrine",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.Pistols.Pistol_Tediore_4_CubicZerconia",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.Shotguns.SG_Tediore_4_CubicZerconia",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.SMGs.SMG_Tediore_4_CubicZerconia",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.Pistols.Pistol_Hyperion_4_Diamond",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.Shotguns.SG_Hyperion_4_Diamond",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.SMGs.SMG_Hyperion_4_Diamond",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.Snipers.SR_Hyperion_4_Diamond",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.AssaultRifles.AR_Dahl_4_Emerald",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.Pistols.Pistol_Dahl_4_Emerald",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.SMGs.SMG_Dahl_4_Emerald",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.Snipers.SR_Dahl_4_Emerald",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.AssaultRifles.AR_Vladof_4_Garnet",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.Pistols.Pistol_Vladof_4_Garnet",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.Snipers.SR_Vladof_4_Garnet",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.AssaultRifles.AR_Bandit_4_Quartz",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.Pistols.Pistol_Bandit_4_Quartz",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.Shotguns.SG_Bandit_4_Quartz",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.SMGs.SMG_Bandit_4_Quartz",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.AssaultRifles.AR_Torgue_4_Rock",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.Pistols.Pistol_Torgue_4_Rock",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_Weapons.Shotguns.SG_Torgue_4_Rock",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Unique Class Mods",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Aster_ItemGrades.ClassMods.BalDef_ClassMod_Aster_Merc",
+      "cls": "ClassModBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_ItemGrades.ClassMods.BalDef_ClassMod_Aster_Psycho",
+      "cls": "ClassModBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_ItemGrades.ClassMods.BalDef_ClassMod_Aster_Assassin",
+      "cls": "ClassModBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_ItemGrades.ClassMods.BalDef_ClassMod_Aster_Mechromancer",
+      "cls": "ClassModBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_ItemGrades.ClassMods.BalDef_ClassMod_Aster_Soldier",
+      "cls": "ClassModBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_ItemGrades.ClassMods.BalDef_ClassMod_Aster_Siren",
+      "cls": "ClassModBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Dragon Keep",
+  "zone": "Chests & Machines",
+  "group": "generic",
+  "bosses": [
+   {
+    "name": "Bridge Boss Loot Explosion",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Aster_GrenadeMods.A_Item.GM_ChainLightning",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Hyperion_5_ConferenceCall",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_GrenadeMods.A_Item_Legendary.GM_Leech",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_GrenadeMods.A_Item.GM_FireStorm",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Torgue_5_Flakker",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Spike_Acid_05_Legendary",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Legendary.AR_Torgue_5_KerBlaster",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_ItemGrades.Shields.ItemGrade_Gear_Shield_Impact_05_Legendary",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Legendary.Sniper_Maliwan_5_Volcano",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_GrenadeMods.A_Item.GM_Fireball",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_GrenadeMods.A_Item.GM_LightningBolt",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Aster_GrenadeMods.A_Item.GM_MagicMissile",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Dice Chests",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Eridium Slot Machine",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Mimic Chests",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Pendant Vending Machine",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Aster_Artifacts.A_Item_Unique.A_MysteryAmulet",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Vending Machines",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Son of Crawmerax",
+  "zone": "Wam Bam Island",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Sparky, Son of Flynt",
+    "pool": "GD_Itempools.Runnables.Pool_CaptFlynt,GD_Itempools.Runnables.Pool_CaptFlyntTinderbox",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Maliwan_5_ThunderballFists",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Unique.Pistol_Bandit_3_Tenderbox",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Ultimate Vault Hunter Upgrade Pack 2",
+  "zone": "The Raid on Digistruct Peak",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Bone Head v3.0",
+    "pool": "GD_Itempools.Runnables.Pool_Bonehead2",
+    "drops": [
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Unique.SMG_Bandit_3_BoneShredder",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Digistruct Assassin Oney",
+    "pool": "GD_Itempools.Runnables.Pool_AssassinOney,GD_Itempools.Runnables.Pool_FourAssassins",
+    "drops": [
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Dahl_5_Emperor",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Unique.Pistol_Jakobs_3_Judge",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Digistruct Assassin Reeth",
+    "pool": "GD_Itempools.Runnables.Pool_AssassinReeth,GD_Itempools.Runnables.Pool_FourAssassins",
+    "drops": [
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Dahl_5_Emperor",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Unique.Sniper_Hyperion_3_FremingtonsEdge",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Digistruct Assassin Rouf",
+    "pool": "GD_Itempools.Runnables.Pool_AssassinRouf,GD_Itempools.Runnables.Pool_FourAssassins",
+    "drops": [
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Dahl_5_Emperor",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Unique.SG_Bandit_3_Dog",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Digistruct Assassin Wot",
+    "pool": "GD_Itempools.Runnables.Pool_AssassinWot,GD_Itempools.Runnables.Pool_FourAssassins",
+    "drops": [
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Dahl_5_Emperor",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Unique.SMG_Hyperion_3_Commerce",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Digistruct Black Queen",
+    "pool": "GD_Itempools.Runnables.Pool_BlackQueen",
+    "drops": [
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Legendary.RL_Torgue_5_Nukem",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Digistruct Doc Mercy",
+    "pool": "GD_Itempools.Runnables.Pool_MrMercy",
+    "drops": [
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons.AR_Bandit_3_Rare_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Vladof_5_Infinity",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Digistruct Dukino's Mom",
+    "pool": "GD_Itempools.Runnables.Pool_SkagzillaMom",
+    "drops": [
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Legendary.RL_Vladof_5_Mongol",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Digistruct Scorch",
+    "pool": "GD_Itempools.Runnables.Pool_Scorch",
+    "drops": [
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Maliwan_5_HellFire",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Saturn",
+    "pool": "GD_Itempools.Runnables.Pool_Talos",
+    "drops": [
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Legendary.Sniper_Hyperion_5_Invader",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Unique.RL_Maliwan_3_TheHive",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Ultimate Vault Hunter Upgrade Pack 2",
+  "zone": "Mission Rewards",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "More History of Simulated Violence",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Ultimate Vault Hunter Upgrade Pack 2",
+  "zone": "Other Sources",
+  "group": "dedicated",
+  "bosses": [
+   {
+    "name": "Raid drop: Iris Raid1 Pink Weapons Revised",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Iris_SeraphItems.BigBoomBlaster.Iris_Seraph_Shield_Booster_Balance",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Iris_SeraphItems.ONegative.Iris_Seraph_GrenadeMod_ONegative_Balance",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Iris_SeraphItems.Hoplite.Iris_Seraph_Shield_Juggernaut_Balance",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Raid drop: Orchid Raid1 Pink Weapons Revised",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Orchid_RaidWeapons.Shield.Anshin.Orchid_Seraph_Anshin_Shield_Balance",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.Shotgun.Spitter.Orchid_Seraph_Spitter_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.SMG.Tattler.Orchid_Seraph_Tattler_Balance",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Raid drop: Orchid Raid3 Pink Weapons Revised",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Orchid_RaidWeapons.RPG.Ahab.Orchid_Seraph_Ahab_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.Pistol.Devastator.Orchid_Seraph_Devastator_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Orchid_RaidWeapons.sniper.Patriot.Orchid_Seraph_Patriot_Balance",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Raid drop: Sage Raid1 Pink Weapons Revised",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Sage_RaidWeapons.sniper.Sage_Seraph_HawkEye_Balance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Sage_RaidWeapons.Shotgun.Sage_Seraph_Interfacer_Balance",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Ultimate Vault Hunter Upgrade Pack 2",
+  "zone": "World Drops",
+  "group": "generic",
+  "bosses": [
+   {
+    "name": "Chubby Enemies",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Lobelia_ClassMods.A_Item_Mechromancer.ClassMod_Mechromancer_Legendary_Anarchist",
+      "cls": "ClassModBalanceDefinition",
+      "gen": "GD_Lobelia_ItemGrades.ClassMods.BalDef_ClassMod_Lobelia_Mechromancer_05_Legendary"
+     },
+     {
+      "path": "GD_Lobelia_ClassMods.A_Item_Siren.ClassMod_Siren_LegendaryBinder",
+      "cls": "ClassModBalanceDefinition",
+      "gen": "GD_Lobelia_ItemGrades.ClassMods.BalDef_ClassMod_Lobelia_Siren_05_Legendary"
+     },
+     {
+      "path": "GD_Lobelia_ClassMods.A_Item_Siren.ClassMod_Siren_LegendaryCat",
+      "cls": "ClassModBalanceDefinition",
+      "gen": "GD_Lobelia_ItemGrades.ClassMods.BalDef_ClassMod_Lobelia_Siren_05_Legendary"
+     },
+     {
+      "path": "GD_Lobelia_ClassMods.A_Item_Mechromancer.ClassMod_Mechromancer_Legendary_Catalyst",
+      "cls": "ClassModBalanceDefinition",
+      "gen": "GD_Lobelia_ItemGrades.ClassMods.BalDef_ClassMod_Lobelia_Mechromancer_05_Legendary"
+     },
+     {
+      "path": "GD_Lobelia_ClassMods.A_Item_Soldier.ClassMod_Soldier_LegendaryEngineer",
+      "cls": "ClassModBalanceDefinition",
+      "gen": "GD_Lobelia_ItemGrades.ClassMods.BalDef_ClassMod_Lobelia_Soldier_05_Legendary"
+     },
+     {
+      "path": "GD_Lobelia_ClassMods.A_Item_Merc.ClassMod_Merc_LegendaryGunzerker",
+      "cls": "ClassModBalanceDefinition",
+      "gen": "GD_Lobelia_ItemGrades.ClassMods.BalDef_ClassMod_Lobelia_Merc_05_Legendary"
+     },
+     {
+      "path": "GD_Lobelia_ClassMods.A_Item_Merc.ClassMod_Merc_LegendaryHoarder",
+      "cls": "ClassModBalanceDefinition",
+      "gen": "GD_Lobelia_ItemGrades.ClassMods.BalDef_ClassMod_Lobelia_Merc_05_Legendary"
+     },
+     {
+      "path": "GD_Lobelia_ClassMods.A_Item_Assassin.ClassMod_Assassin_LegendaryKiller",
+      "cls": "ClassModBalanceDefinition",
+      "gen": "GD_Lobelia_ItemGrades.ClassMods.BalDef_ClassMod_Lobelia_Assassin_05_Legendary"
+     },
+     {
+      "path": "GD_Lobelia_ClassMods.A_Item_Assassin.ClassMod_Assassin_LegendaryNinja",
+      "cls": "ClassModBalanceDefinition",
+      "gen": "GD_Lobelia_ItemGrades.ClassMods.BalDef_ClassMod_Lobelia_Assassin_05_Legendary"
+     },
+     {
+      "path": "GD_Lobelia_ClassMods.A_Item_Siren.ClassMod_Siren_LegendaryNurse",
+      "cls": "ClassModBalanceDefinition",
+      "gen": "GD_Lobelia_ItemGrades.ClassMods.BalDef_ClassMod_Lobelia_Siren_05_Legendary"
+     },
+     {
+      "path": "GD_Lobelia_ClassMods.A_Item_Soldier.ClassMod_Soldier_LegendaryPointman",
+      "cls": "ClassModBalanceDefinition",
+      "gen": "GD_Lobelia_ItemGrades.ClassMods.BalDef_ClassMod_Lobelia_Soldier_05_Legendary"
+     },
+     {
+      "path": "GD_Lobelia_ClassMods.A_Item_Soldier.ClassMod_Soldier_LegendaryRanger",
+      "cls": "ClassModBalanceDefinition",
+      "gen": "GD_Lobelia_ItemGrades.ClassMods.BalDef_ClassMod_Lobelia_Soldier_05_Legendary"
+     },
+     {
+      "path": "GD_Lobelia_ClassMods.A_Item_Psycho.ClassMod_Psycho_Legendary_Reaper",
+      "cls": "ClassModBalanceDefinition",
+      "gen": "GD_Lobelia_ItemGrades.ClassMods.BalDef_ClassMod_Lobelia_Psycho_05_Legendary"
+     },
+     {
+      "path": "GD_Lobelia_ClassMods.A_Item_Mechromancer.ClassMod_Mechromancer_Legendary_Roboteer",
+      "cls": "ClassModBalanceDefinition",
+      "gen": "GD_Lobelia_ItemGrades.ClassMods.BalDef_ClassMod_Lobelia_Mechromancer_05_Legendary"
+     },
+     {
+      "path": "GD_Lobelia_ClassMods.A_Item_Psycho.ClassMod_Psycho_Legendary_Sickle",
+      "cls": "ClassModBalanceDefinition",
+      "gen": "GD_Lobelia_ItemGrades.ClassMods.BalDef_ClassMod_Lobelia_Psycho_05_Legendary"
+     },
+     {
+      "path": "GD_Lobelia_ClassMods.A_Item_Assassin.ClassMod_Assassin_LegendarySniper",
+      "cls": "ClassModBalanceDefinition",
+      "gen": "GD_Lobelia_ItemGrades.ClassMods.BalDef_ClassMod_Lobelia_Assassin_05_Legendary"
+     },
+     {
+      "path": "GD_Lobelia_ClassMods.A_Item_Merc.ClassMod_Merc_LegendaryTitan",
+      "cls": "ClassModBalanceDefinition",
+      "gen": "GD_Lobelia_ItemGrades.ClassMods.BalDef_ClassMod_Lobelia_Merc_05_Legendary"
+     },
+     {
+      "path": "GD_Lobelia_ClassMods.A_Item_Psycho.ClassMod_Psycho_Legendary_Torch",
+      "cls": "ClassModBalanceDefinition",
+      "gen": "GD_Lobelia_ItemGrades.ClassMods.BalDef_ClassMod_Lobelia_Psycho_05_Legendary"
+     }
+    ]
+   },
+   {
+    "name": "E-tech Relics",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Gladiolus_Artifacts.A_Item.A_VitalityStockpile_VeryRare",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Gladiolus_Artifacts.A_Item.A_ElementalProficiency_VeryRare",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Gladiolus_Artifacts.A_Item.A_AggressionTenacityAssault_VeryRare",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Gladiolus_Artifacts.A_Item.A_AggressionTenacityLauncher_VeryRare",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Gladiolus_Artifacts.A_Item.A_AggressionTenacityPistol_VeryRare",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Gladiolus_Artifacts.A_Item.A_AggressionTenacityShotgun_VeryRare",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Gladiolus_Artifacts.A_Item.A_AggressionTenacitySMG_VeryRare",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Gladiolus_Artifacts.A_Item.A_AggressionTenacitySniper_VeryRare",
+      "cls": "InventoryBalanceDefinition"
+     },
+     {
+      "path": "GD_Gladiolus_Artifacts.A_Item.A_ResistanceProtection_VeryRare",
+      "cls": "InventoryBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Legendary Weapons",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Tediore_5_BabyMaker",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Legendary.RL_Bandit_5_BadaBoom",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Hyperion_5_Bitch",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Legendary.RL_Tediore_5_Bunny",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Hyperion_5_ConferenceCall",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Tediore_5_Deliverance",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Dahl_5_Emperor",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Torgue_5_Flakker",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Bandit_5_Gub",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Tediore_5_Gunerang",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Legendary.AR_Jakobs_5_HammerBuster",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Maliwan_5_HellFire",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Dahl_5_Hornet",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Vladof_5_Infinity",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Legendary.Sniper_Hyperion_5_Invader",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Legendary.AR_Torgue_5_KerBlaster",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Hyperion_5_LogansGun",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Legendary.Sniper_Vladof_5_Lyudmila",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Legendary.AR_Bandit_5_Madhouse",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Jakobs_5_Maggie",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Legendary.RL_Vladof_5_Mongol",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Legendary.RL_Torgue_5_Nukem",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Legendary.Sniper_Dahl_5_Pitchfork",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Launchers.A_Weapons_Legendary.RL_Maliwan_5_Pyrophobia",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Legendary.AR_Vladof_5_Sherdifier",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Legendary.Sniper_Jakobs_5_Skullmasher",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SMG.A_Weapons_Legendary.SMG_Bandit_5_Slagga",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Bandit_5_SledgesShotgun",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Shotgun.A_Weapons_Legendary.SG_Jakobs_5_Striker",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Maliwan_5_ThunderballFists",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_Pistol.A_Weapons_Legendary.Pistol_Torgue_5_Calla",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_AssaultRifle.A_Weapons_Legendary.AR_Dahl_5_Veruc",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons_Legendary.Sniper_Maliwan_5_Volcano",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   },
+   {
+    "name": "Pearlescent Weapons",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Gladiolus_Weapons.SMG.SMG_Tediore_6_Avenger",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Gladiolus_Weapons.AssaultRifle.AR_Dahl_6_Bearcat",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Lobelia_Weapons.AssaultRifles.AR_Jakobs_6_Bekah",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Gladiolus_Weapons.Shotgun.SG_Hyperion_6_Butcher",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Lobelia_Weapons.Shotguns.SG_Torgue_6_Carnage",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Lobelia_Weapons.sniper.Sniper_Jakobs_6_Godfinger",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Gladiolus_Weapons.AssaultRifle.AR_Bandit_6_Sawbar",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Gladiolus_Weapons.Pistol.Pistol_Vladof_6_Stalker",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Gladiolus_Weapons.sniper.Sniper_Maliwan_6_Storm",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Gladiolus_Weapons.Launchers.RL_Torgue_6_Tunguska",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Gladiolus_Weapons.Pistol.Pistol_Jakobs_6_Unforgiven",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Lobelia_Weapons.Pistol.Pistol_Maliwan_6_Wanderlust",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "dlc": "Ultimate Vault Hunter Upgrade Pack 2",
+  "zone": "Chests & Machines",
+  "group": "generic",
+  "bosses": [
+   {
+    "name": "Red Chests",
+    "pool": "",
+    "drops": [
+     {
+      "path": "GD_Weap_Pistol.A_Weapons.Pistol_Hyperion_4_VeryRare",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Hyperion_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Vladof_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Maliwan_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     },
+     {
+      "path": "GD_Weap_SniperRifles.A_Weapons.Sniper_Dahl_5_Alien",
+      "cls": "WeaponBalanceDefinition"
+     }
+    ]
+   }
+  ]
+ }
+]
