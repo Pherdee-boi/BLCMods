@@ -250,7 +250,7 @@ def _pc():
 def _radfx():
     """The Cryo mod's radiation effects (its own package of copies, nothing of the game edited), when it is installed and they are ready."""
     import sys  # noqa: PLC0415
-    module = sys.modules.get(f"{__package__}.cryo.cryo.radfx")
+    module = sys.modules.get(f"{__package__}.radfx")
     return module if module is not None and module.ready("medium") else None
 
 
@@ -258,7 +258,7 @@ def _installed() -> bool:
     """The Cryo mod's radiation effects are there (ready or not): then they are THE effect, and while they aren't ready nothing is drawn. The old way
     (slag's own explosion, edited) draws slag's PhysX liquid and is only for a game without the Cryo mod."""
     import sys  # noqa: PLC0415
-    return sys.modules.get(f"{__package__}.cryo.cryo.radfx") is not None
+    return sys.modules.get(f"{__package__}.radfx") is not None
 
 
 def play(rgb: tuple[float, float, float], *args, sound_on: UObject | None = None) -> bool:

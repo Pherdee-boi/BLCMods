@@ -90,7 +90,7 @@ _made: dict[str, UObject] = {}
 
 
 def _fx():
-    return sys.modules.get(f"{__package__}.cryo.cryo.radfx")
+    return sys.modules.get(f"{__package__}.radfx")
 
 
 def _find(cls: str, path: str) -> UObject | None:
@@ -350,14 +350,19 @@ def on_grenade_hit(obj: UObject, args, *_: object) -> None:
         log("radiation grenade failed: " + traceback.format_exc()[-300:])
 
 
-ELEMENT_WORDS = re.compile(r"\b(Acid|Corrosive|Shock|Fire|Incendiary|Slag|Explosive|Cryo|Ice|Frost)\b", re.IGNORECASE)
+ELEMENT_WORDS = re.compile(r"\b(Acid|Corrosive|Shock|Fire|Incendiary|Slag|Explosive|Cryo|Ice|Frost|Asidy|Burnin|Lectrik)\b", re.IGNORECASE)  # (the last three: Bandit grenades\' own spellings)
 
 
 def radiation_name(item: UObject, name: str) -> str:
     """A radiation grenade mod's or shield's name with its element word turned into radiation's ("Resplendant Acid Nova Shield" -> "Resplendant Radiation
     Nova Shield"); a name with no element word in it gets "Radioactive" in front."""
-    renamed, count = ELEMENT_WORDS.subn("Radiation", name, count=1)
-    return renamed if count else f"Radioactive {name}"
+    try:
+        bandit = item.DefinitionData.ManufacturerDefinition.Name == "Bandit"
+    except Exception:  # noqa: BLE001 - no item, no maker: the plain word
+        bandit = False
+    word = "Kemik" if bandit else "Radiation"  # (Bandits misspell everything)
+    renamed, count = ELEMENT_WORDS.subn(word, name, count=1)
+    return renamed if count else f"{'Kemik' if bandit else 'Radioactive'} {name}"
 
 
 def _gear_name(obj: UObject, _args, _ret, func):

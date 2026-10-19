@@ -768,7 +768,7 @@ def own_impact(built: dict) -> None:
         return
     _impact_try = t
     import sys  # noqa: PLC0415
-    module = sys.modules.get(f"{__package__}.cryo.cryo.radfx")
+    module = sys.modules.get(f"{__package__}.radfx")
     if module is None:
         return
     try:

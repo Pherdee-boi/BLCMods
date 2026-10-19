@@ -24,8 +24,18 @@ import unrealsdk
 from mods_base import hook
 from unrealsdk.hooks import Type
 
-from ... import assets
-from ..core import maps, particles
+from . import assets
+from . import cryo as _cryo
+
+if _cryo.ASIDE:
+    # Aurelia is installed and has cryo: the cryo half stands aside, but these effects need only a little of core (the look
+    # compiler and the map-arrival event) and Aurelia's core, the one cryo's was copied from, has the same.
+    import importlib
+
+    maps = importlib.import_module("aurelia.core.maps")
+    particles = importlib.import_module("aurelia.core.particles")
+else:
+    from .cryo.core import maps, particles
 
 PACKAGE = "RadiationFX_SF"
 TOP = "RadiationFX"

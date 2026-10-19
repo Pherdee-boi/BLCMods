@@ -502,9 +502,9 @@ def _created_dirs(bl2: Path, rel: str) -> list[str]:
 
 
 def build(bl2: Path, tps: Path | None = None, adopt: bool = False, streaming: str = STREAMING_PROFILE,
-          log: Callable[[str], None] = print) -> Report:
+          log: Callable[[str], None] = print, radiation_only: bool = False) -> Report:
     report = Report()
-    tps, how = find_tps(tps or _recorded_tps(bl2), bl2)
+    tps, how = (None, "radiation effects only") if radiation_only else find_tps(tps or _recorded_tps(bl2), bl2)
     report.add(f"TPS: {tps} ({how})" if tps is not None else f"{how}; only what needs no TPS is built")
     manifest = load_manifest(bl2)
     targets = plan(bl2, tps, streaming)

@@ -21,6 +21,8 @@ Single player and co-op (every player needs the mod).
 - Borderlands 2 (Steam, PC) with the [Willow2 Mod Manager](https://github.com/bl-sdk/willow2-mod-manager) (v3.8 or newer).
 - For **cryo to work fully:** a copy of Borderlands: The Pre-Sequel installed on the same PC (see "Cryo and The Pre-Sequel" below). Everything else,
   radiation included, does not need it.
+- Works beside the **Aurelia** mod (Grim Reader's The Pre-Sequel Baroness): Aurelia then supplies cryo and this mod's own cryo steps aside; everything else,
+  radiation included, works as usual.
 - Optional, for the **Geiger-counter sound** of radiation explosions: the [Willow Audio Loader (blaudio)](https://github.com/juso40/Willow-Audio-Loader)
   by juso, installed as its own mod. Without it everything works, the blast just has no Geiger sound.
 

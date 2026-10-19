@@ -17,9 +17,11 @@ This module and install.py and builder.py beside it are the mod itself: its menu
 player's TPS install.
 """
 
+import importlib
 import json
 import shutil
 import sys
+import threading
 from argparse import Namespace
 from collections.abc import Callable
 from pathlib import Path
@@ -54,10 +56,56 @@ def stands_aside() -> bool:
     return not (settings is not None and settings.get("enabled") is False)
 
 
+def _radiation_beside_aurelia() -> list[Any]:
+    """Radiation's effects (radfx) still run when this half stands aside: they need only a little of core, and Aurelia's core has the same. Their
+    package is cut from BL2's own Startup.upk (no TPS); a first build needs one restart, which a notice says. Returns the hooks to add."""
+    from .. import radfx  # noqa: PLC0415 - on Aurelia's core, see radfx.py
+    from . import builder  # noqa: PLC0415
+
+    root = Path.cwd().parents[1]                     # the game runs from Binaries/Win32
+    told: list[str] = []
+    try:
+        builder.apply_pending(root)                  # files that waited for a restart go in before the game opens them
+        aurelia_setup = importlib.import_module("aurelia.core.setup")
+        aurelia_setup.use(aurelia_setup.Step("looks", "radiation effects (bl3_weapons)", radfx.load))
+    except Exception as ex:  # noqa: BLE001 - radiation then keeps its old look
+        _log(f"radiation effects beside Aurelia not set up: {type(ex).__name__}: {ex}")
+        return []
+
+    def build() -> None:
+        try:
+            report = builder.build(root, radiation_only=True, log=lambda line: _log(f"build: {line}"))
+            _log(f"build: {report.lines[-1] if report.lines else 'nothing done'}")
+            if report.built or report.pending:
+                told.append("Radiation's effects were built. Restart Borderlands 2 to see them.")
+            elif report.failed:
+                told.append("Radiation's effects could not be built: the console log has the details.")
+        except Exception as ex:  # noqa: BLE001 - report, never take the game down
+            _log(f"build failed: {type(ex).__name__}: {ex}")
+
+    threading.Thread(target=build, daemon=True, name="radiation-fx-build").start()
+
+    @hook("WillowGame.WillowGameViewportClient:Tick", Type.POST)
+    def notice(_obj: UObject, _args: WrappedStruct, _ret: Any, _func: BoundFunction) -> None:
+        pc = get_pc() if told else None
+        if pc is None or pc.GFxUIManager is None:
+            return
+        message = told.pop(0)
+        try:
+            from ui_utils import TrainingBox  # noqa: PLC0415 - the menu's own dependency
+
+            TrainingBox(title="Radiation", message=message).show()
+        except Exception as ex:  # noqa: BLE001
+            _log(f"notice not shown ({type(ex).__name__}: {ex})")
+        _log(f"notice: {message}")
+
+    return [*radfx.HOOKS, notice]
+
+
 ASIDE = stands_aside()
 if ASIDE:
     _log("stands aside: the Aurelia mod is installed and has cryo in it. Switch Aurelia off (or remove it) to use this mod.")
-    PARTS: dict[str, Any] = {"options": [], "hooks": [], "commands": [], "on_disable": None}
+    PARTS: dict[str, Any] = {"options": [], "hooks": _radiation_beside_aurelia(), "commands": [], "on_disable": None}
 else:
 
     # In this order: a feature's modules register with the ones before it as they are imported (listeners on cryo's events, the particle
@@ -182,7 +230,7 @@ else:
     # appended them all).
     PARTS = {
         "options": [*SECTIONS, *install.OPTIONS],
-        "hooks": [on_main_menu, _setup_on_arrival, *install.HOOKS, *cryo.HOOKS, *core.HOOKS],
+        "hooks": [on_main_menu, _setup_on_arrival, *install.HOOKS, *cryo.HOOKS, *core.HOOKS],  # (radfx.HOOKS are in cryo.HOOKS)
         "commands": [cryo_command],
         "on_disable": _on_disable,
     }

@@ -22,7 +22,8 @@ carries (core/tpsports.py `carried`).
 """
 
 from ..core.setup import Step
-from . import (attributes, radfx, cardicons, element, explosions, freeze, frostlayer, frozenfx, gear, guns, noelement, proxies,
+from ... import radfx  # (BL3 Weapons' own module: it runs on Aurelia's core too)
+from . import (attributes, cardicons, element, explosions, freeze, frostlayer, frozenfx, gear, guns, noelement, proxies,
                rules, switches)
 from .element import (AFTER_DAMAGE, BONUS_CAP, FROZEN_CRIT_BONUS, FROZEN_EXPLOSIVE, FROZEN_MELEE, IMMUNE, IMPACT,
                       IMPACT_NO_FREEZE, LOOK, ON_FREEZE, ON_FROZEN_KILL, ON_PLAYER_FROZEN, ON_SHATTER, ON_THAW, SKILL,

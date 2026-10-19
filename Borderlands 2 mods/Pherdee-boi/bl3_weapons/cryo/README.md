@@ -11,10 +11,12 @@ with the character, her skills, class mods, voice, slam and Contract left out.
 your own copy of The Pre-Sequel, the first time you start Borderlands 2 with the mod. The Baroness Pack is not needed. Without The Pre-Sequel nothing breaks (tested: no errors, cryo guns still drop), but cryo has no ice effects, snowflake icon or
 translated texts; what it looks like then has not been checked. Everything else in BL3 Weapons (radiation included) is unaffected.
 
-## Do not run it with Aurelia
+## Together with Aurelia
 
-Both make the same objects and hook the same functions. When the Aurelia mod is installed and not switched off in the MODS menu, the cryo part
-**stands aside** (builds nothing, hooks nothing, says so in `unrealsdk.log`). To use this one: switch Aurelia off (or remove her folder).
+Both make the same cryo objects and hook the same functions, so they cannot both run. When the Aurelia mod is installed and not switched off in the
+MODS menu, the cryo part **stands aside** (builds nothing, hooks nothing, says so in `unrealsdk.log`) and Aurelia supplies cryo. The rest of BL3
+Weapons, radiation included, keeps working: radiation's effects run on Aurelia's own core and are built from Borderlands 2's files (a first start
+builds them and asks for one restart). To use this cryo instead: switch Aurelia off (or remove her folder).
 
 Cryo items already in your saves keep working: the packages and sublibraries keep Aurelia's names, so a cryo gun, grenade or shield saved with
 Aurelia loads here. Items that are Aurelia's own (her class mods and legendaries) are not known to this mod and are dropped the next time that
