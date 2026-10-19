@@ -1,4 +1,4 @@
-ADVENTURE GUIDE  v0.9.0 (beta)   for Borderlands 2 (Steam, PC)
+ADVENTURE GUIDE  v0.9.1 (beta)   for Borderlands 2 (Steam, PC)
 =============================================================
 
 A sixth tab in the status menu (after Badass Rank) that lists where the good loot comes from:
@@ -20,7 +20,8 @@ INSTALL
 USE
   Tab / shoulder buttons   cycle the tabs (Badass Rank -> Adventure Guide -> Mission Log)
   Up / Down / Page keys    move
-  Enter                    on a DLC row: fold / unfold it;  on a boss: show / hide its drops;  on an item: inspect it
+  Enter                    on a DLC row: fold / unfold it;  on a map: show / hide its bosses;  on a boss: show / hide its drops;
+                           on an item: inspect it  (Map sorting is a tree: each level sits a little further to the right)
   Q                        sort: Map, Boss Name, Source Type, Item Type, Rarity
   R                        search: type part of an item, boss, map, DLC, type or rarity name (every word must match)
                            Backspace deletes, Enter keeps the results, Escape clears the search

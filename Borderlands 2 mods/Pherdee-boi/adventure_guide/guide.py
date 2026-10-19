@@ -63,6 +63,8 @@ MAX_QUERY = 32
 SECTIONS = (("dedicated", "DEDICATED DROPS"), ("generic", "GENERIC DROPS"))
 INDENT = "   "  # text indent of drop rows under their boss (their icon frames are indented too: "i_<icon>")
 ICON_DLC = "new"
+ICON_ZONE = "n1_inprogress"  # a map row's icon, one level to the right of the DLC row's (swf_patch.NATIVE_INDENTED)
+ITEM_PREFIX = {1: "i_", 3: "i3_"}  # item icon frames by level (swf_patch.ITEM_INDENTS)
 EXTRA_ZONES = ("Special Enemies", "Mission Rewards", "Vendors", "Other Sources", "World Drops", "Chests & Machines")  # zones that hold non-boss sources (see bl2_guide/build_guide_v2.py)
 SOURCE_ORDER = ("Boss", "Special Enemies", "Mission Rewards", "Vendors", "Other Sources", "World Drops", "Chests & Machines")  # "Source Type" sorting
 TYPE_LABEL = {"pistol": "Pistols", "shotgun": "Shotguns", "smg": "Sub-Machine Guns", "ar": "Assault Rifles", "sniper": "Sniper Rifles",
@@ -102,6 +104,7 @@ GUIDE: list = []  # [(dlc, [(zone, [boss record])])]
 rows: dict[int, tuple] = {}  # text-entry index -> (kind, boss record, drop); kind is "boss" or "drop"
 expanded: set[str] = set()  # boss keys whose drop rows are open
 collapsed: set[tuple] = set()  # (section, DLC name) whose maps are folded away (map sorting)
+open_zones: set[tuple] = set()  # (section, DLC name, map) whose bosses are shown (map sorting); a map starts closed, like a DLC starts open
 sort_mode = 0  # index into SORT_MODES
 query = ""  # search text; while it is not empty the list shows the matching drops instead of the sort mode's view
 typing = False  # True while keys are going into the search text
@@ -419,7 +422,7 @@ def _anchor_mission():
 
 def _row_key(row: tuple):
     kind, rec, drop = row
-    if kind in ("dlc", "none"):
+    if kind in ("dlc", "zone", "none"):
         return (kind, rec, None)
     return (kind, _boss_key(rec), drop["path"] if drop else None)
 
@@ -510,12 +513,13 @@ def fill(m, select: tuple | None = None) -> None:
             select_idx = idx
         return idx
 
-    def boss_rows(ci: int, rec: dict, label: str | None = None) -> None:
-        add(ci, label or rec["name"], PLAIN, ICON_BOSS, ("boss", rec, None))
+    def boss_rows(ci: int, rec: dict, label: str | None = None, level: int = 0) -> None:
+        """A boss row at `level` steps from the left edge (text and icon both moved right), and its drops one step further when it is open."""
+        add(ci, INDENT * level + (label or rec["name"]), PLAIN, ICON_BOSS if level == 0 else f"n{level}_{ICON_BOSS}", ("boss", rec, None))
         if _boss_key(rec) in expanded:
             for d in rec.get("drops", []):
                 info = item_info(d)
-                add(ci, INDENT + info["title"], info["color"], "i_" + (_icon_frame(info) or "none"), ("drop", rec, d))
+                add(ci, INDENT * (level + 1) + info["title"], info["color"], ITEM_PREFIX[level + 1] + (_icon_frame(info) or "none"), ("drop", rec, d))
 
     def drop_row(ci: int, boss: dict, d: dict) -> None:
         info = item_info(d)
@@ -554,9 +558,12 @@ def fill(m, select: tuple | None = None) -> None:
                 if folded:
                     continue
                 for zone, bosses in zs:
-                    zci = header(zone)
-                    for rec in bosses:
-                        boss_rows(zci, rec)
+                    zkey = (group, dlc, zone)
+                    shown = zkey in open_zones
+                    add(ci, f"{INDENT}{'-' if shown else '+'} {zone}", ZONE_COLOR, ICON_ZONE, ("zone", zkey, None))
+                    if shown:
+                        for rec in bosses:
+                            boss_rows(ci, rec, level=2)
     elif mode == "Boss Name":
         letter, ci = None, 0
         for rec in sorted((b for b in _all_bosses() if _is_boss(b)), key=lambda b: b["name"].lower().removeprefix("the ")):
@@ -599,6 +606,8 @@ def fill(m, select: tuple | None = None) -> None:
         extent = target
         if select is not None and rows[target][0] == "boss" and _boss_key(rows[target][1]) in expanded:
             extent += len(rows[target][1].get("drops", []))
+        elif select is not None and rows[target][0] == "zone" and rows[target][1] in open_zones:
+            extent += len(_zone_bosses(rows[target][1]))
         top = min(top, target)
         if extent >= top + per:
             top = max(0, min(target - 1, extent - per + 1))
@@ -650,11 +659,27 @@ def level_text(lv) -> str:
     return f"DROPS FROM LEVEL {lo}" if hi >= 100 else f"DROPS AT LEVEL {lo}-{hi}"
 
 
+def _zone_bosses(zkey: tuple) -> list[dict]:
+    """The sources of one map (or of one of the extra zones) in one section of one DLC."""
+    group, dlc, zone = zkey
+    return next((bs for d, zs in GUIDE if d == dlc for z, bs in zs if z == zone and bs and bs[0]["group"] == group), [])
+
+
 def _details(row: tuple) -> dict:
     kind, rec, drop = row
     if kind == "none":
         return {"title": "No match", "frame": "new", "body": "Nothing in the guide matches the search text.<br><br><font color='#BBBBBB'>Try a boss, a map, an item type or part of a name.</font>",
                 "level": "0 ITEMS", "diff": "", "xp": "", "head": "SEARCH", "tag": "", "icons": []}
+    if kind == "zone":
+        group, dlc, zone = rec
+        bosses = _zone_bosses(rec)
+        lines = [f"• {b['name']} <font color='{ZONE_COLOR}'>{len(b.get('drops', []))} drop{'s' if len(b.get('drops', [])) != 1 else ''}</font>" for b in bosses]
+        drops = len({d["path"] for b in bosses for d in b.get("drops", [])})
+        extra = zone in EXTRA_ZONES
+        what = ("SOURCE", "SOURCES") if extra else ("BOSS", "BOSSES")
+        return {"title": zone, "frame": HEADER_BOSS, "body": "<br>".join(lines) + "<br><br><font color='#BBBBBB'>Enter opens / closes this map.</font>",
+                "level": f"{len(bosses)} {what[len(bosses) != 1]}, {drops} DROP{'S' if drops != 1 else ''}", "diff": "", "xp": "",
+                "head": "SOURCES" if extra else "MAP", "tag": dlc.upper(), "icons": []}
     if kind == "dlc":
         group, dlc = rec
         zones = [(z, bs) for z, bs in next(z for d, z in GUIDE if d == dlc) if bs and bs[0]["group"] == group]
@@ -849,7 +874,7 @@ def _row_drop(row: tuple):
     kind, rec, drop = row
     if kind == "drop":
         return drop
-    if kind in ("dlc", "none"):
+    if kind in ("dlc", "zone", "none"):
         return None
     drops = rec.get("drops", [])
     return max(drops, key=lambda d: rarity_class(item_info(d).get("rarity", 0)), default=None)  # the rarest drop
@@ -863,6 +888,11 @@ def activate(m) -> bool:
         return False
     if row[0] == "dlc":
         collapsed.symmetric_difference_update({row[1]})
+        fill(m, select=_row_key(row))
+        apply_details(m)
+        return True
+    if row[0] == "zone":
+        open_zones.symmetric_difference_update({row[1]})
         fill(m, select=_row_key(row))
         apply_details(m)
         return True

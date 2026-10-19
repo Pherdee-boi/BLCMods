@@ -1,10 +1,16 @@
 [project]
 name = "adventure_guide"
-version = "0.9.0"
+version = "0.9.1"
+description = "A sixth status-menu tab in Borderlands 2 that lists bosses, special enemies, vendors and chests, by DLC and map, with every legendary and unique item they drop."
 authors = [{ name = "Pherdee" }, { name = "Claude" }]
 
+[project.urls]
+"Source Code" = "https://github.com/Pherdee-boi/BLCMods/tree/master/Borderlands%202%20mods/Pherdee-boi/adventure_guide"
+Releases = "https://github.com/Pherdee-boi/BLCMods/releases"
+
 [tool.sdkmod]
-license = "MIT"
 name = "Adventure Guide"
+license = { name = "MIT", url = "https://choosealicense.com/licenses/mit/" }
 supported_games = ["BL2"]
 coop_support = "ClientSide"
+download = "https://github.com/Pherdee-boi/BLCMods/releases/download/adventure-guide-v0.9.1/adventure_guide.sdkmod"

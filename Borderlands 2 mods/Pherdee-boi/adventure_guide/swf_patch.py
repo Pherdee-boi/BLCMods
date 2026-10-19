@@ -365,7 +365,9 @@ ICON_NAME = {"mod": "grenade"}  # label used by the guide for the sprite's "mod"
 # 6 e-tech, 7 pearlescent, 8 seraph, 9 gemstone, 10 rainbow
 RARITY_TINT = {2: (61, 210, 11), 3: (60, 142, 255), 4: (168, 63, 229), 5: (255, 140, 0), 6: (202, 0, 168), 7: (0, 255, 255), 8: (255, 154, 184), 9: (145, 50, 200), 10: (242, 255, 161)}
 ICON_SCALE = 0.8
-INDENT_TWIPS = 16 * 20  # "i_<icon>" frames sit this far to the right (drop rows under a boss)
+INDENT_TWIPS = 16 * 20  # one level of the list's tree: "i_<icon>" frames sit this far to the right (drop rows under a boss at the left edge)
+ITEM_INDENTS = {1: "i_", 3: "i3_"}  # item icon frames by level: drops under a boss (1), drops under a boss under a map (3, the Map sorting)
+NATIVE_INDENTED = ((1, "inprogress"), (2, "inprogressMission"))  # the list's own icons moved one and two levels right: "n<level>_<label>" (map and boss rows)
 HEADER_ICON_SPRITE = 522  # the summary box's title icon clip
 HEADER_ICON_SCALE = 0.95
 HEADER_ICON_CENTER = (36.3 * 20, 15.5 * 20)  # twips: where sprite 522 draws its title icon
@@ -444,37 +446,72 @@ def add_header_icons(swf: Swf) -> int:
     return new_frames
 
 
+def native_art(inner: list[Tag]) -> dict[str, list]:
+    """{frame label: [PlaceObject2 dicts]} of the list icon sprite's own frames."""
+    out, label, places = {}, None, []
+    for t in inner:
+        if t.code == 43:
+            label = t.data[:-1].decode()
+        elif t.code == 26:
+            places.append(parse_place2(t))
+        elif t.code == 1:
+            if label:
+                out[label] = places
+            label, places = None, []
+    return out
+
+
+def moved_right(p, twips: int, depth: int):
+    """A copy of a PlaceObject2 dict moved right by `twips` and put at `depth` (a placement without a matrix gets one)."""
+    p = dict(p)
+    m = dict(p["matrix"]) if p["matrix"] else {"scale": None, "rot": None, "tx": 0, "ty": 0}
+    m["tx"] += twips
+    p["matrix"] = m
+    p["flags"] = (p["flags"] | 0x04) & ~0x20
+    p["name"], p["depth"] = None, depth
+    return p
+
+
 def add_list_icons(swf: Swf) -> int:
-    """Append frames "<icon>", "<icon>_2".."<icon>_9" (plain / rarity tinted) to the mission list's type icon sprite."""
+    """Append frames "<icon>", "<icon>_2".."<icon>_9" (plain / rarity tinted) to the mission list's type icon sprite, also moved right by one and three
+    levels ("i_...", "i3_...": ITEM_INDENTS), and the list's own map and boss icons moved right ("n1_...", "n2_...": NATIVE_INDENTED)."""
     src = item_art(swf)
     i37 = swf.sprite(LIST_ICON_SPRITE)
     sid, frames = struct.unpack_from("<HH", swf.tags[i37].data, 0)
     inner = parse_tags(swf.tags[i37].data, 4)
     end_tag = inner.pop()
     assert end_tag.code == 0
+    native = native_art(inner)
+    specs: list[tuple[str, list]] = []  # (frame label, PlaceObject2 dicts for depths 10 and 11)
+    for level, prefix in ((0, ""), *ITEM_INDENTS.items()):
+        for lab in ICON_FRAMES:
+            places = src[lab]  # base (depth 1) and the tintable overlay (depth 2) of that icon
+            for rarity in (None, *RARITY_TINT):
+                frame = []
+                for p in places:
+                    q = scaled(p, ICON_SCALE, (ICON_CENTER[0] + level * INDENT_TWIPS, ICON_CENTER[1]))
+                    q["depth"] += 9  # depths 10 and 11
+                    q["flags"] &= ~0x20  # no instance names needed
+                    q["name"] = None
+                    if rarity is not None and p["depth"] == 2:  # the overlay carries the colour
+                        r, g, b = RARITY_TINT[rarity]
+                        q["flags"] |= 0x08
+                        q["cx"] = cxform_alpha(r, g, b, 256)
+                    frame.append(q)
+                specs.append((prefix + ICON_NAME.get(lab, lab) + ("" if rarity is None else f"_{rarity}"), frame))
+    for level, lab in NATIVE_INDENTED:
+        specs.append((f"n{level}_{lab}", [moved_right(p, level * INDENT_TWIPS, 10 + k) for k, p in enumerate(native[lab])]))
     new_frames, first = 0, True
-    for indent, lab in [(i, l) for i in (False, True) for l in ICON_FRAMES]:
-        places = src[lab]  # base (depth 1) and the tintable overlay (depth 2) of that icon
-        for rarity in (None, *RARITY_TINT):
-            name = ("i_" if indent else "") + ICON_NAME.get(lab, lab) + ("" if rarity is None else f"_{rarity}")
-            if first:
-                inner.append(Tag(28, struct.pack("<H", 2)))  # the last original frame ("playing") leaves depth 2 behind
-                first = False
-            else:
-                inner += [Tag(28, struct.pack("<H", 10)), Tag(28, struct.pack("<H", 11))]
-            inner.append(Tag(43, name.encode() + b"\0"))
-            for p in places:
-                q = scaled(p, ICON_SCALE, (ICON_CENTER[0] + (INDENT_TWIPS if indent else 0), ICON_CENTER[1]))
-                q["depth"] += 9  # depths 10 and 11
-                q["flags"] &= ~0x20  # no instance names needed
-                q["name"] = None
-                if rarity is not None and p["depth"] == 2:  # the overlay carries the colour
-                    r, g, b = RARITY_TINT[rarity]
-                    q["flags"] |= 0x08
-                    q["cx"] = cxform_alpha(r, g, b, 256)
-                inner.append(build_place2(q))
-            inner.append(Tag(1, b""))
-            new_frames += 1
+    for name, frame in specs:
+        if first:
+            inner.append(Tag(28, struct.pack("<H", 2)))  # the last original frame ("playing") leaves depth 2 behind
+            first = False
+        else:
+            inner += [Tag(28, struct.pack("<H", 10)), Tag(28, struct.pack("<H", 11))]
+        inner.append(Tag(43, name.encode() + b"\0"))
+        inner += [build_place2(q) for q in frame]
+        inner.append(Tag(1, b""))
+        new_frames += 1
     inner.append(end_tag)
     swf.tags[i37].data = struct.pack("<HH", sid, frames + new_frames) + b"".join(t.encode() for t in inner)
     swf.tags[i37].raw = None
