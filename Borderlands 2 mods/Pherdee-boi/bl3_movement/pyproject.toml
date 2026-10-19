@@ -1,9 +1,15 @@
 [project]
 name = "bl3_movement"
 version = "0.8.0"
+description = "Borderlands 3's slide and ground slam in Borderlands 2."
 authors = [{ name = "Pherdee" }, { name = "Claude" }]
 
+[project.urls]
+"Source Code" = "https://github.com/Pherdee-boi/BLCMods/tree/master/Borderlands%202%20mods/Pherdee-boi/bl3_movement"
+Releases = "https://github.com/Pherdee-boi/BLCMods/releases"
+
 [tool.sdkmod]
-license = "MIT"
 name = "BL3 Movement"
+license = { name = "MIT", url = "https://choosealicense.com/licenses/mit/" }
 supported_games = ["BL2"]
+download = "https://github.com/Pherdee-boi/BLCMods/releases/download/bl3-movement/bl3_movement.sdkmod"
