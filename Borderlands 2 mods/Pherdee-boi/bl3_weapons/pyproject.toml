@@ -1,6 +1,6 @@
 [project]
 name = "bl3_weapons"
-version = "0.64.8"
+version = "0.64.9"
 description = "BL3's gun mechanics in Borderlands 2 (Maliwan element switch, Vladof underbarrel, Torgue, Dahl, Tediore, Hyperion, Jakobs, Bandit, anointments, relics), plus the radiation and cryo elements."
 authors = [{ name = "Pherdee" }, { name = "Grim Reader" }, { name = "Claude" }]
 dependencies = ["texloader"]

@@ -61,7 +61,10 @@ height = SliderOption("Close-Range Sight Height", 0, -10, 10, 0.5, False,
                       description="Moves the sights up (+) or down (-) on the gun when you are not aiming, in game units. Aiming always uses the calibrated aim line.")
 forward = SliderOption("Close-Range Sight Position", 0, -20, 20, 0.5, False,
                        description="Moves the sights toward the muzzle (+) or toward you (-) when you are not aiming, in game units. Aiming always uses the calibrated position.")
-OPTIONS = [enabled, chance, height, forward]
+zoom_fov = SliderOption("Close-Range Sight Zoom (FOV)", 45, 20, 70, 1, True,
+                        description="Field of view while aiming through a close-range sight on a sniper: a higher number zooms less. Scopes keep the sniper's own zoom "
+                                    "(about 20). 45 is an assault rifle's, 60 a shotgun's.")
+OPTIONS = [enabled, chance, zoom_fov, height, forward]
 
 # Where a sight's centre goes on a sniper, in the gun mesh's own units (X sideways, Y along the barrel with the
 # muzzle at -Y, Z up). Every gun type's parts are modelled in one shared frame, so this is the same for all: the
@@ -290,6 +293,8 @@ def _remove(addr: int) -> None:
             comp.DetachComponent(psc)
         except Exception:  # noqa: BLE001
             pass
+    if entry.get("fov0") is not None and weapon is not None:
+        weapon.ZoomedEndFOV = weapon.ZoomedEndFOVBaseValue = weapon.ReplicatedZoomedEndFOVBaseValue = entry["fov0"]
     if entry.get("fp_z") is not None and weapon is not None and weapon.FirstPersonMesh is not None:
         fp = weapon.FirstPersonMesh
         fp.SetTranslation(unrealsdk.make_struct("Vector", X=fp.Translation.X, Y=fp.Translation.Y, Z=entry["fp_z"]))
@@ -470,6 +475,16 @@ def _source_material(weapon: UObject, definition: str) -> UObject | None:
     return unrealsdk.find_object("WeaponPartDefinition", path).Material if path else None
 
 
+def _zoom(weapon: UObject, entry: dict) -> None:
+    """A sniper with a close-range sight zooms to the slider's field of view, not the sniper's own (about 20: the zoom of a scope).
+    The game recomputes the zoom when a gun is equipped, so this is checked with every draw check."""
+    fov = float(zoom_fov.value)
+    if abs(weapon.ZoomedEndFOV - fov) < 0.01:
+        return
+    entry.setdefault("fov0", weapon.ZoomedEndFOV)
+    weapon.ZoomedEndFOV = weapon.ZoomedEndFOVBaseValue = weapon.ReplicatedZoomedEndFOVBaseValue = fov
+
+
 def draw(weapon: UObject) -> None:
     """Keep the held gun's foreign sight drawn (build once per gun and sight, follow material changes)."""
     addr = weapon._get_address()
@@ -504,6 +519,7 @@ def draw(weapon: UObject) -> None:
                                 "definition": definition, "names": names, "fp_z": None,
                                 "reticle": WeakPointer(psc) if psc is not None else None, "zoomed": None}
         log(f"sights: drawing {sight} ({'+'.join(names)}) on {weapon.DefinitionData.BalanceDefinition.Name}")
+    _zoom(weapon, entry)
     aimed = bool(entry.get("zoomed")) and not entry["scoped"]
     if entry["placed"] != _want(weapon, aimed):  # sliders moved / body changed
         entry["placed"] = place(weapon, entry["comp"](), definition, names, aimed)

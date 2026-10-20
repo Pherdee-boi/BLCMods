@@ -15,6 +15,7 @@ Single player and co-op (every player needs the mod).
   each: one that is off is not rolled (a gun type with every one of its own off rolls all of its own).
 - **Anointments** (off by default, Mods menu): rare and better guns can roll a BL3 anointment, shown on the item card. N shows the held gun's.
 - **Relics** roll BL3 artifact perks; **snipers** can roll close-range sights from other gun types.
+  Aiming through a close-range sight zooms less than a scope (Mods menu → "Close-Range Sight Zoom (FOV)": higher = less zoom, 20 = a scope's).
 - **Loot beams** by rarity (off by default: switch them on in the Mods menu), and item cards that show anointments, trait lines and a Maliwan gun's second element.
 - **HeartShatter:** the mod's own legendary, a slow, hard-hitting Vladof sniper with a Dahl pistol sight and a bipod, always cryo. Console: `heartshatter give`.
 - **Radiation:** a new element after BL3. Damage over time; an irradiated enemy hurts the ones near it and explodes when it dies, leaving a cloud.
