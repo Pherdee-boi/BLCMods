@@ -33,8 +33,14 @@ def _element_of(part: UObject | None) -> str | None:
 
 
 def _sibling(part: UObject, element: str) -> UObject | None:
-    """SMG_Elemental_Fire -> SMG_Elemental_Shock (same weapon type); any of them -> the cryo part and back."""
+    """SMG_Elemental_Fire -> SMG_Elemental_Shock (same weapon type); any of them -> the cryo part and back. A Ribs Arsenal shotgun's
+    Elemental_Tile_Fire -> its own Elemental_Tile_Shock; to radiation or cryo -> the shotgun type's part (v0.64.10: it had no sibling,
+    so such a gun said "Radiation isn't available right now" whenever its element was the Ribs part, and worked while it was the vanilla one)."""
     kind = part.Name.split("_", 1)[0]  # 'SMG', 'Pistol', 'AR', ...
+    if part.Name.startswith("Elemental_Tile_"):  # the Ribs Arsenal shotguns' own element parts (MaliwanShotgunDev): they have the four BL2 elements
+        if element not in (CRYO, RADIATION):  # (their own parts, found below by name) but no radiation or cryo: those come from the vanilla shotgun parts
+            return find_part(part._path_name().rsplit("_", 1)[0] + "_" + element)
+        kind = "Shotgun"
     if element == CRYO:
         return find_part(f"{CRYO_PACKAGE}.{kind}_Elemental_Cryo")
     package = WEAPON_PACKAGES.get(kind)
