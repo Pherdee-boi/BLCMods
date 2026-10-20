@@ -33,7 +33,7 @@ from mods_base import SliderOption, hook
 from unrealsdk.hooks import Block, Type
 from unrealsdk.unreal import UObject, WeakPointer
 
-from .core import describe, held_weapon, log, maker_of, state
+from .core import describe, held_weapon, log, active_maker_of as maker_of, state
 
 MODES = ("default", "burst", "semi")
 BURST = 3

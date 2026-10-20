@@ -15,6 +15,7 @@ Dev (only with a dev.flag file here): a file named exec.now.py dropped in this f
 import contextlib
 import copy
 import random
+import re
 import time
 import traceback
 from pathlib import Path
@@ -438,6 +439,37 @@ def _hide_mount(weapon: UObject) -> bool:
     return True
 
 
+# A sight's mesh is textured for its own gun type's material (every type has its own texture sheets per maker and
+# rarity), so on the sniper's material it showed another part of the sheet: noise (seen 2026-10-20). It gets the source
+# type's plain material of the sniper's maker and rarity instead (Hyperion 3 sniper -> the pistol's Mat_Hyperion_3).
+_PLAIN_MATERIAL = re.compile(r"Mat(?:erial)?_([A-Za-z]+)_(\d)")
+_source_materials: dict[tuple[str, str, int], str] = {}  # (type package, maker, rarity 1-4) -> material part path
+
+
+def _maker_key(name: str) -> str:
+    return {"banditmade": "bandit", "tedior": "tediore"}.get(name.lower(), name.lower())  # BL2's own spellings
+
+
+def _source_material(weapon: UObject, definition: str) -> UObject | None:
+    """The material to draw the foreign sight with (None: keep the sniper's)."""
+    if not _source_materials:
+        for part in unrealsdk.find_all("WeaponPartDefinition", exact=False):
+            package, _, name = part._path_name().partition(".ManufacturerMaterials.")
+            found = _PLAIN_MATERIAL.fullmatch(name)
+            if found and package in GESTALT_DEFS:
+                _source_materials[(package, _maker_key(found[1]), int(found[2]))] = part._path_name()
+    package = next((p for p, d in GESTALT_DEFS.items() if d == definition), None)
+    data = weapon.DefinitionData
+    own = _PLAIN_MATERIAL.match(data.MaterialPartDefinition.Name) if data.MaterialPartDefinition is not None else None
+    tier = min(int(own[2]), 4) if own else 3
+    makers = [_maker_key(own[1])] if own else []
+    makers.append(_maker_key(data.SightPartDefinition.Name.rpartition("_")[2]))  # (a type without the sniper's maker: the sight's own)
+    path = next((_source_materials[k] for m in makers if (k := (package, m, tier)) in _source_materials), None)
+    if path is None:
+        path = next((v for k, v in _source_materials.items() if k[0] == package and k[2] == tier), None)
+    return unrealsdk.find_object("WeaponPartDefinition", path).Material if path else None
+
+
 def draw(weapon: UObject) -> None:
     """Keep the held gun's foreign sight drawn (build once per gun and sight, follow material changes)."""
     addr = weapon._get_address()
@@ -479,8 +511,13 @@ def draw(weapon: UObject) -> None:
     key = material._get_address() if material is not None else 0
     if material is not None and entry["material"] != key:
         comp = entry["comp"]()
+        try:
+            source = _source_material(weapon, definition)
+        except Exception:  # noqa: BLE001
+            unrealsdk.logging.error("[BL3Weapons] sights material: " + traceback.format_exc())
+            source = None
         for i in range(max(comp.GetNumElements(), 1)):
-            comp.SetMaterial(i, material)
+            comp.SetMaterial(i, source or material)
         entry["material"] = key
 
 
@@ -492,6 +529,26 @@ def drop_drawn() -> None:
 
 
 SCOPES = ("Dahl", "Vladof", "Maliwan", "Jakobs", "Hyperion")
+
+
+SWAP_ACCESSORIES = ("Bayonet1", "Bipod1_Accuracy", "Bipod2_Critical", "Foregrip_Stability")  # sniper accessories with no bracket
+
+
+def drop_mounts(weapon: UObject) -> None:
+    """A new sniper that keeps a close-range sight swaps its scope-mount accessories for another accessory (so it keeps a
+    bonus): the bracket floats above the gun in the inspect and shop views, which never draw the sight (see _mount_guard
+    for the held gun)."""
+    data = weapon.DefinitionData
+    mounts = [f for f in ("Accessory1PartDefinition", "Accessory2PartDefinition")
+              if getattr(data, f) is not None and str(getattr(data, f).GestaltModeSkeletalMeshName).startswith("Acc_Scope_Mount")]
+    swaps = [p for p in (find_part_by_path(f"GD_Weap_SniperRifles.Accessory.Sniper_Accessory_{a}") for a in SWAP_ACCESSORIES) if p is not None]
+    if not mounts or len(swaps) < len(mounts):
+        return
+    fresh = copy.copy(data)
+    for field, part in zip(mounts, random.sample(swaps, len(mounts))):
+        setattr(fresh, field, part)
+    weapon.DefinitionData = fresh
+    log(f"sights: new sniper's scope mount swapped for {', '.join(getattr(fresh, f).Name for f in mounts)}")
 
 
 def reroll(weapon: UObject) -> None:
@@ -515,6 +572,7 @@ def reroll(weapon: UObject) -> None:
     share = foreign / (foreign + len(SCOPES))  # what the even pick gives close-range sights
     keep = min(1.0, chance.value / 100 / share)
     if random.random() < keep:
+        drop_mounts(weapon)
         return
     scope = find_part_by_path(f"GD_Weap_SniperRifles.Sight.Sniper_Sight_{random.choice(SCOPES)}")
     if scope is None:

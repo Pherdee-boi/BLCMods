@@ -21,7 +21,7 @@ from mods_base import DropdownOption, get_pc, hook
 from unrealsdk.unreal import UObject
 
 from . import dahl, hud, maliwan, tediore, torgue, vladof
-from .core import held_weapon, log, maker_of, now as game_now, state
+from .core import held_weapon, log, active_maker_of as maker_of, now as game_now, state
 
 mode_option = DropdownOption(
     "Mode Indicator",

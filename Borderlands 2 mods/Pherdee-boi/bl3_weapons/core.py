@@ -6,7 +6,7 @@ import random
 import time
 
 import unrealsdk
-from mods_base import HiddenOption, get_pc, hook
+from mods_base import BoolOption, HiddenOption, get_pc, hook
 from unrealsdk.unreal import UObject
 
 # Per-gun saved state: "<feature>:<UniqueId>" -> feature-specific JSON (e.g. an element pair)
@@ -51,6 +51,42 @@ def maker_of(weapon: UObject) -> str:
     """'Maliwan', 'Vladof', ... or '' if unknown."""
     maker = weapon.DefinitionData.ManufacturerDefinition
     return maker.Name if maker is not None else ""
+
+
+# One switch for each manufacturer's add-on (v0.64.8): a player can keep only the ones they like. A switched-off maker's guns are not seen by the
+# feature modules (they import active_maker_of as maker_of), so those guns behave as in the base game.
+ADDON_TEXT = {
+    "Maliwan": "the second element and the mode key's element switch",
+    "Vladof": "the underbarrels",
+    "Torgue": "the impact / sticky rounds mode",
+    "Dahl": "the fire modes (full-auto, burst, semi)",
+    "Tediore": "the BL3 reload throws",
+    "Hyperion": "the frontal shield while aiming",
+    "Jakobs": "the ricochet of critical hits",
+    "Bandit": "the overheat (no reloads)",
+}
+addons: dict[str, BoolOption] = {
+    maker: BoolOption(f"{maker} Add-on", True, description=f"{maker} guns: {text}. Off = {maker} guns behave as in the base game.")
+    for maker, text in ADDON_TEXT.items()
+}
+
+
+def addon_on(maker: str) -> bool:
+    option = addons.get(maker)
+    return option is None or bool(option.value)
+
+
+def active_maker_of(weapon: UObject) -> str:
+    """maker_of, but '' for a maker whose add-on is switched off."""
+    maker = maker_of(weapon)
+    if addon_on(maker):
+        return maker
+    if maker == "Vladof":
+        from . import heartshatter  # noqa: PLC0415 - the mod's own gun keeps its bipod whatever the Vladof switch says
+
+        if heartshatter.has_fingerprint(weapon):
+            return maker
+    return ""
 
 
 PART_FIELDS = (

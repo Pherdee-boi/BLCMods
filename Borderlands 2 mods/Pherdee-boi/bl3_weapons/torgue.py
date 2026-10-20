@@ -37,7 +37,7 @@ from ui_utils import show_hud_message
 from unrealsdk.hooks import Block, Type, prevent_hooking_direct_calls
 from unrealsdk.unreal import UObject, WeakPointer
 
-from .core import describe, held_weapon, log, maker_of, now as game_now, parts_of, state
+from .core import addon_on, describe, held_weapon, log, active_maker_of as maker_of, now as game_now, parts_of, state
 
 STICKY_FM = "GD_Weap_Pistol.FiringModes.Bullet_Pistol_Spiker"
 SPIKER = "GD_Weap_Pistol.Projectiles.Projectile_Spiker"
@@ -98,7 +98,7 @@ def special_fire(weapon: UObject) -> UObject | None:
 
 
 def _is_sticky(weapon: UObject) -> bool:
-    return state.value.get(_key(weapon)) == ["sticky"]
+    return addon_on("Torgue") and state.value.get(_key(weapon)) == ["sticky"]
 
 
 def _find(cls: str, path: str) -> UObject | None:

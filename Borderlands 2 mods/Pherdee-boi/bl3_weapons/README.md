@@ -8,6 +8,8 @@ Single player and co-op (every player needs the mod).
   toggle impact/sticky rounds, Dahl guns cycle full-auto/burst/semi. Tediore guns roll a BL3 reload throw (turret, MIRV, chaser, bouncing). The key also
   explains the passive traits: Hyperion (aim down sights for a frontal shield), Jakobs (critical hits ricochet), Bandit (no reloads: the gun heats up and
   stops firing until it has cooled, even with the trigger held).
+- **Weapon add-ons, one switch per manufacturer** (Maliwan, Vladof, Torgue, Dahl, Tediore, Hyperion, Jakobs, Bandit), at the top of Mods menu → BL3 Weapons.
+  A manufacturer that is switched off behaves as in the base game (no mode key, no trait, no card lines). Everything else stays.
 - **Vladof underbarrels:** assault rifles (rocket launcher, grenade launcher, shotgun, double barrel), pistols (zip rockets, taser, and a double barrel only on
   a Vladof barrel) and snipers (rocket launcher, shotgun, double barrel, bipod). Mods menu → BL3 Weapons → "Vladof Underbarrels That Can Roll" has a switch for
   each: one that is off is not rolled (a gun type with every one of its own off rolls all of its own).

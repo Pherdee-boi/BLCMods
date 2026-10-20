@@ -35,7 +35,7 @@ from ui_utils import show_hud_message
 from unrealsdk.hooks import Block, Type
 from unrealsdk.unreal import UObject, WeakPointer
 
-from .core import find_part, forget, held_weapon, log, maker_of, now as game_now, rebuild, remembered, state
+from .core import find_part, forget, held_weapon, log, active_maker_of as maker_of, now as game_now, rebuild, remembered, state
 
 AR_BARRELS = "GD_Weap_AssaultRifle.Barrel."
 SHOCK_PART = {

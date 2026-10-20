@@ -19,7 +19,7 @@ from mods_base import BoolOption, SliderOption, get_pc, hook
 from unrealsdk.hooks import Type, prevent_hooking_direct_calls
 from unrealsdk.unreal import UObject
 
-from .core import held_weapon, log, maker_of, pawns
+from .core import held_weapon, log, active_maker_of as maker_of, pawns
 
 GUN_DAMAGE = {"Bullet", "Pistol", "SubMachineGun", "Shotgun", "Sniper", "MachineGun", "Rocket"}
 RANGE = 2000.0  # Unreal units from the crit target (about 20 m)

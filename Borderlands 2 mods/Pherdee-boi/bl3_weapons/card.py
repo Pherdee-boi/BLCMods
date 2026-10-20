@@ -15,7 +15,7 @@ from mods_base import BoolOption, hook
 from unrealsdk.hooks import Block, Type, prevent_hooking_direct_calls
 from unrealsdk.unreal import UObject, WeakPointer
 
-from .core import log, maker_of
+from .core import log, active_maker_of as maker_of
 
 show_on_card = BoolOption("Show On Item Cards", True, description="Show anointments and Maliwan second elements on item cards.")
 OPTIONS = [show_on_card]

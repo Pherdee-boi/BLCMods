@@ -64,7 +64,9 @@ CLASSIC = {  # the first HeartShatter's look: used when Random Look is off
     "MaterialPartDefinition": "GD_Weap_SniperRifles.ManufacturerMaterials.Material_Hyperion_3_Morningstar",  # icy white-blue
 }
 MAKERS = ("Dahl", "Hyperion", "Jakobs", "Maliwan", "Vladof")
-ACCESSORIES = ("Bayonet1", "Bipod1_Accuracy", "Bipod2_Critical", "Foregrip_Stability", "Mount1_Mag", "Mount2_FireRate", "Mount3_Damage")
+# no scope mounts (Mount1-3): a mount's bracket is built for a scope, and with the Dahl pistol sight it is drawn floating above the gun in the
+# inspect and shop views, which never show the sight (seen 2026-10-20)
+ACCESSORIES = ("Bayonet1", "Bipod1_Accuracy", "Bipod2_Critical", "Foregrip_Stability")
 SKINS = (
     "Dahl_1", "Dahl_2", "Dahl_3", "Dahl_3_Sloth", "Dahl_4", "Dahl_5_Legendary", "Hyperion_1", "Hyperion_2", "Hyperion_3",
     "Hyperion_3_FremingtonsEdge", "Hyperion_3_Longbow", "Hyperion_3_Morningstar", "Hyperion_4", "Hyperion_5_Legendary",
@@ -116,7 +118,7 @@ random_look = BoolOption(
 random_accessory = BoolOption(
     "HeartShatter Random Accessory",
     True,
-    description="With Random Look off: keep the classic look but roll the accessory (bayonet, bipod, mount, foregrip or none). The accessory decides the name prefix: Britva, Zammechat, Razrez, Dobby, Bolshy, Skorry, Gromky or Cold.",
+    description="With Random Look off: keep the classic look but roll the accessory (bayonet, bipod, foregrip or none). The accessory decides the name prefix: Britva, Zammechat, Razrez, Dobby, Bolshy, Skorry, Gromky or Cold.",
 )
 ricochet_pct = SliderOption(
     "HeartShatter Ricochet Damage",

@@ -27,7 +27,7 @@ from unrealsdk.hooks import Block, Type
 from unrealsdk.unreal import UObject
 
 from . import hud
-from .core import held_weapon, log, maker_of, now as game_now
+from .core import held_weapon, log, active_maker_of as maker_of, now as game_now
 
 AS_TYPE = unrealsdk.find_enum("ASType")
 

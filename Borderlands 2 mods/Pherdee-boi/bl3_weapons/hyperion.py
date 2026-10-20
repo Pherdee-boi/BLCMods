@@ -27,7 +27,7 @@ from unrealsdk.hooks import Block, prevent_hooking_direct_calls
 from unrealsdk.unreal import UObject, WeakPointer
 
 from . import hud
-from .core import held_weapon, log, maker_of, now as game_now
+from .core import held_weapon, log, active_maker_of as maker_of, now as game_now
 
 FRONT_ANGLE = 60.0  # degrees either side of the view direction
 REGEN_DELAY, BROKEN_DELAY, REGEN_TIME = 2.5, 5.0, 2.0  # seconds

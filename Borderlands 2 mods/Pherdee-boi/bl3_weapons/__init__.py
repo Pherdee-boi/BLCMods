@@ -11,7 +11,7 @@ from mods_base import build_mod, keybind
 from ui_utils import show_hud_message
 
 from . import cryo, anoint, backups, bandit, beams, card, gear, dahl, elementicons, heartshatter, hyperion, indicator, jakobs, maliwan, radgear, radiation, relics, sights, testgear, tediore, torgue, vladof
-from .core import clock_tick, held_weapon, maker_of, state
+from .core import active_maker_of, addons, clock_tick, held_weapon, maker_of, state
 
 # Test buttons, the F5-F7 test keys and the exec.now.py trigger exist only where a file named dev.flag sits in this folder (a release ships without it).
 DEV = (Path(__file__).parent / "dev.flag").exists()
@@ -31,6 +31,9 @@ def weapon_mode() -> None:
         weapon = held_weapon()
         if weapon is None:
             return
+        if maker_of(weapon) and not active_maker_of(weapon):
+            show_hud_message(f"{maker_of(weapon)} Add-on", "Switched off in the Mods menu.", 1.5)
+            return
         feature = FEATURES.get(maker_of(weapon))
         if feature is None and maker_of(weapon) in PASSIVE:
             title, text = PASSIVE[maker_of(weapon)]
@@ -44,10 +47,15 @@ def weapon_mode() -> None:
         unrealsdk.logging.error("[BL3Weapons] " + traceback.format_exc())
 
 
+# Switching an add-on off in the menu puts back what it had changed on the gun in hand (a deployed underbarrel, a sticky mode, a thrown reload...).
+_SWITCH_OFF = {"Vladof": vladof.reset, "Torgue": torgue.restore, "Dahl": dahl.reset, "Tediore": tediore.restore, "Bandit": bandit.restore_ammo, "Hyperion": hyperion.reset}
+for _maker, _undo in _SWITCH_OFF.items():
+    addons[_maker].on_change_anytime = lambda _option, value, undo=_undo: None if value else undo()
+
 mod = build_mod(
     name="BL3 Weapons",
     description=__doc__.split("\n\n")[1],
-    options=[anoint.enabled, *vladof.OPTIONS, *dahl.OPTIONS, *bandit.OPTIONS, jakobs.ricochet_pct, jakobs.show_tracer, *hyperion.OPTIONS, *indicator.OPTIONS, *torgue.OPTIONS, *card.OPTIONS, *beams.OPTIONS, *sights.OPTIONS, *gear.OPTIONS, *tediore.OPTIONS, *heartshatter.OPTIONS, *radiation.OPTIONS, *radgear.OPTIONS, *([anoint.test_anoint, *testgear.OPTIONS] if DEV else []), *cryo.PARTS["options"], state],
+    options=[*addons.values(), anoint.enabled, *vladof.OPTIONS, *dahl.OPTIONS, *bandit.OPTIONS, jakobs.ricochet_pct, jakobs.show_tracer, *hyperion.OPTIONS, *indicator.OPTIONS, *torgue.OPTIONS, *card.OPTIONS, *beams.OPTIONS, *sights.OPTIONS, *gear.OPTIONS, *tediore.OPTIONS, *heartshatter.OPTIONS, *radiation.OPTIONS, *radgear.OPTIONS, *([anoint.test_anoint, *testgear.OPTIONS] if DEV else []), *cryo.PARTS["options"], state],
     keybinds=[weapon_mode, anoint.show_anointment, *([*heartshatter.KEYBINDS, *radiation.KEYBINDS] if DEV else [])],
     commands=[heartshatter.command_heartshatter, radiation.command_radiation, *cryo.PARTS["commands"]],
     hooks=[clock_tick, *vladof.HOOKS, *bandit.HOOKS, *anoint.HOOKS, *torgue.HOOKS, *jakobs.HOOKS, *hyperion.HOOKS, *dahl.HOOKS, *tediore.HOOKS, *indicator.HOOKS, *card.HOOKS, *beams.HOOKS, *sights.HOOKS, *gear.HOOKS, *relics.HOOKS, *heartshatter.HOOKS, *radiation.HOOKS, *elementicons.HOOKS, *backups.HOOKS, *radgear.HOOKS, *cryo.PARTS["hooks"]],

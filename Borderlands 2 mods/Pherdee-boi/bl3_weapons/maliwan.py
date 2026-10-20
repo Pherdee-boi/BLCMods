@@ -11,7 +11,7 @@ like any other. Cryo and radiation are in the pool a gun's second element is pic
 from ui_utils import show_hud_message
 from unrealsdk.unreal import UObject
 
-from .core import find_part, log, rebuild, remembered
+from .core import addon_on, find_part, log, rebuild, remembered
 
 ELEMENTS = ("Fire", "Corrosive", "Shock", "Slag")
 CRYO = "Cryo"
@@ -51,6 +51,8 @@ def second_element(part: UObject, current: str, rng) -> list[str] | None:
 
 def alt_of(weapon: UObject) -> str | None:
     """The element the mode key switches the gun to (None: no element, or no second one rolled)."""
+    if not addon_on("Maliwan"):
+        return None
     part = weapon.DefinitionData.ElementalPartDefinition
     current = _element_of(part)
     if current is None:
