@@ -151,6 +151,7 @@ _forced: dict[int, str] = {}  # underbarrel forced by the option when deployed
 _ammo_at_deploy: dict[int, int] = {}  # reserve when deployed (given back on stow)
 _total_shots: dict[int, int] = {}  # shots in this deploy
 _mode: dict[int, dict] = {}  # deployed mode: {"kind", "ref", "base": {attr: v}, "written": {attr: v}, "until"}
+_reloading: set[int] = set()  # guns whose player pressed reload while an underbarrel was out (the next tick stows it)
 _hit_logged: set[str] = set()
 _fm_logged = False
 _speed: dict | None = None  # bipod: {"pawn": WeakPointer, "base": float, "written": float}
@@ -328,6 +329,7 @@ def _restore_element(weapon: UObject, loaded: int | None) -> None:
 def _stow(weapon: UObject, kind: str, original: str, used: float, reason: str) -> None:
     uid = weapon.DefinitionData.UniqueId
     loaded = _deployed.pop(uid, None)
+    _reloading.discard(uid)
     entry = _mode.pop(uid, None)
     if entry is not None:
         for attr, value in entry["base"].items():
@@ -535,6 +537,25 @@ def single_shot(obj: UObject, *_: object) -> None:
         obj.ClearPendingFire(0)
 
 
+def _note_reload(obj: UObject) -> None:
+    """A reload (the player's own, or the gun running dry) while an underbarrel is out: noted here, stowed by the next tick. Before v0.64.11
+    this was looked for in the weapon's state name (GetStateName is always None for a gun), so a manual reload never stowed the launcher: it
+    simply refilled it, and pressing reload over and over kept it out for good with no cooldown."""
+    uid = obj.DefinitionData.UniqueId
+    if uid in _deployed:
+        _reloading.add(uid)
+
+
+@hook("WillowGame.WillowWeapon:BeginManualReload", hook_identifier="bl3w_vladof_manual_reload")
+def manual_reload(obj: UObject, *_: object) -> None:
+    _note_reload(obj)
+
+
+@hook("WillowGame.WillowWeapon:StartReload", hook_identifier="bl3w_vladof_start_reload")
+def auto_reload(obj: UObject, *_: object) -> None:
+    _note_reload(obj)
+
+
 @hook("WillowGame.WillowGameViewportClient:Tick")
 def watch_underbarrel(*_: object) -> None:
     """Auto-stow when the shots/time run out or a reload starts; keep mode attributes on; stow a mode
@@ -577,8 +598,8 @@ def watch_underbarrel(*_: object) -> None:
     if timed is not None:
         if timed <= 0:
             _stow(weapon, kind, original, 1, "time up")
-    elif weapon.ReloadCnt <= 0 or str(weapon.GetStateName()) == "WeaponReloading":
-        _stow(weapon, kind, original, 1, "empty")
+    elif weapon.ReloadCnt <= 0 or held_uid in _reloading:
+        _stow(weapon, kind, original, 1, "reload" if held_uid in _reloading else "empty")
 
 
 def reset() -> None:
@@ -878,4 +899,4 @@ def _muzzle_tick() -> None:
             comp.ActivateSystem(True)
 
 
-HOOKS = [watch_underbarrel, mode_firing_mode, pump_refire, single_shot, no_sprint_on_bipod]
+HOOKS = [watch_underbarrel, manual_reload, auto_reload, mode_firing_mode, pump_refire, single_shot, no_sprint_on_bipod]

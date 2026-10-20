@@ -4,6 +4,7 @@ import contextlib
 import copy
 import random
 import time
+import traceback
 
 import unrealsdk
 from mods_base import BoolOption, HiddenOption, get_pc, hook
@@ -181,6 +182,59 @@ def reset_attributes(weapon: UObject) -> None:
             pass
 
 
+_PROVIDER_FIELDS = ("BodyPartDefinition", "GripPartDefinition", "BarrelPartDefinition", "SightPartDefinition", "StockPartDefinition", "MagazinePartDefinition",
+                    "ElementalPartDefinition", "Accessory1PartDefinition", "Accessory2PartDefinition", "MaterialPartDefinition", "WeaponTypeDefinition")
+
+
+def _behavior_kernel() -> UObject | None:
+    return next((k for k in unrealsdk.find_all("BehaviorKernel", exact=False) if not k._path_name().startswith("GearboxFramework.Default__")), None)
+
+
+def _providers(data) -> list[UObject]:
+    """The behavior providers (a part's own timers, procs, equip / unequip scripts) a gun's definition carries."""
+    out = []
+    for field in _PROVIDER_FIELDS:
+        provider = getattr(getattr(data, field, None), "BehaviorProviderDefinition", None)
+        if provider is not None and all(provider._get_address() != p._get_address() for p in out):
+            out.append(provider)
+    return out
+
+
+def _running_sequences(weapon: UObject, data) -> tuple | None:
+    """(the gun's behavior handle, [(provider, sequence name)] that are switched on) before a rebuild. Initialising a gun again gives it a
+    NEW behavior handle and never lets go of the old one. A part's sequences switched on by the equip event (a Grog Nozzle's drunk-camera
+    timer, "GrogOn") stayed on for the old handle, while the unequip event switched off only the new handle's: after a few element switches the
+    timer kept firing while another gun was in the player's hands (reported 2026-10-20)."""
+    try:
+        kernel = _behavior_kernel()
+        handle = weapon.GetBehaviorConsumerHandle()
+        on = [(p, str(seq.BehaviorSequenceName)) for p in _providers(data) for seq in p.BehaviorSequences
+              if kernel.IsBehaviorSequenceEnabled(ConsumerHandle=handle, ProviderDefinition=p, BehaviorSequenceName=str(seq.BehaviorSequenceName))[0]]
+        return handle, on
+    except Exception:  # noqa: BLE001 - never stop a rebuild over this
+        log("behavior sequences: " + traceback.format_exc()[-300:])
+        return None
+
+
+def _move_sequences(weapon: UObject, running: tuple | None, new_data) -> None:
+    """After the rebuild: switch the same sequences on for the gun's new handle (where its parts still carry them) and off for the old one."""
+    if not running or not running[1]:
+        return
+    try:
+        kernel = _behavior_kernel()
+        old, on = running
+        new = weapon.GetBehaviorConsumerHandle()
+        if int(old.PID) == int(new.PID):
+            return
+        kept = [p._get_address() for p in _providers(new_data)]
+        for provider, name in on:
+            if provider._get_address() in kept:
+                kernel.ChangeBehaviorSequenceActivationStatus(ConsumerHandle=new, ProviderDefinition=provider, SequenceName=name, ActivationStatusChanage=1)
+            kernel.ChangeBehaviorSequenceActivationStatus(ConsumerHandle=old, ProviderDefinition=provider, SequenceName=name, ActivationStatusChanage=2)
+    except Exception:  # noqa: BLE001
+        log("behavior sequences: " + traceback.format_exc()[-300:])
+
+
 def rebuild(weapon: UObject, loaded: int | None = None, **parts: UObject) -> None:
     """Swap DefinitionData fields (e.g. BarrelPartDefinition=...) and re-init the held gun in place.
 
@@ -195,8 +249,11 @@ def rebuild(weapon: UObject, loaded: int | None = None, **parts: UObject) -> Non
     if loaded is None:
         loaded = weapon.ReloadCnt
     reset_attributes(weapon)
+    weapon.CrosshairFrameOverride = weapon.Class.ClassDefaultObject.CrosshairFrameOverride  # a part that sets it (the grenade launcher barrel) leaves it set for good otherwise
+    running = _running_sequences(weapon, weapon.DefinitionData)
     with contextlib.ExitStack() as stack:
         for guard in mesh_guards:
             stack.enter_context(guard(weapon))
         weapon.InitializeFromDefinitionData(new_def, weapon.Owner, False)
+    _move_sequences(weapon, running, new_def)
     weapon.ReloadCnt = max(0, min(loaded, weapon.ClipSize))
