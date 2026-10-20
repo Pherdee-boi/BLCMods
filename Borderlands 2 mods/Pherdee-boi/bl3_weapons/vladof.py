@@ -27,8 +27,10 @@ cooldown; stowing by hand starts a cooldown scaled by how much was used.
   * Damage: a multiplier per underbarrel, applied in anoint.scale_damage (the mod's single damage hook).
 """
 
+import random
+
 import unrealsdk
-from mods_base import DropdownOption, SliderOption, hook
+from mods_base import BoolOption, DropdownOption, GroupedOption, SliderOption, hook
 from ui_utils import show_hud_message
 from unrealsdk.hooks import Block, Type
 from unrealsdk.unreal import UObject, WeakPointer
@@ -101,10 +103,35 @@ DAMAGE = {"Grenade Launcher": grenade_damage, "Rocket Launcher": rocket_damage, 
           "Taser": taser_damage, "Zip Rockets": zip_damage}
 SHOTS = {"Rocket Launcher": rocket_shots, "Shotgun": shotgun_shots, "Taser": taser_shots, "Zip Rockets": zip_shots}
 FULL_SHOTS = {"Zip Rockets"}  # shot counts already meant for pistols (no 2/3 cut)
-force_type = DropdownOption(
-    "Underbarrel Type", "Random", ["Random", *UNDERBARRELS],
-    description="Random = each gun's own saved roll. Forcing a type doesn't change any saved roll.",
-)
+# v0.64.7: one switch for each underbarrel (the old "Underbarrel Type" dropdown forced a single type, and did nothing on the gun types that cannot have it: Bipod
+# on an AR left the AR with its random roll). A switched-off underbarrel is not rolled; a gun type none of whose own underbarrels is switched on rolls from all of them.
+KIND_OPTIONS = {
+    kind: BoolOption(
+        f"Underbarrel: {kind}", True,
+        description=f"Vladof {' and '.join(g.lower() + 's' for g, kinds in KINDS.items() if kind in kinds)} can roll the {kind.lower()} underbarrel. "
+                    "Off = it is not rolled (a gun that already has it gets another one, its saved roll is kept). If every underbarrel of a gun type is off, that type rolls all of its own.",
+    )
+    for kind in dict.fromkeys(k for kinds in KINDS.values() for k in kinds)
+}
+KIND_GROUP = GroupedOption("Vladof Underbarrels That Can Roll", list(KIND_OPTIONS.values()), description="Switch off the underbarrels you do not want to see on Vladof guns.")
+
+
+NEEDS_BARREL = {("Pistol", "Double Barrel"): "Pistol_Barrel_Vladof"}  # (gun type, underbarrel) -> the barrel part's name it needs: a pistol's double barrel only makes sense on the Vladof barrel
+
+
+def kinds_for(weapon: UObject) -> list[str]:
+    """The underbarrels this gun can have: its type's, minus the ones that need a barrel it doesn't have."""
+    gun = gun_type(weapon) or ""
+    barrel = weapon.DefinitionData.BarrelPartDefinition
+    name = barrel.Name if barrel is not None else ""
+    return [k for k in KINDS.get(gun, []) if not NEEDS_BARREL.get((gun, k)) or name.startswith(NEEDS_BARREL[(gun, k)])]
+
+
+def wanted_kinds(allowed: list[str]) -> list[str]:
+    """Of the underbarrels a gun can have, the ones switched on, or all of them when none is."""
+    return [k for k in allowed if KIND_OPTIONS[k].value] or allowed
+
+
 cooldown = SliderOption(
     "Underbarrel Cooldown",
     20,
@@ -114,7 +141,7 @@ cooldown = SliderOption(
     True,
     description="Seconds before a Vladof underbarrel can be redeployed after its magazine runs out.",
 )
-OPTIONS = [cooldown, force_type, grenade_damage, rocket_damage, rocket_shots, shotgun_damage, shotgun_shots,
+OPTIONS = [cooldown, KIND_GROUP, grenade_damage, rocket_damage, rocket_shots, shotgun_damage, shotgun_shots,
            taser_damage, taser_shots, zip_damage, zip_shots, fire_rate_time]
 
 # This session only (not saved), keyed by UniqueId
@@ -190,11 +217,12 @@ def time_left(weapon: UObject) -> float | None:
 def _plan(weapon: UObject) -> tuple[str, str] | None:
     """(original barrel path, underbarrel) for this gun, rolled once and saved."""
     current = weapon.DefinitionData.BarrelPartDefinition._path_name()
-    allowed = KINDS.get(gun_type(weapon) or "", [])
+    allowed = kinds_for(weapon)
+    wanted = wanted_kinds(allowed)
 
     def make(rng):
         # A gun that already has a launcher barrel never gets that barrel as its underbarrel.
-        options = sorted(k for k in allowed if UNDERBARRELS[k] != current)
+        options = sorted(k for k in wanted if UNDERBARRELS[k] != current) or sorted(k for k in allowed if UNDERBARRELS[k] != current)
         from . import heartshatter
 
         if "Bipod" in options and heartshatter.has_fingerprint(weapon):  # the HeartShatter's underbarrel is not random
@@ -216,9 +244,10 @@ def _plan(weapon: UObject) -> tuple[str, str] | None:
     if UNDERBARRELS.get(kind, 0) == original or kind not in allowed:  # old/bad state: re-roll
         forget("vladof", weapon)
         original, kind = remembered("vladof", weapon, make)
-    forced = force_type.value
-    if forced in allowed and UNDERBARRELS[forced] != original:
-        kind = forced
+    if kind not in wanted:  # switched off: another one, the same one every time for this gun (the saved roll stays as it was)
+        others = sorted(k for k in wanted if UNDERBARRELS[k] != original)
+        if others:
+            kind = random.Random(f"vladof-pick:{weapon.DefinitionData.UniqueId}").choice(others)
     return original, kind
 
 

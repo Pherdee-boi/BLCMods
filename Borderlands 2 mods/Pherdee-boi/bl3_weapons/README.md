@@ -4,13 +4,16 @@ Borderlands 3's gun mechanics in Borderlands 2, plus two elements BL2 never had:
 Single player and co-op (every player needs the mod).
 
 ## What it adds
-- **Weapon Mode key (B):** Maliwan guns swap to a second element (cryo and radiation are in the pool), Vladof assault rifles deploy an underbarrel
-  launcher, Torgue guns toggle impact/sticky rounds, Dahl guns cycle full-auto/burst/semi. Tediore guns roll a BL3 reload throw (turret, MIRV, chaser,
-  bouncing). The key also explains the passive traits: Hyperion (aim down sights for a frontal shield), Jakobs (critical hits ricochet), Bandit (no
-  reloads, the gun overheats).
+- **Weapon Mode key (B):** Maliwan guns swap to a second element (cryo and radiation are in the pool), Vladof guns deploy an underbarrel, Torgue guns
+  toggle impact/sticky rounds, Dahl guns cycle full-auto/burst/semi. Tediore guns roll a BL3 reload throw (turret, MIRV, chaser, bouncing). The key also
+  explains the passive traits: Hyperion (aim down sights for a frontal shield), Jakobs (critical hits ricochet), Bandit (no reloads: the gun heats up and
+  stops firing until it has cooled, even with the trigger held).
+- **Vladof underbarrels:** assault rifles (rocket launcher, grenade launcher, shotgun, double barrel), pistols (zip rockets, taser, and a double barrel only on
+  a Vladof barrel) and snipers (rocket launcher, shotgun, double barrel, bipod). Mods menu → BL3 Weapons → "Vladof Underbarrels That Can Roll" has a switch for
+  each: one that is off is not rolled (a gun type with every one of its own off rolls all of its own).
 - **Anointments** (off by default, Mods menu): rare and better guns can roll a BL3 anointment, shown on the item card. N shows the held gun's.
 - **Relics** roll BL3 artifact perks; **snipers** can roll close-range sights from other gun types.
-- **Loot beams** by rarity, and item cards that show anointments, trait lines and a Maliwan gun's second element.
+- **Loot beams** by rarity (off by default: switch them on in the Mods menu), and item cards that show anointments, trait lines and a Maliwan gun's second element.
 - **HeartShatter:** the mod's own legendary, a slow, hard-hitting Vladof sniper with a Dahl pistol sight and a bipod, always cryo. Console: `heartshatter give`.
 - **Radiation:** a new element after BL3. Damage over time; an irradiated enemy hurts the ones near it and explodes when it dies, leaving a cloud.
   Radiation guns, grenade mods and shields drop in the world (see below) and have their own look: yellow muzzle flashes and tracers, gas explosions
@@ -53,6 +56,10 @@ Cryo's ice effects, snowflake icon and translated texts are built from **your ow
   `cryo build` shows what is built and what is missing.
 - **If you don't have it:** the game runs without errors and cryo guns still drop and work, but without the ice effects, snowflake icon and translated
   texts (what cryo then looks like has not been checked). A notice at start-up says so.
+- **"Cryo's files can't be built: <file> ..."**: a file cryo needs is already in the game folder and the mod has no record of having written it (an earlier cryo or
+  Aurelia, or the mod's settings were reset). If it is byte for byte what the build writes, the mod takes it over by itself. If not, the notice names it: press
+  **Mods menu → BL3 Weapons → Cryo → "Replace files in the way and build"** (or type `cryo build adopt` in the console). The old file is moved to
+  `sdk_mods\settings\cryo_replaced`, never deleted, and the new one is in place after one restart.
 
 ## Drops
 Radiation rolls on guns as an element of its own, with chances set to sit in line with the other elements:

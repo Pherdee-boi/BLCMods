@@ -502,6 +502,26 @@ def _created_dirs(bl2: Path, rel: str) -> list[str]:
     return out
 
 
+def _adopt_if_identical(bl2: Path, target: Target, manifest: dict[str, Any], log: Callable[[str], None]) -> bool:
+    """A file in the way that the build has no record of (a lost record, an Aurelia that wrote the same bytes) is made now, to a temporary file: when it is
+    byte for byte the file in place, that file is the build's and gets its record, nothing is moved or replaced."""
+    path = bl2 / target.out
+    tmp = path.with_name(path.name + TEMP)
+    try:
+        target.make(tmp)
+        if tmp.stat().st_size != path.stat().st_size or _sha1(tmp) != _sha1(path):
+            return False
+        manifest["files"][target.out] = {"recipe": target.recipe, "code": _code_stamp(target.recipe), "sources": _source_stamps(target),
+                                         "size": path.stat().st_size, "sha1": _sha1(path), "mtime_ns": path.stat().st_mtime_ns}
+        _save_manifest(bl2, manifest)
+        log(f"already what the build writes, taken over: {target.out}")
+        return True
+    except Exception:  # noqa: BLE001 - any trouble: the file stays in the way, as before
+        return False
+    finally:
+        _discard(tmp)
+
+
 def build(bl2: Path, tps: Path | None = None, adopt: bool = False, streaming: str = STREAMING_PROFILE,
           log: Callable[[str], None] = print, radiation_only: bool = False) -> Report:
     report = Report()
@@ -510,6 +530,9 @@ def build(bl2: Path, tps: Path | None = None, adopt: bool = False, streaming: st
     manifest = load_manifest(bl2)
     targets = plan(bl2, tps, streaming)
     states = {t.out: state(bl2, t, manifest) for t in targets}
+    for t in targets:
+        if states[t.out] == "foreign" and not t.optional and _adopt_if_identical(bl2, t, manifest, log):
+            states[t.out] = "up to date"
     foreign = [t.out for t in targets if states[t.out] == "foreign" and not t.optional]
     if foreign and not adopt:
         report.blocked += foreign
@@ -534,11 +557,16 @@ def build(bl2: Path, tps: Path | None = None, adopt: bool = False, streaming: st
         if st == "foreign" and target.optional:
             report.add(f"left as it is (not the build's file): {target.out}")
             continue
+        held_aside = None                                 # the file in the way is open in the running game: it is moved aside at the next start
         if st == "foreign":
             aside = bl2 / REPLACED / stamp / target.out
             aside.parent.mkdir(parents=True, exist_ok=True)
-            shutil.move(str(path), str(aside))
-            report.add(f"moved aside: {target.out} -> {aside.relative_to(bl2).as_posix()}")
+            try:
+                _again(lambda: shutil.move(str(path), str(aside)), tries=2)
+                report.add(f"moved aside: {target.out} -> {aside.relative_to(bl2).as_posix()}")
+            except PermissionError:
+                held_aside = aside.relative_to(bl2).as_posix()
+                report.add(f"held by the running game, it is moved aside at the next start: {target.out}")
         for d in _created_dirs(bl2, target.out):
             if d not in manifest["dirs"]:
                 manifest["dirs"].append(d)
@@ -558,6 +586,12 @@ def build(bl2: Path, tps: Path | None = None, adopt: bool = False, streaming: st
                 record["mtime_ns"] = path.stat().st_mtime_ns
                 report.same += 1
                 done = "unchanged"
+            elif held_aside is not None:
+                _again(lambda: tmp.replace(path.with_name(path.name + PENDING)))
+                record["pending"], record["aside"] = True, held_aside
+                report.pending += 1
+                report.radfx += target.recipe == "radfx"
+                done = "waits for a restart"
             elif _place(tmp, path):
                 record["mtime_ns"] = path.stat().st_mtime_ns
                 report.built += 1
@@ -602,10 +636,15 @@ def apply_pending(bl2: Path) -> list[str]:
         if not new.is_file():
             continue
         try:
+            if record.get("aside") and path.exists():  # the file that was in the way (it was held when the build ran) goes aside first, never over-written
+                aside = bl2 / record["aside"]
+                aside.parent.mkdir(parents=True, exist_ok=True)
+                _again(lambda path=path, aside=aside: shutil.move(str(path), str(aside)), tries=2)
             _again(lambda new=new, path=path: new.replace(path), tries=2)
         except OSError:                               # still held: it waits for another start
             continue
         record.pop("pending")
+        record.pop("aside", None)
         record["mtime_ns"] = path.stat().st_mtime_ns
         done.append(rel)
     if done:

@@ -107,14 +107,11 @@ def _work(launch: bool, adopt: bool, tps: Path | None) -> None:
                 notify(f"{NEEDS}\n\n{why}.\n\nIf it's installed somewhere else, type in the console:\n"
                        "cryo build run \"<its folder>\"")
                 return
-            if verdict == "blocked":
-                notify(f"Cryo's files can't be built: {why}.\n\nType in the console: cryo build adopt\n"
-                       "(it moves them to sdk_mods/settings/cryo_replaced, then builds).")
-                return
+            # "blocked" goes on to the build: it takes over a file in the way that is byte for byte its own, and the notice names the files that really are in the way
             if verdict == "restart":
                 notify("Cryo's files are built. Restart Borderlands 2 to use cryo.")
                 return
-            if verdict != "build":
+            if verdict not in ("build", "blocked"):
                 return                                  # ready, or automatic builds are off
         report = builder.build(root, tps, adopt=adopt, log=lambda line: _log(f"build: {line}"))
         _log(f"build: {report.lines[-1] if report.lines else 'nothing done'}")
@@ -161,7 +158,8 @@ def _tell(report: builder.Report) -> None:
     if report.blocked:
         notify(f"Cryo's files can't be built: {report.blocked[0]}"
                + ("" if len(report.blocked) == 1 else f" (and {len(report.blocked) - 1} more)")
-               + ".\n\nType in the console: cryo build adopt\n(it moves such files aside, then builds).")
+               + ".\n\nIn the Mods menu (BL3 Weapons, Cryo) press \"Replace files in the way and build\", or type in the console: cryo build adopt\n"
+                 "(it moves such files to sdk_mods/settings/cryo_replaced, then builds).")
         return
     parts = []
     # Cryo's texts in the game's other languages need no restart: the game reads them when it loads the packages, and
@@ -226,6 +224,13 @@ def _build_now(_button: ButtonOption) -> None:
 build_button = ButtonOption("Build cryo's files now", on_press=_build_now,
                             description="Builds what's missing or outdated from your Pre-Sequel install, in the "
                                         "background. Restart the game afterwards.")
+def _adopt_now(_button: ButtonOption) -> None:
+    _log(f"build: {start(adopt=True)}")
+
+
+adopt_button = ButtonOption("Replace files in the way and build", on_press=_adopt_now,
+                            description="When a file cryo needs is already there and isn't the build's own (the notice at start-up names it): moves it to "
+                                        "sdk_mods/settings/cryo_replaced, then builds cryo's files. Nothing is deleted. Restart the game afterwards.")
 uninstall_button = ButtonOption("Remove cryo's files", on_press=_confirm_uninstall,
                                 description="Removes everything built from your Pre-Sequel install (it asks "
                                             "first). Do this before you delete the mod's folder.")
@@ -325,4 +330,4 @@ def _show_notices(_obj: UObject, _args: WrappedStruct, _ret: Any, _func: BoundFu
 
 
 HOOKS = (_show_notices, _place_later)
-OPTIONS = (build_button, uninstall_button)
+OPTIONS = (build_button, adopt_button, uninstall_button)

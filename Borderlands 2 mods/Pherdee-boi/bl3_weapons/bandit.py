@@ -70,6 +70,7 @@ RELOAD_MAX = 5.0  # s: a vent reload that never finished (weapon swap) stops cou
 # This session only: UniqueId -> heat 0..1 / locked flag / last shot time / shot interval / reload start time
 _heat: dict[int, float] = {}
 _locked: set[int] = set()
+_halted: set[int] = set()  # locked guns whose automatic fire has been stopped (once per lock)
 _last_shot: dict[int, float] = {}
 _interval: dict[int, float] = {}
 _reloading: dict[int, float] = {}
@@ -150,6 +151,22 @@ def block_refire(obj: UObject, *_: object) -> tuple[type[Block], bool] | None:
     return None
 
 
+def _halt_held() -> None:
+    """A held trigger keeps a gun firing on its own (the block on BeginFire only stops a new press, and the refire check is not what the auto-fire loop asks):
+    the moment the held Bandit gun locks, its fire is stopped, once. The next press is blocked until it has vented."""
+    weapon = held_weapon()
+    if weapon is None or not _is_cov(weapon):
+        return
+    uid = weapon.DefinitionData.UniqueId
+    if uid not in _locked or uid in _halted:
+        return
+    _halted.add(uid)
+    try:
+        weapon.StopFire(0)
+    except Exception as ex:  # noqa: BLE001 - the lock still blocks new presses
+        log(f"COV #{uid}: could not stop the automatic fire ({ex!r})")
+
+
 @hook("WillowGame.WillowGameViewportClient:Tick")
 def vent(*_: object) -> None:
     global _last_tick
@@ -158,6 +175,9 @@ def vent(*_: object) -> None:
     for uid, started in list(_reloading.items()):
         if now - started > RELOAD_MAX:
             _reloading.pop(uid)
+    _halted.intersection_update(_locked)
+    if _locked:
+        _halt_held()
     for uid, heat in list(_heat.items()):
         if uid in _reloading:
             heat -= dt / RELOAD_VENT_TIME  # the vent reload: ReloadDone clears the rest

@@ -64,7 +64,7 @@ BL2_COLOURS = {
 }
 TIERS = {"common": 0, "uncommon": 1, "rare": 2, "epic": 3, "etech": 3, "legendary": 4, "pearl": 4, "seraph": 4, "gemstone": 4, "rainbow": 4}
 
-enabled = BoolOption("Loot Beams", True, description="BL3-style rarity beams on dropped loot.")
+enabled = BoolOption("Loot Beams", False, description="BL3-style rarity beams on dropped loot. Off by default since 0.64.7 (they can stay behind after loot is picked up).")
 min_rarity = DropdownOption("Loot Beam Min Rarity", "Rare", RARITY_NAMES, description="Lowest rarity that gets a beam.")
 style = DropdownOption("Loot Beam Style", "Trail", list(STYLES), description="Look of the beam.", on_change=lambda *_: _reset_all())
 texture = DropdownOption("Loot Beam Texture", "Lightning Beam", list(TEXTURES), description="Texture of the Trail-style beam.", on_change=lambda *_: _reset_all())
