@@ -1,7 +1,7 @@
 """Radiation grenades and shields: a grenade mod or shield with an element part can be radioactive, like the radiation guns.
 
 Which ones is rolled once per item, from its unique number (core.remembered: saved with the mod's records, the way the anointments are), with the
-chances below; only items that have an element part to turn into radiation's (a plain shield, a cryo item or a legendary's own parts never are).
+chances below; only items that have an element part to turn into radiation's (a plain shield, a cryo item or a legendary whose element is its own, like the Pandemic's, never are; one with a rolled element, the Fastball, can be).
 A radioactive item is radiation for real (see "the real radiation parts" below): its element part is swapped for a copy with radiation's explosion,
 damage type and effects, and its name and card say radiation.
 
@@ -32,7 +32,6 @@ shield_chance = SliderOption("Radiation Shield Chance", 15, 0, 100, 5, True,
                              description="Chance that a shield is radioactive (rolled once per shield). When it breaks it releases a radiation burst around you. 0: none.")
 OPTIONS = [grenade_chance, shield_chance]
 
-LEGENDARY_LEVELS = {5, 7, 8, 9, 10}  # item rarity levels of legendary and unique gear (the same set gear.py calls legendary; level 6 is the purple-class one)
 WINDOW = 10.0  # seconds after a radiation grenade is thrown in which the player's grenade explosions are radiation's (a fuse and a MIRV's children)
 MAX_BLASTS = 8  # explosions of one throw
 SHIELD_RADIUS = 600.0  # units: the radiation burst of a broken shield (6 m)
@@ -47,6 +46,19 @@ BOOM_GAP = 0.8  # seconds: hits of one explosion arrive together; a later one th
 _shield_ready = 0.0
 
 
+ELEMENT_WORD = re.compile(r"(Corrosive|Incendiary|Shock|Slag|Explosive|Fire)")
+
+
+def element_locked(item: UObject) -> bool:
+    """Can the item's balance only roll one element (Pandemic's corrosive, the Quasar's shock)? Then radiation is not its to take."""
+    try:
+        weighted = item.DefinitionData.BalanceDefinition.PartListCollection.DeltaPartData.WeightedParts
+        found = {m.group(1) for w in weighted if w.Part is not None and (m := ELEMENT_WORD.search(w.Part.Name))}
+    except Exception:  # noqa: BLE001 - a balance that can't be read is not called locked
+        return False
+    return len(found) == 1
+
+
 def flagged(item: UObject | None, kind: str) -> bool:
     """Is this grenade mod / shield radioactive? (rolled the first time it is looked at, then remembered)"""
     if item is None:
@@ -54,14 +66,7 @@ def flagged(item: UObject | None, kind: str) -> bool:
     chance = (grenade_chance if kind == "grenade" else shield_chance).value
 
     def make(rng) -> list[str]:
-        if element_source(item) is None:  # no element part to turn into radiation's (a plain shield, a cryo item, a legendary's own parts): never radioactive
-            return []
-        try:
-            ret = item.StaticCalculateItemRarityLevel(item.DefinitionData)
-            level = int(ret[0] if isinstance(ret, tuple) else ret)
-        except Exception:  # noqa: BLE001
-            level = 0
-        if level in LEGENDARY_LEVELS or level >= 500:  # a legendary or unique shield or grenade (the Impaler, the Bee...) is its own item: never radioactive
+        if element_source(item) is None or element_locked(item):  # no element part to turn into radiation's (a plain shield, a cryo item), or an element that is the item's own (Pandemic): never radioactive
             return []
         return ["radiation"] if rng.random() * 100.0 < chance else []
 
@@ -193,6 +198,31 @@ def _edit_shield_part(behaviour: UObject, own: UObject) -> UObject | None:
     return copy_
 
 
+_fastball_taught = False
+
+
+def _teach_fastball() -> None:
+    """The Fastball's glow is picked by a chain of compares on the damage type (corrosive's, incendiary's...). Radiation's is a clone of corrosive's,
+    so it matched nothing and took the explosive one's orange: one more compare at the chain's end sends it to corrosive's."""
+    global _fastball_taught
+    if _fastball_taught:
+        return
+    _fastball_taught = True
+    try:
+        from .cryo.core import graphs  # noqa: PLC0415
+        from .cryo.cryo.switches import ENABLE, FASTBALL, _matched  # noqa: PLC0415
+
+        seq = graphs.Sequence(unrealsdk.find_object("ProjectileDefinition", FASTBALL).BehaviorProviderDefinition, "Delivery_Fastball")
+        impact = radiation.build()["impact"]
+        if seq.compares(impact):
+            return
+        corrosive = unrealsdk.find_object("WillowDamageTypeDefinition", "GD_Corrosive.DamageType.DmgType_Corrosive_Impact")
+        seq.extend_chain(corrosive, impact, f"{graphs.COMPARE}_Radiation", _matched(seq, corrosive, ENABLE))
+        seq.write()
+    except Exception:  # noqa: BLE001 - a Fastball that stays orange is no reason to lose the grenade
+        log("radiation gear: the Fastball's glow wasn't taught: " + traceback.format_exc()[-300:])
+
+
 def radiation_part(kind: str, source: UObject) -> UObject | None:
     """The radiation copy of an element part (made once; None while the effects aren't ready)."""
     if source.Name.endswith("_Radiation"):
@@ -207,6 +237,8 @@ def radiation_part(kind: str, source: UObject) -> UObject | None:
         return None
     clone = radiation._clone(source, source.Outer, source.Name + "_Radiation")
     clone.BehaviorProviderDefinition = _own_provider(base, clone, "BehaviorProviderDefinition_0", _edit_grenade if kind == "grenade" else _edit_shield_part)
+    if kind == "grenade":
+        _teach_fastball()
     _made[path] = clone
     return clone
 
@@ -318,7 +350,6 @@ def on_throw() -> None:
     if flagged(gear._equipped("grenade"), "grenade"):
         _armed_until, _blasts = game_now() + WINDOW, 0
         log("radiation grenade thrown")
-        show_hud_message("Radiation Grenade", "Its explosion will irradiate", 1.5)
 
 
 @hook("WillowGame.WillowAIPawn:TakeDamage", Type.POST, hook_identifier="bl3w_radgear_hit")

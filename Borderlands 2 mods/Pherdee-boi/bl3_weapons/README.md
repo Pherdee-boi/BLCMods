@@ -6,13 +6,21 @@ Single player and co-op (every player needs the mod).
 ## What it adds
 - **Weapon Mode key (B):** Maliwan guns swap to a second element (cryo and radiation are in the pool), Vladof guns deploy an underbarrel, Torgue guns
   toggle impact/sticky rounds, Dahl guns cycle full-auto/burst/semi. Tediore guns roll a BL3 reload throw (turret, MIRV, chaser, bouncing). The key also
-  explains the passive traits: Hyperion (aim down sights for a frontal shield), Jakobs (critical hits ricochet), Bandit (no reloads: the gun heats up and
+  explains the passive traits: Hyperion (aim down sights for a frontal shield, in four kinds, see below), Jakobs (critical hits ricochet), Bandit (no reloads: the gun heats up and
   stops firing until it has cooled, even with the trigger held).
 - **Weapon add-ons, one switch per manufacturer** (Maliwan, Vladof, Torgue, Dahl, Tediore, Hyperion, Jakobs, Bandit), at the top of Mods menu → BL3 Weapons.
   A manufacturer that is switched off behaves as in the base game (no mode key, no trait, no card lines). Everything else stays.
 - **Vladof underbarrels:** assault rifles (rocket launcher, grenade launcher, shotgun, double barrel), pistols (zip rockets, taser, and a double barrel only on
   a Vladof barrel) and snipers (rocket launcher, shotgun, double barrel, bipod). Mods menu → BL3 Weapons → "Vladof Underbarrels That Can Roll" has a switch for
   each: one that is off is not rolled (a gun type with every one of its own off rolls all of its own).
+- **Rocket launchers (in active development):** Vladof launchers roll a BL3 launcher underbarrel, deployed with the mode key: Rocket Salvo (twice the
+  launcher's rockets per shot, fast, from the magazine), Big-Boy Rocket (one big rocket, two to three times the damage with a bigger explosion, from the
+  reserve ammo, then the gun is back to its normal rockets and the Big-Boy cools down) and Mortar (aims a ring on the ground or an enemy and lobs a burst of four
+  shells onto it). They keep the launcher's element and, for the Salvo and Big-Boy, its special rocket (E-tech, Mongol). **These are still being worked on:**
+  expect rough edges, and numbers and effects will change.
+- **Hyperion shields:** aiming a Hyperion gun raises a BL3-style frontal shield (six pale hexagons, a light on the gun and an outline), in the BL3 kinds: Hyperion
+  (blue), Amped (purple: damage taken becomes weapon damage for a few seconds), Genesis (aqua: damage taken becomes a bullet in the magazine) and Redirect
+  (yellow: damage taken is reflected at the attacker). A gun rolls its kind once and the item card names it ("Hyperion Shield Variant Chance" in the Mods menu).
 - **Anointments** (off by default, Mods menu): rare and better guns can roll a BL3 anointment, shown on the item card. N shows the held gun's.
 - **Relics** roll BL3 artifact perks; **snipers** can roll close-range sights from other gun types.
   Aiming through a close-range sight zooms less than a scope (Mods menu → "Close-Range Sight Zoom (FOV)": higher = less zoom, 20 = a scope's).

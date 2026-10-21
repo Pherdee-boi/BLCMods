@@ -18,8 +18,11 @@ The grenade's spray is TPS's `Part_Ice_AOESpray`, carried into her build's ice e
 runtime materials (frozenfx.py names them). Until her files carry it the cloud deals its damage unseen. TPS also lays
 a sheet of ice on the ground under it for seven seconds, a decal whose material isn't carried: left out.
 
-Not here, because only a look is missing: the Singularity's rising effect, and the Fastball's glow and impact (their
-damage and explosion come from the grenade's own element, which cryo has).
+The Fastball's damage and explosion come from the grenade's own element, which cryo has. Its glow is a colour its
+element's payload sequence sets on the mesh, and an unknown element took the plain explosive one's orange: cryo takes
+shock's blue.
+
+Not here, because only a look is missing: the Singularity's rising effect.
 """
 
 from __future__ import annotations
@@ -35,6 +38,7 @@ from . import element, frozenfx
 AREA_CHILD = "GD_GrenadeMods.Projectiles.Grenade_AreaEffectChild"
 ROCKET_CHILD = "GD_Weap_Launchers.Projectiles.Projectile_Rocket_Maliwan_Child_Invisible"
 BETTY = "GD_GrenadeMods.Projectiles.Grenade_BouncingBetty_Jump"
+FASTBALL = "GD_GrenadeMods.Projectiles.Grenade_Fastball"
 SHOCK = "GD_Shock.DamageType.DmgType_Shock_Impact"
 SPRAY = frozenfx.FX + "Part_Ice_AOESpray"
 SWITCH = "DamageTypeSwitch"
@@ -164,8 +168,19 @@ def _betty(damage: UObject, shock: UObject) -> str:
     return f"cryo is {SWITCH} {value}"
 
 
+def _fastball(damage: UObject, shock: UObject) -> str:
+    """The Fastball's glow: cryo runs shock's payload (the same particles, a blue mesh) instead of the explosive one."""
+    seq = graphs.Sequence(unrealsdk.find_object("ProjectileDefinition", FASTBALL).BehaviorProviderDefinition,
+                          "Delivery_Fastball")
+    if seq.compares(damage):
+        return "has cryo"
+    seq.extend_chain(shock, damage, f"{graphs.COMPARE}_Ice", _matched(seq, shock, ENABLE))
+    seq.write()
+    return "cryo takes shock's glow"
+
+
 TARGETS = (("area-effect grenades", _area_child), ("Maliwan rockets' areas", _rocket_child),
-           ("Bouncing Betties", _betty))
+           ("Bouncing Betties", _betty), ("Fastballs", _fastball))
 
 
 def apply() -> list[str]:

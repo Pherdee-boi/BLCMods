@@ -52,6 +52,11 @@ TPS_TIERS = {
 # TPS's near-white (1, 1, 3) a purple wash: a colder colour, as [min, max, rgb, rgb] (bl2-test, 2026-10-03)
 NOVA_RINGS = ("ShockNovaLeft", "ShockNovaRight")
 NOVA_RING_COLOR = (0.35, 1.2, 3.0)
+# Emitters of TPS's ice explosions that BL2 draws as a solid white wall for a frame or two and then drops (a rocket's blast, 2026-10-22: 39% of the
+# screen pure white, then nothing but mist). They are TPS's flash and glow layers: materials whose blend and values are TPS's own, and which
+# BL2's renderer saturates. Switched off by material name, in the three sizes; what is left is the ice chunks, snow, specks, spikes and the
+# distortion ring.
+WHITE_OUT = ("Mat_Emp_Trans", "Mat_AcidSprayGoop_1x1", "Mat_ExplosionFlashModulate")
 _SHOCK_MASTER = "GD_Explosions.shock.Explosion_ShockMaster"
 _SHOCK_NOVA = "GD_Explosions.shock.Explosion_ShockMaster_ShieldNova"
 _RF_ROOTSET = 0x4000
@@ -134,7 +139,21 @@ def dress() -> list[str]:
         dressed.append(path.rpartition(".")[2])
         if path == NOVA:
             _color_rings(systems[0])
+        else:
+            for system in systems:
+                _drop_white(system)
     return dressed
+
+
+def _drop_white(system: UObject) -> None:
+    for emitter in system.Emitters:
+        if emitter is None:
+            continue
+        for lod in emitter.LODLevels:
+            module = lod.RequiredModule if lod is not None else None
+            material = module.Material if module is not None else None
+            if material is not None and material.Name.endswith(WHITE_OUT):
+                lod.bEnabled = False
 
 
 def _color_rings(system: UObject) -> None:

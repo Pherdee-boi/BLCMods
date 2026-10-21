@@ -59,6 +59,12 @@ def _migrated(new: Path, old_name: str) -> Path:
 
 RECORDS_FILE = _migrated(SETTINGS_DIR / "cryo_layouts.json", "aurelia_layouts.json")
 PLACEHOLDER_PACKAGE = "AureliaLayoutKeeper"
+# The fixed-block registry of the TPS character mods (Enforcer's sublibs.py) puts a mod's sublibrary on its exact index and replaces a placeholder
+# there only when the placeholder's name starts with this; any other entry is reported as a CONFLICT and the mod's items (its class mods) are not
+# registered. The keeper's placeholders keep the place of a sublibrary a save was written with, and a mod that registers later than the read (Enforcer's
+# own sublibraries stand on 123/124 and 161/162) found them in its way: they carry the registry's prefix now, so it takes the place over.
+FAMILY_PLACEHOLDER_PREFIX = "OurModsReserved_"
+LIBRARY_NAMES = ("WeaponTypes", "WeaponParts", "ItemTypes", "ItemParts", "Manufacturer", "Balance")
 _RF_ROOTSET = 0x4000
 
 # The base game's sublibrary counts per library (weapon types, weapon parts, item types, item parts,
@@ -186,7 +192,7 @@ def _placeholder(index: int, name: str) -> UObject:
         except ValueError:
             pkg = unrealsdk.construct_object("Package", None, PLACEHOLDER_PACKAGE)
         pkg.ObjectFlags = int(pkg.ObjectFlags) | _RF_ROOTSET
-        obj = unrealsdk.construct_object("PackageAssetSublibrary", pkg, f"Missing_{index}_{len(_placeholders)}")
+        obj = unrealsdk.construct_object("PackageAssetSublibrary", pkg, f"{FAMILY_PLACEHOLDER_PREFIX}Kept{LIBRARY_NAMES[index]}_{len(_placeholders)}")
         obj.ObjectFlags = int(obj.ObjectFlags) | _RF_ROOTSET
         # Each placeholder needs a package name of its own: with one shared object (and name) standing
         # in several slots, encoding and decoding broke for the whole library (S3, 2026-09-30).
@@ -385,6 +391,11 @@ def order_of_the_day() -> dict[str, list[str]]:
     return _natural
 
 
+def _standing_in() -> int:
+    """How many entries of the libraries are stand-ins for a sublibrary that isn't there (one a mod registering later takes over, or a mod missing)."""
+    return sum(1 for library in _base_libraries() for link in library.SublibraryLinks if link is not None and link._path_name() in _stands_for)
+
+
 def _before_read(filename: str) -> None:
     global _loading  # noqa: PLW0603
     try:  # CRYO_EARLY_SETUP: the mod's whole setup (cryo's objects, its item libraries) is done before the save is read: nobody else calls it
@@ -408,6 +419,7 @@ def _before_read(filename: str) -> None:
         moved = arrange(natural)                       # not the order the last save's record left
         if moved:
             _log(f"{filename}: no record, so the order of the day ({moved} entries moved back)")
+    _log(f"{_standing_in()} stand-in entries keep the places of sublibraries that are not loaded (the mods that own them take the places over)")
 
 
 @hook("WillowGame.WillowSaveGameManager:BeginLoadGame")

@@ -1,4 +1,4 @@
-"""Vladof: assault rifles, pistols and sniper rifles get a BL3-style underbarrel; the mode key deploys/stows it.
+"""Vladof: assault rifles, pistols, sniper rifles and rocket launchers get a BL3-style underbarrel; the mode key deploys/stows it.
 
 Each gun rolls its underbarrel once (saved per UniqueId). A deploy gives one load of underbarrel shots
 (the fire-rate boost lasts a few seconds instead). Emptying it or reloading auto-stows it and starts a
@@ -22,11 +22,21 @@ cooldown; stowing by hand starts a cooldown scaled by how much was used.
         refused). Gun's own ammo, no shot count, no cooldown; stows when the gun is put away.
       - Zip Rockets (v0.26.2, BL3, pistols): the small AR rockets (GD_Weap_AssaultRifle.FiringModes.
         FM_Rocket_Vladof), automatic at 4 per second.
+      - Launchers (BL3), all toggled with the mode key like the bipod, none with a cooldown:
+          Rocket Salvo: twice the launcher's own rockets per shot at a high fire rate (so its explosion, element and special effect, the Mongol's
+          or an E-tech's), a shot costing 1 round whatever the gun's own shot cost, out of the current magazine.
+          Big-Boy Rocket: not a toggle: deploying it loads one big rocket (Torgue's Nukem mode; a Mongol or E-tech keeps its own rocket), two to three
+          times a normal rocket's damage (rolled per shot) with a bigger explosion, out of the reserve ammo. The shot stows it again, so the gun is back to
+          its normal rockets at once (the magazine as it was), and the underbarrel is on a cooldown (a slider).
+          Mortar: the cursor is where the aim meets a surface (WillowWeapon.GetTargetDistance); a pull fires a burst of
+          four shells, one round each from the current magazine, each launched on a lob that lands on the cursor.
   * Own ammo (v0.23.0): the reserve (GetAmmoCount) is noted on deploy and what the underbarrel spent is
     given back on stow (AddAmmo); the gun's magazine is restored too. Not for the fire-rate boost.
   * Damage: a multiplier per underbarrel, applied in anoint.scale_damage (the mod's single damage hook).
 """
 
+import copy
+import math
 import random
 
 import unrealsdk
@@ -35,7 +45,7 @@ from ui_utils import show_hud_message
 from unrealsdk.hooks import Block, Type
 from unrealsdk.unreal import UObject, WeakPointer
 
-from .core import find_part, forget, held_weapon, log, active_maker_of as maker_of, now as game_now, rebuild, remembered, state
+from .core import find_part, forget, held_weapon, log, active_maker_of as maker_of, now as game_now, pawns, rebuild, remembered, state
 
 AR_BARRELS = "GD_Weap_AssaultRifle.Barrel."
 SHOCK_PART = {
@@ -51,12 +61,16 @@ UNDERBARRELS = {
     "Double Barrel": None,
     "Bipod": None,
     "Zip Rockets": None,
+    "Rocket Salvo": None,
+    "Big-Boy Rocket": None,
+    "Mortar": None,
 }
 KINDS = {  # which underbarrels each gun type can roll (v0.26.1, user: taser = pistols only, grenade = ARs
     # only, rocket = ARs and later snipers). A saved roll that's no longer allowed is re-rolled.
     "AR": ["Rocket Launcher", "Grenade Launcher", "Shotgun", "Double Barrel"],
     "Pistol": ["Zip Rockets", "Taser", "Double Barrel"],  # v0.26.2: zip rockets replace the pistol shotgun
     "Sniper": ["Rocket Launcher", "Shotgun", "Double Barrel", "Bipod"],  # v0.27.0, Bipod v0.28.0
+    "Launcher": ["Rocket Salvo", "Big-Boy Rocket", "Mortar"],
 }
 MODES = {
     "Shotgun": {"attrs": {"ProjectilesPerShot": 8, "Spread": 7.0, "PerShotAccuracyImpulse": 12.0}, "interval": 0.55, "semi": True},
@@ -64,12 +78,23 @@ MODES = {
                         "fm": "GD_Weap_Launchers.FiringModes.FM_Rocket_Vladof"},
     "Taser": {"attrs": {"ProjectilesPerShot": 2}, "interval": 0.5, "semi": True, "shock": True},
     "Double Barrel": {"attrs": {}, "rate": 2.0, "timed": True},
-    "Bipod": {"attrs": {}, "scale": {"Spread": 0.3, "PerShotAccuracyImpulse": 0.3}, "rate": 1.5, "toggle": True},
+    "Bipod": {"attrs": {}, "scale": {"Spread": 0.3, "PerShotAccuracyImpulse": 0.3}, "rate": 1.5, "toggle": True, "stance": True},
     # BL3 zip rockets: the small Vladof AR rockets (the AR Torgue-Vladof barrel's firing mode, which ARs
     # used as their rocket underbarrel up to v0.24.0), automatic, on the pistol's own barrel
     "Zip Rockets": {"attrs": {"ProjectilesPerShot": 1}, "interval": 0.25,
                     "fm": "GD_Weap_AssaultRifle.FiringModes.FM_Rocket_Vladof"},
 }
+# BL3's launcher underbarrels (toggles: no shots of their own, no cooldown; "stance" is the bipod's pose, speed and sounds only).
+MODES["Rocket Salvo"] = {"attrs": {"ShotCost": 1, "PerShotAccuracyImpulse": 8.0}, "scale": {"ProjectilesPerShot": 2}, "rate": 2.6, "toggle": True}  # (the gun's own rocket: twice
+# as many a shot, with the explosion (radius 250 against the AR mini-rocket's 90), element and special effect of the launcher it is on)
+MODES["Big-Boy Rocket"] = {"attrs": {"ShotCost": 1, "PerShotAccuracyImpulse": 30.0}, "interval": 1.0, "semi": True, "one_shot": True,
+                           "fm": "GD_Weap_Launchers.FiringModes.FM_Rocket_Torgue_Nukem", "fm_if_standard": True}  # (a special launcher, the Mongol or an E-tech, keeps its own rocket)
+STANDARD_FM = "GD_Weap_Launchers.FiringModes.FM_Rocket_Vladof"  # a launcher with this firing mode is a plain one
+MODES["Mortar"] = {"attrs": {"ProjectilesPerShot": 1, "PerShotAccuracyImpulse": 15.0}, "rate": 4.0, "toggle": True, "burst": 4, "arc": True,
+                   "fm": "GD_Weap_AssaultRifle.FiringModes.FM_Rocket_Dahl_Grenade", "shell": "Dahl_Grenade"}
+BIG_BOY_LOW = 2 / 3  # a Big-Boy rocket's damage is rolled between this share of the slider and all of it
+MORTAR_BURST_GAP = 0.6  # seconds without a shot: the next one starts a new burst
+MORTAR_G = 1011.0  # a shell's own gravity in uu/s^2 (measured on a Dahl grenade: 809 at its 0.8 gravity scale)
 PISTOL_SHOTS = 2 / 3  # pistols get fewer underbarrel shots
 BIPOD_SPEED = 0.15  # walk speed while the bipod is out
 
@@ -97,10 +122,26 @@ zip_damage = SliderOption(
     description="Vladof pistol zip rocket damage, percent of the gun's own damage.",
 )
 zip_shots = SliderOption("Zip Rocket Shots", 12, 2, 16, 1, True, description="Zip rockets per underbarrel deploy (pistols).")
+salvo_damage = SliderOption(
+    "Rocket Salvo Damage", 55, 10, 300, 5, True,
+    description="Vladof launcher rocket salvo: damage of each mini-rocket, percent of the gun's own damage.",
+)
+bigboy_cooldown = SliderOption(
+    "Big-Boy Rocket Cooldown", 8, 2, 30, 1, True,
+    description="Seconds after a Big-Boy rocket before it can be deployed again (it is one rocket, out of the reserve ammo, and the gun goes back to its normal rockets).",
+)
+bigboy_damage = SliderOption(
+    "Big-Boy Rocket Damage", 300, 100, 800, 10, True,
+    description="Vladof launcher Big-Boy rocket: the most damage it can roll, percent of a normal rocket (it rolls between two thirds of this and all of it; BL3: double to triple).",
+)
+mortar_damage = SliderOption(
+    "Mortar Damage", 130, 30, 600, 10, True,
+    description="Vladof launcher mortar: damage of each shell, percent of the gun's own damage.",
+)
 fire_rate_time = SliderOption("Double Barrel Time", 8, 3, 20, 1, True, description="Seconds the doubled fire rate lasts.")
 RENAMED = {"Fire Rate": "Double Barrel"}  # old saved names -> current
 DAMAGE = {"Grenade Launcher": grenade_damage, "Rocket Launcher": rocket_damage, "Shotgun": shotgun_damage,
-          "Taser": taser_damage, "Zip Rockets": zip_damage}
+          "Taser": taser_damage, "Zip Rockets": zip_damage, "Rocket Salvo": salvo_damage, "Mortar": mortar_damage}  # (the Big-Boy's damage is put on its rocket: _retag_big_boy)
 SHOTS = {"Rocket Launcher": rocket_shots, "Shotgun": shotgun_shots, "Taser": taser_shots, "Zip Rockets": zip_shots}
 FULL_SHOTS = {"Zip Rockets"}  # shot counts already meant for pistols (no 2/3 cut)
 # v0.64.7: one switch for each underbarrel (the old "Underbarrel Type" dropdown forced a single type, and did nothing on the gun types that cannot have it: Bipod
@@ -142,7 +183,7 @@ cooldown = SliderOption(
     description="Seconds before a Vladof underbarrel can be redeployed after its magazine runs out.",
 )
 OPTIONS = [cooldown, KIND_GROUP, grenade_damage, rocket_damage, rocket_shots, shotgun_damage, shotgun_shots,
-           taser_damage, taser_shots, zip_damage, zip_shots, fire_rate_time]
+           taser_damage, taser_shots, zip_damage, zip_shots, salvo_damage, bigboy_damage, bigboy_cooldown, mortar_damage, fire_rate_time]
 
 # This session only (not saved), keyed by UniqueId
 _deployed: dict[int, int] = {}  # gun rounds loaded when deployed
@@ -153,6 +194,14 @@ _total_shots: dict[int, int] = {}  # shots in this deploy
 _mode: dict[int, dict] = {}  # deployed mode: {"kind", "ref", "base": {attr: v}, "written": {attr: v}, "until"}
 _reloading: set[int] = set()  # guns whose player pressed reload while an underbarrel was out (the next tick stows it)
 _hit_logged: set[str] = set()
+_big_boy_pending = [0, -1e9]  # Big-Boy rockets fired that are not given their damage and explosion yet, and when the last was fired
+_big_boy_seen: dict[int, float] = {}  # a rocket's address -> when it was
+_big_boy_explosions: dict[str, UObject] = {}  # an explosion's path -> its bigger copy
+_burst: dict[int, list] = {}  # mortar: [shots in this burst, when the last one was]
+_mortar_pending = [0]  # mortar shells fired that are not aimed yet
+_mortar_seen: dict[int, float] = {}  # a shell's address -> when it was aimed
+_mortar_lock: list = [None, -1e9]  # the cursor point a burst was fired at (the recoil moves the view during the burst) and when it was taken
+_mortar_due: list[tuple[WeakPointer, float]] = []  # shells in the air and when each reaches the cursor (it goes off there)
 _fm_logged = False
 _speed: dict | None = None  # bipod: {"pawn": WeakPointer, "base": float, "written": float}
 
@@ -166,6 +215,8 @@ def gun_type(weapon: UObject) -> str | None:
         return "Pistol"
     if "Sniper" in name:
         return "Sniper"
+    if "Launcher" in name:
+        return "Launcher"
     return None
 
 
@@ -285,12 +336,17 @@ def _tune_mode(weapon: UObject) -> None:
     if shots:
         watched.append("ClipSize")
     for attr in watched:
+        if attr == "ShotCost":  # the gun's own reading flickers between 0 and its cost around each shot: its original is the base value
+            entry["base"].setdefault(attr, max(1, round(weapon.ShotCostBaseValue)))
+            continue
         current = getattr(weapon, attr)
         if attr not in entry["written"] or not _close(current, entry["written"][attr]):
             entry["base"][attr] = current  # first time, or BL2 recomputed it
     targets = dict(mode["attrs"])
     for attr, factor in mode.get("scale", {}).items():
         targets[attr] = entry["base"][attr] * factor
+        if attr == "ProjectilesPerShot":
+            targets[attr] = max(1, round(targets[attr]))  # (an integer property)
     base_interval = entry["base"]["FireInterval"]
     if "rate" in mode:
         targets["FireInterval"] = base_interval / mode["rate"]
@@ -337,7 +393,8 @@ def _stow(weapon: UObject, kind: str, original: str, used: float, reason: str) -
         if loaded is not None and not (MODES[entry["kind"]].get("timed") or MODES[entry["kind"]].get("toggle")):
             weapon.ReloadCnt = loaded
         if MODES[entry["kind"]].get("toggle"):
-            _release_speed()
+            if MODES[entry["kind"]].get("stance"):
+                _release_speed()
             used = 0.0
         _restore_element(weapon, loaded)
     else:
@@ -346,19 +403,19 @@ def _stow(weapon: UObject, kind: str, original: str, used: float, reason: str) -
     _forced.pop(uid, None)
     _total_shots.pop(uid, None)
     before = _ammo_at_deploy.pop(uid, None)
-    if before is not None:
+    if before is not None and kind != "Big-Boy Rocket":  # (the Big-Boy's rocket does come out of the reserve)
         spent = before - weapon.GetAmmoCount()
         if spent > 0:
             weapon.AddAmmo(spent)  # the underbarrel's shots don't cost the gun's ammo
             log(f"Vladof #{uid}: gave back {spent} rounds the underbarrel used")
-    wait = cooldown.value * used
+    wait = (bigboy_cooldown.value if kind == "Big-Boy Rocket" else cooldown.value) * used
     if wait > 0:
         _ready_at[uid] = game_now() + wait
     log(f"Vladof #{uid}: {kind} stowed ({reason}), cooldown {wait:.0f}s")
     from . import indicator
 
     indicator.bump()
-    if not MODES.get(kind, {}).get("toggle"):
+    if not MODES.get(kind, {}).get("stance"):
         indicator.flick()  # quick gun flick on deploy / stow
         _clack(weapon, kind, False)
     else:
@@ -384,15 +441,26 @@ def _deploy_mode(weapon: UObject, kind: str) -> None:
     if mode.get("timed") or mode.get("toggle"):
         _ammo_at_deploy.pop(uid, None)  # the boost / the bipod fire the gun's own ammo
         _total_shots[uid] = 0
+    elif mode.get("one_shot"):
+        _total_shots[uid] = 1
     else:
         shots = SHOTS[kind].value
         if gun_type(weapon) == "Pistol" and kind not in FULL_SHOTS:
             shots = max(1, round(shots * PISTOL_SHOTS))
         _total_shots[uid] = shots
-    _mode[uid] = {"kind": kind, "ref": WeakPointer(weapon), "base": {}, "written": {}, "until": game_now() + fire_rate_time.value}
+    native = weapon.GetFiringModeDefinition()  # (before the mode is in place: the gun's own firing mode)
+    _mode[uid] = {"kind": kind, "ref": WeakPointer(weapon), "base": {}, "written": {}, "until": game_now() + fire_rate_time.value,
+                  "native_fm": native._path_name() if native is not None else ""}
     _tune_mode(weapon)
     if _total_shots[uid]:
         weapon.ReloadCnt = _total_shots[uid] * _cost(weapon)
+
+
+
+def is_stance(weapon: UObject | None) -> bool:
+    """Is the held gun's deployed mode the bipod's stance (its pose, sounds and the slowed walk)?"""
+    entry = _mode.get(weapon.DefinitionData.UniqueId) if weapon is not None else None
+    return entry is not None and bool(MODES[entry["kind"]].get("stance"))
 
 
 def is_toggle(weapon: UObject) -> bool:
@@ -428,7 +496,7 @@ def _release_speed() -> None:
 @hook("WillowGame.WillowPlayerController:BeginSprint")
 def no_sprint_on_bipod(_obj: UObject, *_: object) -> type[Block] | None:
     weapon = held_weapon()
-    return Block if weapon is not None and is_toggle(weapon) else None
+    return Block if weapon is not None and is_stance(weapon) else None
 
 
 def switch(weapon: UObject) -> None:
@@ -487,7 +555,7 @@ def switch(weapon: UObject) -> None:
     from . import indicator
 
     indicator.bump()
-    if MODES.get(kind, {}).get("toggle"):
+    if MODES.get(kind, {}).get("stance"):
         _plant_fx(weapon)  # the bipod has its own plant pose and sound instead of the flick
     else:
         indicator.flick()  # quick gun flick on deploy / stow
@@ -500,7 +568,7 @@ def mode_firing_mode(obj: UObject, *_: object) -> tuple[type[Block], UObject] | 
     global _fm_logged
     entry = _mode.get(obj.DefinitionData.UniqueId)
     path = MODES[entry["kind"]].get("fm") if entry is not None else None
-    if path is None:
+    if path is None or (MODES[entry["kind"]].get("fm_if_standard") and entry["native_fm"] != STANDARD_FM):
         return None
     try:
         fm = unrealsdk.find_object("FiringModeDefinition", path)
@@ -517,11 +585,17 @@ def mode_firing_mode(obj: UObject, *_: object) -> tuple[type[Block], UObject] | 
 @hook("WillowGame.WillowWeapon:ShouldRefire")
 def pump_refire(obj: UObject, *_: object) -> tuple[type[Block], bool] | None:
     """Single-shot underbarrels (shotgun, rocket, taser) fire once per trigger pull."""
-    entry = _mode.get(obj.DefinitionData.UniqueId)
+    uid = obj.DefinitionData.UniqueId
+    entry = _mode.get(uid)
     if entry is not None and MODES[entry["kind"]].get("semi"):
         held = held_weapon()
         if held is not None and held._get_address() == obj._get_address():
             return Block, False
+    if entry is not None and MODES[entry["kind"]].get("burst"):
+        held = held_weapon()
+        if held is not None and held._get_address() == obj._get_address():
+            count, last = _burst.get(uid, [0, -1e9])
+            return Block, 0 < count < MODES[entry["kind"]]["burst"] and game_now() - last < MORTAR_BURST_GAP  # the rest of the burst fires by itself
     return None
 
 
@@ -529,11 +603,30 @@ def pump_refire(obj: UObject, *_: object) -> tuple[type[Block], bool] | None:
 def single_shot(obj: UObject, *_: object) -> None:
     """v0.33.2: one shot per pull for real. Refusing ShouldRefire (pump_refire) doesn't stop the engine's
     native refire (found on Dahl semi-auto); clearing the "trigger held" flag after each shot does."""
-    entry = _mode.get(obj.DefinitionData.UniqueId)
-    if entry is None or not MODES[entry["kind"]].get("semi"):
+    uid = obj.DefinitionData.UniqueId
+    entry = _mode.get(uid)
+    if entry is None:
         return
+    mode = MODES[entry["kind"]]
     held = held_weapon()
-    if held is not None and held._get_address() == obj._get_address():
+    if held is None or held._get_address() != obj._get_address():
+        return
+    if entry["kind"] == "Big-Boy Rocket":
+        _big_boy_pending[:] = [_big_boy_pending[0] + 1, game_now()]
+    if mode.get("burst"):
+        now = game_now()
+        count, last = _burst.get(uid, [0, -1e9])
+        count = 1 if now - last > MORTAR_BURST_GAP else count + 1
+        _burst[uid] = [count, now]
+        if mode.get("arc"):
+            _mortar_pending[0] += 1
+            if count == 1:
+                _mortar_lock[:] = [mortar_cursor(obj), now]
+        if count >= mode["burst"]:
+            _burst[uid] = [0, now]
+            obj.ClearPendingFire(0)  # the burst is over: the next shell needs another pull
+        return
+    if mode.get("semi"):
         obj.ClearPendingFire(0)
 
 
@@ -556,12 +649,211 @@ def auto_reload(obj: UObject, *_: object) -> None:
     _note_reload(obj)
 
 
+def _view_ray():
+    """(camera position, forward unit vector) of the player's view."""
+    from mods_base import get_pc
+
+    pc = get_pc(possibly_loading=True)
+    if pc is None:
+        return None
+    zero_v = unrealsdk.make_struct("Vector", X=0, Y=0, Z=0)
+    zero_r = unrealsdk.make_struct("Rotator", Pitch=0, Yaw=0, Roll=0)
+    ret = pc.GetPlayerViewPoint(zero_v, zero_r)
+    if not isinstance(ret, tuple) or len(ret) < 3:
+        return None
+    cam, rot = ret[1], ret[2]
+    pitch, yaw = rot.Pitch * math.tau / 65536, rot.Yaw * math.tau / 65536
+    return cam, (math.cos(pitch) * math.cos(yaw), math.cos(pitch) * math.sin(yaw), math.sin(pitch))
+
+
+SNAP_ANGLE = 4.5  # degrees: an enemy this close to the aim line takes the cursor
+_snap: dict = {"at": -1e9, "point": None}
+
+
+def _snap_enemy(cam, fwd) -> tuple[float, float, float] | None:
+    """The feet of the live enemy nearest the aim line (within SNAP_ANGLE of it, 3 to 90 m away), looked for 5 times a second."""
+    now = game_now()
+    if now - _snap["at"] < 0.2:
+        return _snap["point"]
+    _snap["at"], _snap["point"] = now, None
+    from mods_base import get_pc
+
+    pc = get_pc(possibly_loading=True)
+    player = pc.Pawn if pc is not None else None
+    if player is None:
+        return None
+    best, best_angle = None, SNAP_ANGLE
+    for pawn in pawns(player):
+        try:
+            if pawn._get_address() == player._get_address() or not pawn.IsAliveAndWell() or not player.IsEnemy(pawn):
+                continue
+            loc = pawn.Location
+            to = (loc.X - cam.X, loc.Y - cam.Y, loc.Z - cam.Z)
+            dist = math.sqrt(sum(c * c for c in to))
+            if not 300.0 < dist < 9000.0:
+                continue
+            angle = math.degrees(math.acos(max(-1.0, min(1.0, sum(a * b for a, b in zip(to, fwd)) / dist))))
+            if angle < best_angle:
+                best, best_angle = loc, angle
+        except Exception:  # noqa: BLE001 - a pawn going away mid-walk
+            continue
+    if best is not None:
+        _snap["point"] = (best.X, best.Y, best.Z - 70.0)  # (the pawn's origin is at its middle: a shell comes down at its feet)
+    return _snap["point"]
+
+
+def mortar_cursor(weapon: UObject) -> tuple[float, float, float] | None:
+    """Where the mortar's cursor is: the game's own target distance when it has one; else on the enemy nearest the aim line; else where the aim line comes
+    down on the ground at the player's feet. None when it meets none of them (the sky, or looking up).
+    shortcut: the SDK's traces never report a hit (tediore.py found this too), so away from an enemy the cursor is the feet's level, not the real surface: on a slope it
+    sits too far or too near. Upgrade when a trace works."""
+    ray = _view_ray()
+    if ray is None:
+        return None
+    cam, fwd = ray
+    try:
+        distance = weapon.GetTargetDistance()
+    except Exception:  # noqa: BLE001
+        distance = 0.0
+    if 0 < distance < 20000:
+        return cam.X + fwd[0] * distance, cam.Y + fwd[1] * distance, cam.Z + fwd[2] * distance
+    enemy = _snap_enemy(cam, fwd)
+    if enemy is not None:
+        return enemy
+    from mods_base import get_pc
+
+    pc = get_pc(possibly_loading=True)
+    feet = pc.Pawn.Location.Z - 55.0 if pc is not None and pc.Pawn is not None else None
+    if feet is None or fwd[2] > -0.03:
+        return None
+    t = (feet - cam.Z) / fwd[2]
+    return (cam.X + fwd[0] * t, cam.Y + fwd[1] * t, feet) if 150.0 < t < 9000.0 else None
+
+
+def _aim_mortar(weapon: UObject) -> None:
+    """Give each shell just fired a lob that lands on the cursor (the flight time grows with the distance, a little scatter around the point)."""
+    now = game_now()
+    for key in [k for k, t in _mortar_seen.items() if now - t > 10]:
+        _mortar_seen.pop(key, None)
+    for entry in [e for e in _mortar_due if e[1] <= now]:
+        _mortar_due.remove(entry)
+        shell = entry[0]()
+        if shell is not None:
+            try:
+                shell.Detonate()  # a mortar shell goes off where it lands, not after a grenade's bounces and fuse
+            except Exception as e:  # noqa: BLE001
+                log(f"mortar shell: Detonate refused ({e!r})")
+    if _mortar_pending[0] <= 0:
+        return
+    target = _mortar_lock[0] if now - _mortar_lock[1] < 2.0 else mortar_cursor(weapon)
+    for p in unrealsdk.find_all("WillowProjectile", exact=False):
+        if _mortar_pending[0] <= 0:
+            break
+        address = p._get_address()
+        if address in _mortar_seen or p.Name.startswith("Default__") or p.Definition is None or MODES["Mortar"]["shell"] not in p.Definition._path_name():
+            continue
+        _mortar_seen[address] = now
+        _mortar_pending[0] -= 1
+        if target is None:
+            continue  # nothing to land on: it flies as the gun fires it
+        loc = p.Location
+        scatter = 40 + 0.02 * math.dist((loc.X, loc.Y), target[:2])
+        dx, dy = target[0] + random.uniform(-scatter, scatter) - loc.X, target[1] + random.uniform(-scatter, scatter) - loc.Y
+        dz = target[2] - loc.Z
+        flight = min(2.6, 0.9 + math.hypot(dx, dy) / 2200)
+        g = MORTAR_G * p.CustomGravityScaling
+        p.Velocity = unrealsdk.make_struct("Vector", X=dx / flight, Y=dy / flight, Z=(dz + 0.5 * g * flight * flight) / flight)
+        _mortar_due.append((WeakPointer(p), now + flight))
+    _mortar_pending[0] = min(_mortar_pending[0], 8)
+
+
+@hook("WillowGame.WillowGameViewportClient:PostRender", hook_identifier="bl3w_vladof_cursor")
+def draw_mortar_cursor(_obj: UObject, args, *_: object) -> None:
+    """A ring on the surface the mortar will land on."""
+    weapon = held_weapon()
+    if weapon is None or weapon.DefinitionData.UniqueId not in _mode or _mode[weapon.DefinitionData.UniqueId]["kind"] != "Mortar":
+        return
+    target = mortar_cursor(weapon)
+    if target is None:
+        return
+    canvas = args.Canvas
+    centre = canvas.Project(unrealsdk.make_struct("Vector", X=target[0], Y=target[1], Z=target[2]))
+    ray = _view_ray()
+    if ray is None or centre.Z < 0:
+        return
+    cam, _ = ray
+    distance = max(math.dist((cam.X, cam.Y, cam.Z), target), 50.0)
+    from mods_base import get_pc
+
+    fov = get_pc(possibly_loading=True).GetFOVAngle()
+    radius = max(10.0, min(120.0, 190.0 * (canvas.SizeY / 2) / (math.tan(math.radians(fov) / 2) * distance)))  # a ring about 3.8 m across
+    ring = unrealsdk.make_struct("Color", R=255, G=210, B=120, A=235)
+    for k in range(20):
+        a1, a2 = k * math.tau / 20, (k + 1) * math.tau / 20
+        canvas.Draw2DLine(centre.X + math.cos(a1) * radius, centre.Y + math.sin(a1) * radius * 0.45, centre.X + math.cos(a2) * radius, centre.Y + math.sin(a2) * radius * 0.45, ring)
+    canvas.Draw2DLine(centre.X - radius * 0.25, centre.Y, centre.X + radius * 0.25, centre.Y, ring)
+    canvas.Draw2DLine(centre.X, centre.Y - radius * 0.12, centre.X, centre.Y + radius * 0.12, ring)
+
+
+def _big_explosion(explosion: UObject) -> UObject:
+    """A bigger copy of an element's explosion, for a Big-Boy rocket: its biggest size bracket's particles at 1.8 times the scale (made once)."""
+    path = explosion._path_name()
+    if _big_boy_explosions.get(path) is not None:
+        return _big_boy_explosions[path]
+    name = explosion.Name + "_BigBoy"
+    try:
+        clone = unrealsdk.find_object("ExplosionDefinition", f"{explosion.Outer._path_name()}.{name}")
+    except ValueError:
+        clone = unrealsdk.construct_object(explosion.Class, explosion.Outer, name, 0, explosion)
+        clone.ObjectFlags = int(clone.ObjectFlags) | 0x4000
+        tiers = [copy.copy(t) for t in clone.ExplosionScale]
+        tiers[-1].MaxParticleScale *= 1.8
+        tiers[-1].MinParticleScale *= 1.8
+        clone.ExplosionScale = tiers
+    _big_boy_explosions[path] = clone
+    return clone
+
+
+def _retag_big_boy() -> None:
+    """Give the Big-Boy rocket just fired its damage (two to three times a normal rocket's: the slider's share, rolled) and a bigger explosion."""
+    now = game_now()
+    for key in [k for k, t in _big_boy_seen.items() if now - t > 10]:
+        _big_boy_seen.pop(key, None)
+    if _big_boy_pending[0] <= 0:
+        return
+    if now - _big_boy_pending[1] > 1.5:
+        _big_boy_pending[0] = 0
+        return
+    for p in unrealsdk.find_all("WillowProjectile", exact=False):
+        if _big_boy_pending[0] <= 0:
+            break
+        address = p._get_address()
+        if address in _big_boy_seen or p.Name.startswith("Default__") or p.Definition is None:
+            continue
+        path = p.Definition._path_name()
+        if not path.startswith(("GD_Weap", "GD_Anemone")) or path.endswith("_Child"):
+            continue
+        _big_boy_seen[address] = now
+        _big_boy_pending[0] -= 1
+        factor = random.uniform(BIG_BOY_LOW, 1.0) * bigboy_damage.value / 100
+        p.DamageBaseValue = p.DamageBaseValue * factor
+        p.Damage = p.Damage * factor
+        explosion = p.MyExplosionDefinition
+        if explosion is not None and "Nukem" not in explosion.Name:
+            p.MyExplosionDefinition = _big_explosion(explosion)  # (the Nukem's own is the biggest there is)
+        log(f"Vladof Big-Boy rocket: x{factor:.2f} damage, {p.MyExplosionDefinition.Name if p.MyExplosionDefinition is not None else None}")
+
+
 @hook("WillowGame.WillowGameViewportClient:Tick")
 def watch_underbarrel(*_: object) -> None:
     """Auto-stow when the shots/time run out or a reload starts; keep mode attributes on; stow a mode
     whose gun was put away (its attributes must not stay); repair a taser element left by a save."""
     weapon = held_weapon()
     held_uid = weapon.DefinitionData.UniqueId if weapon is not None else None
+    try:
+        _retag_big_boy()
+    except Exception as e:  # noqa: BLE001 - a rocket that keeps its plain damage is no reason to lose the tick
+        log(f"Big-Boy rocket error: {e!r}")
     try:
         _bipod_fx_tick(weapon)
         _muzzle_tick()
@@ -587,12 +879,15 @@ def watch_underbarrel(*_: object) -> None:
     original, kind = entry
     if held_uid in _mode:
         _tune_mode(weapon)
+        if MODES[_mode[held_uid]["kind"]].get("arc"):
+            _aim_mortar(weapon)
     if held_uid not in _deployed:
         # Deployed in a previous session (saved while out): no free shots, just stow.
         _stow(weapon, kind, original, 0, "stowed")
         return
     if is_toggle(weapon):
-        _hold_speed()
+        if is_stance(weapon):
+            _hold_speed()
         return
     timed = time_left(weapon)
     if timed is not None:
@@ -740,7 +1035,7 @@ def _bipod_fx_tick(weapon: UObject | None) -> None:
     now = game_now()
     dt = min(0.1, now - _fx["last"]) if _fx["last"] is not None else 0.016
     _fx["last"] = now
-    target = 1.0 if weapon is not None and is_toggle(weapon) else 0.0
+    target = 1.0 if weapon is not None and is_stance(weapon) else 0.0
     p = _fx["p"]
     if p == 0.0 and target == 0.0:
         return
@@ -805,7 +1100,7 @@ OPTIONS += [spark_offset, spark_height]
 # else by gun type. The double barrel also plays the gun's own barrel spin-up sound.
 EQUIP = "Ake_Obj_Pickup.Obj_Pickup_Equip.Ak_Play_Obj_Pickup_Equip_"
 CLACK_BY_KIND = {"Rocket Launcher": "RL", "Grenade Launcher": "RL", "Zip Rockets": "SMG", "Shotgun": "Shotgun"}
-CLACK_BY_GUN = {"AR": "Rifle", "Sniper": "Rifle", "Pistol": "Pistol"}
+CLACK_BY_GUN = {"AR": "Rifle", "Sniper": "Rifle", "Pistol": "Pistol", "Launcher": "RL"}
 
 
 def _clack(weapon: UObject, kind: str, deploying: bool) -> None:
@@ -899,4 +1194,4 @@ def _muzzle_tick() -> None:
             comp.ActivateSystem(True)
 
 
-HOOKS = [watch_underbarrel, manual_reload, auto_reload, mode_firing_mode, pump_refire, single_shot, no_sprint_on_bipod]
+HOOKS = [watch_underbarrel, manual_reload, auto_reload, mode_firing_mode, pump_refire, single_shot, no_sprint_on_bipod, draw_mortar_cursor]

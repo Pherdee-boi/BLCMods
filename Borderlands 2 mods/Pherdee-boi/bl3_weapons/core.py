@@ -187,7 +187,9 @@ _PROVIDER_FIELDS = ("BodyPartDefinition", "GripPartDefinition", "BarrelPartDefin
 
 
 def _behavior_kernel() -> UObject | None:
-    return next((k for k in unrealsdk.find_all("BehaviorKernel", exact=False) if not k._path_name().startswith("GearboxFramework.Default__")), None)
+    """The game's one live behavior kernel, or None when there is not exactly one (a handle belongs to one kernel: with two, the wrong one could be asked)."""
+    kernels = [k for k in unrealsdk.find_all("BehaviorKernel", exact=False) if not k._path_name().startswith("GearboxFramework.Default__")]
+    return kernels[0] if len(kernels) == 1 else None
 
 
 def _providers(data) -> list[UObject]:
@@ -207,6 +209,8 @@ def _running_sequences(weapon: UObject, data) -> tuple | None:
     timer kept firing while another gun was in the player's hands (reported 2026-10-20)."""
     try:
         kernel = _behavior_kernel()
+        if kernel is None:
+            return None
         handle = weapon.GetBehaviorConsumerHandle()
         on = [(p, str(seq.BehaviorSequenceName)) for p in _providers(data) for seq in p.BehaviorSequences
               if kernel.IsBehaviorSequenceEnabled(ConsumerHandle=handle, ProviderDefinition=p, BehaviorSequenceName=str(seq.BehaviorSequenceName))[0]]
@@ -222,6 +226,8 @@ def _move_sequences(weapon: UObject, running: tuple | None, new_data) -> None:
         return
     try:
         kernel = _behavior_kernel()
+        if kernel is None:
+            return
         old, on = running
         new = weapon.GetBehaviorConsumerHandle()
         if int(old.PID) == int(new.PID):

@@ -121,8 +121,6 @@ def _trait(item: UObject) -> str | None:
         return None if torgue.special_fire(item) is not None else "Alt mode: sticky / impact rounds"
     if maker == "Tediore":
         return f"Thrown: {tediore.throw_of(item)}"
-    if maker == "Hyperion":
-        return "Aim down sights: frontal energy shield"
     if maker == "Jakobs":
         return "Critical hits ricochet"
     if maker == "Bandit":
@@ -158,6 +156,11 @@ def card_lines(item: UObject) -> list[str]:
         kind = vladof.underbarrel_kind(item)
         if kind:
             lines.append(f'<font color="{UNDERBARREL_COLOUR}">Underbarrel: {kind}</font>')
+    if maker_of(item) == "Hyperion":
+        from . import hyperion
+
+        shield = hyperion.VARIANTS[hyperion.variant_of(item)]
+        lines.append(f'<font color="{shield["html"]}">Shield: {shield["name"].removesuffix(" Shield")}</font>')
     if maker_of(item) == "Maliwan":
         alt = _maliwan_alt(item)
         if alt:

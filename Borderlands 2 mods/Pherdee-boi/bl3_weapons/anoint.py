@@ -181,6 +181,9 @@ def scale_damage(obj: UObject, args, _ret, func) -> type[Block] | None:
     from . import dahl
 
     mult *= dahl.damage_multiplier(weapon) if source in GUN_DAMAGE else 1.0
+    from . import hyperion
+
+    mult *= hyperion.amp_multiplier(weapon) if source in GUN_DAMAGE else 1.0
     ub = vladof.damage_multiplier(weapon)
     if ub != 1.0:
         mult *= ub

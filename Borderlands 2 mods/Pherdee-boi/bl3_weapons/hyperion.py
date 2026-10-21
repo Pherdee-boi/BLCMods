@@ -27,7 +27,7 @@ from unrealsdk.hooks import Block, prevent_hooking_direct_calls
 from unrealsdk.unreal import UObject, WeakPointer
 
 from . import hud
-from .core import held_weapon, log, active_maker_of as maker_of, now as game_now
+from .core import held_weapon, log, active_maker_of as maker_of, now as game_now, remembered
 
 FRONT_ANGLE = 60.0  # degrees either side of the view direction
 REGEN_DELAY, BROKEN_DELAY, REGEN_TIME = 2.5, 5.0, 2.0  # seconds
@@ -52,6 +52,7 @@ WORLD_MATERIALS = {  # label: material path (all in Startup.upk, so always loade
     "Digital Shield": "FX_CHAR_Shared_Shield.Materials.MasterShaders.Mat_Digital_Shield_MS",
     "Shield Distortion": "FX_CHAR_Shared_Shield.Materials.MasterShaders.Mat_Shield_Distortion_MS",
     "Generic Shield": "FX_CHAR_Shared_Shield.Materials.Instances.Digital.Dahl.Basic.MQ.Mati_Shield_Generic",
+    "BL3 Pale": "FX_CHAR_Shared_Shield.Materials.Instances.Digital.Dahl.Basic.MQ.Mati_Shield_Generic",  # the same, made pale and see-through (_pale)
 }
 WORLD_MESHES = {
     "Hex Plate": "FX_WEP_Scopes.Meshes.Mesh_Maliwan_Sniper_Scope_Cover_Hex",
@@ -59,7 +60,7 @@ WORLD_MESHES = {
 }
 FACINGS = ["Auto", "X", "-X", "Y", "-Y", "Z", "-Z"]
 visual_style = DropdownOption("Shield Visual Style", "In World", ["In World", "On Screen"], description="In World: a real shield object in front of you (your gun draws over it). On Screen: a HUD panel.")
-world_material = DropdownOption("Shield Material", "Hex Hit", list(WORLD_MATERIALS), description="Which BL2 shield material the in-world shield uses.")
+world_material = DropdownOption("Shield Material", "BL3 Pale", list(WORLD_MATERIALS), description="Which BL2 shield material the in-world shield uses.")
 world_mesh = DropdownOption("Shield Mesh", "Hex Plate", list(WORLD_MESHES), description="Shape of the in-world shield.")
 world_facing = DropdownOption("Shield Mesh Facing", "Auto", FACINGS, description="Change if the shield is seen edge-on or from behind.")
 world_size = SliderOption("World Shield Size", 70, 10, 150, 1, True, description="Width of the in-world shield (Unreal units).")
@@ -67,11 +68,72 @@ world_dist = SliderOption("World Shield Distance", 75, 20, 200, 1, True, descrip
 world_drop = SliderOption("World Shield Height", -10, -40, 20, 1, True, description="Height relative to your eyes (Unreal units).")
 world_tint = DropdownOption("Shield Tint", "Blue", ["Light Blue", "Blue", "White"], description="Colour of the in-world Hex Hit shield.")
 TINTS = {"Light Blue": (0.55, 0.8, 1.0), "Blue": (0.3, 0.6, 1.0)}
-world_cells = DropdownOption("Shield Cells", "19", ["1", "7", "19"], description="Build the in-world shield from this many hex cells (more = sharper).")
+world_cells = DropdownOption("Shield Cells", "6 (BL3)", ["1", "7", "19", "6 (BL3)"], description="Build the in-world shield from this many hex cells (more = sharper). 6 (BL3): three cells each side of the gun, low in the view, like Borderlands 3's.")
 OPTIONS = [
     shield_pct, fx_on, visual_style, world_material, world_tint, world_mesh, world_cells, world_facing, world_size, world_dist, world_drop,
     panel_size, panel_height, panel_opacity,
 ]
+
+# BL3's four Hyperion shields, each its own colour. A gun rolls its shield once (core.remembered), and the item card names it.
+# colour: the cells' fill (the material is additive, so these are how bright each channel is); ui: the meter's; line: the outline's and the glow's; html: the card's.
+VARIANTS = {
+    "Hyperion": {"name": "Hyperion Shield", "text": "Aim down sights: frontal energy shield", "colour": (0.5, 0.85, 1.1), "ui": (82, 210, 232), "line": (175, 218, 255), "html": "#7FD6F0"},
+    "Amped": {"name": "Amped Shield", "text": "Damage taken becomes weapon damage for a short time", "colour": (0.85, 0.5, 1.2), "ui": (178, 108, 240), "line": (212, 170, 255), "html": "#B56CF0"},
+    "Genesis": {"name": "Genesis Shield", "text": "Damage taken becomes a bullet in the loaded magazine", "colour": (0.4, 1.1, 0.85), "ui": (70, 220, 185), "line": (160, 245, 225), "html": "#46DCB9"},
+    "Redirect": {"name": "Redirect Shield", "text": "Damage taken is reflected back at attackers", "colour": (0.8, 0.75, 0.45), "ui": (204, 190, 120), "line": (225, 215, 160), "html": "#CCBE78"},
+}
+variant_chance = SliderOption("Hyperion Shield Variant Chance", 50, 0, 100, 5, True, description="Percent of Hyperion guns that roll an Amped, Genesis or Redirect shield instead of the plain one (rolled once per gun). 0: every gun has the plain shield.")
+OPTIONS += [variant_chance]
+AMP_SECONDS, AMP_PER_SHIELD, AMP_MAX = 5.0, 1.0, 1.0  # Amped: a hit worth the whole shield adds this much damage (a share, 1.0 = +100%), for this long; it stacks up to the max
+GENESIS_STEP = 0.10  # Genesis: one bullet for a hit, and one more for each of this share of your max health in it
+
+_amp = 0.0  # the Amped bonus now (a share of damage), and when it ends
+_amp_until = -1e9
+_reflecting = False  # Redirect's own hit on the attacker must not be absorbed again
+
+
+def variant_of(weapon: UObject | None) -> str:
+    """"Hyperion", "Amped", "Genesis" or "Redirect": the shield this gun raises (rolled once per gun)."""
+    if weapon is None or maker_of(weapon) != "Hyperion" or weapon.DefinitionData.UniqueId == 0:
+        return "Hyperion"
+    rolled = remembered("hyshield", weapon, lambda rng: [rng.choice(("Amped", "Genesis", "Redirect")) if rng.random() * 100 < variant_chance.value else "Hyperion"])
+    return rolled[0] if rolled and rolled[0] in VARIANTS else "Hyperion"
+
+
+def amp_multiplier(weapon: UObject | None) -> float:
+    """The damage multiplier an Amped shield gives the held gun (1.0 when it isn't one, or the bonus ran out)."""
+    global _amp
+    if weapon is None or variant_of(weapon) != "Amped":
+        return 1.0
+    if game_now() > _amp_until:
+        _amp = 0.0
+        return 1.0
+    return 1.0 + _amp
+
+
+def _on_absorbed(pc: UObject, weapon: UObject | None, args, absorbed: float) -> None:
+    """What the gun's shield does with the damage it took."""
+    global _amp, _amp_until, _reflecting
+    variant = variant_of(weapon)
+    if variant == "Amped":
+        _amp = min(AMP_MAX, _amp + AMP_PER_SHIELD * absorbed / max(_max_hp(), 1.0))
+        _amp_until = game_now() + AMP_SECONDS
+    elif variant == "Genesis":
+        health = max(pc.Pawn.GetMaxHealth(), 1.0)
+        bullets = 1 + int(absorbed / (health * GENESIS_STEP))
+        weapon.ReloadCnt = min(int(weapon.ClipSize), int(weapon.ReloadCnt) + bullets)
+    elif variant == "Redirect" and not _reflecting:
+        attacker = args.InstigatedBy.Pawn if args.InstigatedBy is not None else None
+        if attacker is None or attacker._get_address() == pc.Pawn._get_address():
+            return
+        _reflecting = True
+        try:
+            attacker.TakeDamage(Damage=absorbed, InstigatedBy=pc, HitLocation=attacker.Location, Momentum=unrealsdk.make_struct("Vector", X=0, Y=0, Z=0), DamageType=args.DamageType, DamageCauser=pc.Pawn)
+        except Exception as ex:  # noqa: BLE001 - a reflection that fails must not break the shield
+            log(f"Hyperion Redirect: couldn't hit the attacker ({ex!r})")
+        finally:
+            _reflecting = False
+
 
 _hp = -1.0  # current shield points (-1 = not initialised)
 _last_hit = -1e9
@@ -122,6 +184,7 @@ def absorb(obj: UObject, args, _ret, func) -> type[Block] | None:
     absorbed = min(args.Damage, _hp)
     _hp -= absorbed
     _last_hit = game_now()
+    _on_absorbed(pc, held_weapon(), args, absorbed)
     _fx_event("hit")
     if _hp <= 0:
         _hp = 0.0
@@ -215,8 +278,8 @@ def _fx_tick() -> None:
 
 
 def reset() -> None:
-    global _panel_open, _breaking_at
-    _panel_open, _breaking_at = 0.0, -1e9
+    global _panel_open, _breaking_at, _amp
+    _panel_open, _breaking_at, _amp = 0.0, -1e9, 0.0
     _world_reset()
     _meter_off()
 
@@ -426,7 +489,8 @@ def _ensure_cells(pawn: UObject, count: int) -> list[UObject] | None:
         for c in _live():
             c.SetStaticMesh(mesh, True)
         _comp_mesh, _comp_mat = world_mesh.value, ""
-    want_mat = f"{world_material.value}|{world_tint.value}"
+    variant = variant_of(held_weapon())
+    want_mat = f"{world_material.value}|{world_tint.value}|{variant}"
     if _comp_mat != want_mat:
         mat = None
         for cls in ("MaterialInterface", "Material", "MaterialInstanceConstant"):
@@ -435,6 +499,8 @@ def _ensure_cells(pawn: UObject, count: int) -> list[UObject] | None:
                 break
         if mat is not None and world_tint.value in TINTS and mat.Class.Name == "Material":
             mat = _tinted(mat, TINTS[world_tint.value])
+        elif mat is not None and world_material.value == "BL3 Pale":
+            mat = _pale(mat, VARIANTS[variant]["colour"])
         if mat is not None:
             for c in _live():
                 c.SetMaterial(0, mat)
@@ -445,23 +511,213 @@ def _ensure_cells(pawn: UObject, count: int) -> list[UObject] | None:
 
 _tint_mics: dict[tuple, WeakPointer] = {}
 
+# Borderlands 3's shield is six pale blue hexagons, three each side of the gun, outside the gun's own silhouette. Centres in pixels of a 1920 wide
+# screen from its middle (x right, y up), measured from BL3; scaled by the field of view, so they sit the same on the screen whatever the gun's zoom.
+BL3_CELLS = ((-490, -212), (-575, -330), (-480, -460), (485, -212), (570, -330), (475, -460))  # (BL3's gun is narrower: these clear BL2's wider ones)
+BL3_RADIUS = 90  # of a cell, pixels (the hex plate fills part of its box)
+SCOPE_FIT = (0.9, 0.62, 0.85)  # the layout's x, y and the cell size, with a full-screen scope
+_aspect = 16 / 9  # of the screen (draw_shield keeps it): BL2's field of view is the vertical one
+BL3_COLOUR = (0.5, 0.85, 1.1)
 
-def _tinted(parent: UObject, rgb: tuple[float, float, float]) -> UObject:
-    """A MaterialInstanceConstant of `parent` with its colour parameter set. Material_ShieldHitHex2 has a
-    single VectorParameter (default white) whose ParameterName is blank in the cooked data, i.e. 'None'."""
+
+def _pale(parent: UObject, rgb: tuple[float, float, float] = BL3_COLOUR) -> UObject:
+    """A MaterialInstanceConstant of the Generic Shield with a pale, see-through fill and no honeycomb inside."""
     key = (parent._get_address(), rgb)
     mic = _tint_mics[key]() if key in _tint_mics else None
     if mic is not None:
         return mic
-    mic = unrealsdk.construct_object("MaterialInstanceConstant", parent.Outer, f"BL3W_ShieldTint_{len(_tint_mics)}")
+    mic = unrealsdk.construct_object("MaterialInstanceConstant", parent.Outer, f"BL3W_ShieldPale_{len(_tint_mics)}")
     mic.ObjectFlags |= 0x4000  # RF_RootSet: keep it through map changes
     mic.SetParent(parent)
     colour = unrealsdk.make_struct("LinearColor", R=rgb[0], G=rgb[1], B=rgb[2], A=1.0)
-    for name in ("None", "Color", "Colour", "Tint"):
+    for name in ("p_GradientColor_01", "p_GradientColor_02"):
         mic.SetVectorParameterValue(name, colour)
+    mic.SetScalarParameterValue("p_BaseTexMultiplier", 2.0)  # the fill: 0.9 is only an outline, 2.5 is solid white
+    mic.SetScalarParameterValue("p_InternalTexMultiplier", 0.0)  # no honeycomb inside
     _tint_mics[key] = WeakPointer(mic)
-    log(f"Hyperion world shield: tint {rgb} on {parent.Name}")
     return mic
+
+
+def _scoped(weapon: UObject | None) -> bool:
+    """Does aiming this gun show a full-screen scope (a sight part that is `bScoped`)?"""
+    if weapon is None:
+        return False
+    data = weapon.DefinitionData
+    return any(getattr(getattr(data, f, None), "bScoped", False) for f in ("SightPartDefinition", "BodyPartDefinition", "BarrelPartDefinition"))
+
+
+def _cell_count() -> int:
+    return int(world_cells.value.split()[0])
+
+
+# BL3 also draws a thin pale outline along both sides of the screen, round the shield. Fractions of the screen's width and height for the left
+# side, top of the screen first; the right side is its mirror. Drawn as a smooth curve through them.
+FRAME = ((0.004, 0.84), (0.003, 0.74), (0.012, 0.70), (0.05, 0.675), (0.13, 0.645), (0.21, 0.615))
+FRAME_RGB = (175, 218, 255)
+FRAME_LINES = ((-3.0, 0.1), (-2.0, 0.3), (-1.0, 0.65), (0.0, 1.0), (1.0, 0.65), (2.0, 0.3), (3.0, 0.1))  # (pixels along the normal, how strong): a bright core and a soft glow
+
+
+def _curve(points: tuple[tuple[float, float], ...], steps: int = 2) -> list[tuple[float, float]]:
+    """A Catmull-Rom curve through the points, `steps` pieces between each two."""
+    p = [points[0], *points, points[-1]]
+    out = []
+    for i in range(1, len(p) - 2):
+        p0, p1, p2, p3 = p[i - 1:i + 3]
+        for n in range(steps):
+            t = n / steps
+            out.append(tuple(0.5 * (2 * p1[k] + (p2[k] - p0[k]) * t + (2 * p0[k] - 5 * p1[k] + 4 * p2[k] - p3[k]) * t * t + (3 * p1[k] - p0[k] - 3 * p2[k] + p3[k]) * t ** 3) for k in (0, 1)))
+    out.append(points[-1])
+    return out
+
+
+FRAME_CURVE = _curve(FRAME)
+_frame_colours: dict[tuple, list] = {}  # (strength in twentieths, rgb) -> a colour per glow line
+_frame_geometry: tuple[float, float, list] = (0.0, 0.0, [])  # the screen it was laid out for, and each line segment of the outline
+
+
+def _frame_segments(w: float, h: float) -> list[tuple[float, float, float, float, float, float]]:
+    """(x1, y1, x2, y2, normal x, normal y) of each piece of the outline on this screen, both sides."""
+    out = []
+    for side in (0, 1):
+        pts = [(((1 - fx) if side else fx) * w, fy * h) for fx, fy in FRAME_CURVE]
+        for (x1, y1), (x2, y2) in zip(pts, pts[1:]):
+            length = math.hypot(x2 - x1, y2 - y1) or 1.0
+            out.append((x1, y1, x2, y2, -(y2 - y1) / length, (x2 - x1) / length))
+    return out
+
+
+def _draw_frame(canvas: UObject, alpha: float, dx: float = 0.0, dy: float = 0.0, rgb: tuple[int, int, int] = FRAME_RGB) -> None:
+    """The outline, as 2D lines: a bright core with a soft glow each side of it, offset along the line's normal; (dx, dy) moves it as a piece."""
+    global _frame_geometry
+    w, h = canvas.SizeX, canvas.SizeY
+    if _frame_geometry[:2] != (w, h):
+        _frame_geometry = (w, h, _frame_segments(w, h))
+    level = round(alpha * 20)
+    colours = _frame_colours.get((level, rgb))
+    if colours is None:
+        colours = _frame_colours[(level, rgb)] = [unrealsdk.make_struct("Color", R=rgb[0], G=rgb[1], B=rgb[2], A=int(230 * fade * level / 20)) for _, fade in FRAME_LINES]
+    for x1, y1, x2, y2, nx, ny in _frame_geometry[2]:
+        for (offset, _), colour in zip(FRAME_LINES, colours):
+            canvas.Draw2DLine(x1 + dx + nx * offset, y1 + dy + ny * offset, x2 + dx + nx * offset, y2 + dy + ny * offset, colour)
+
+
+# The light BL3's shield throws from the middle of the gun. It is in the world, behind the gun, like the cells: layers of the hex plate, flattened into
+# a lens a little under the middle of the view, each a faint additive tint of the shield's colour, so they add up to a soft glow.
+GLOW_MESH = "FX_WEP_Scopes.Meshes.Mesh_Maliwan_Sniper_Scope_Cover_Hex"
+GLOW_BOUNDS = ((1.1508, 3.5602, 3.2172), (0.0039, -0.001, 0.0002))  # the plate's extent and centre offset (measured), thin along X
+GLOW_LAYERS = ((0.64, 0.085, 0.08), (0.50, 0.062, 0.11), (0.37, 0.045, 0.13), (0.26, 0.032, 0.15), (0.17, 0.022, 0.17), (0.11, 0.014, 0.19))  # (width, height as shares of the view, strength)
+GLOW_BELOW = 0.60  # of the view's half height, under the middle
+_glow: list[WeakPointer] = []
+_glow_variant = ""
+_glow_mics: dict[str, list[WeakPointer]] = {}
+
+
+def _glow_live() -> list[UObject]:
+    global _glow
+    objs = [w() for w in _glow]
+    if any(o is None for o in objs):
+        _glow = []
+        return []
+    return objs
+
+
+def _glow_material(variant: str) -> list[UObject] | None:
+    """One faint additive material per glow layer, in the shield's colour (made once per colour)."""
+    have = [w() for w in _glow_mics.get(variant, [])]
+    if have and all(m is not None for m in have):
+        return have
+    base = _obj("MaterialInstanceConstant", WORLD_MATERIALS["Generic Shield"])
+    if base is None:
+        return None
+    r, g, b = VARIANTS[variant]["colour"]
+    out = []
+    for i, (_, _, strength) in enumerate(GLOW_LAYERS):
+        mic = unrealsdk.construct_object("MaterialInstanceConstant", base.Outer, f"BL3W_ShieldGlow_{variant}_{i}")
+        mic.ObjectFlags |= 0x4000  # RF_RootSet: keep it through map changes
+        mic.SetParent(base)
+        colour = unrealsdk.make_struct("LinearColor", R=r * strength, G=g * strength, B=b * strength, A=1.0)
+        for name in ("p_GradientColor_01", "p_GradientColor_02", "p_InternalTexColor"):
+            mic.SetVectorParameterValue(name, colour)
+        mic.SetScalarParameterValue("p_BaseTexMultiplier", 1.0)
+        mic.SetScalarParameterValue("p_InternalTexMultiplier", 0.0)
+        mic.SetScalarParameterValue("p_MaskPower", 0.05)
+        mic.SetScalarParameterValue("p_ColorGradientPower", 0.3)
+        out.append(mic)
+    _glow_mics[variant] = [WeakPointer(m) for m in out]
+    return out
+
+
+def _glow_hide() -> None:
+    for c in _glow_live():
+        c.SetHidden(True)
+
+
+def _place_glow(pc: UObject, pawn: UObject, variant: str, cam, cam_pitch: int, cam_yaw: int, ease: float, show: bool) -> None:
+    """The glow's layers behind the gun (`show`: false hides them)."""
+    global _glow, _glow_variant
+    if not show:
+        _glow_hide()
+        return
+    if _glow and not _glow_live():
+        _glow = []
+    mesh = _obj("StaticMesh", GLOW_MESH)
+    if mesh is None:
+        return
+    fresh = False
+    while len(_glow) < len(GLOW_LAYERS):
+        _glow.append(WeakPointer(_new_cell(pawn)))
+        fresh = True
+    cells = _glow_live()
+    if fresh or _glow_variant != variant:
+        mics = _glow_material(variant)
+        if mics is None:
+            return
+        for c, mic in zip(cells, mics):
+            c.SetStaticMesh(mesh, True)
+            c.SetMaterial(0, mic)
+        _glow_variant = variant
+    ext, origin = GLOW_BOUNDS
+    axis = "X"
+    rot = _mesh_rotation(cam_pitch, cam_yaw, axis)
+    axes = dict(zip("XYZ", _axes(*rot)))
+    fwd, right, up = _axes(cam_pitch, cam_yaw, 0)
+    wide = max("YZ", key=lambda k: abs(sum(a * b for a, b in zip(axes[k], right))))  # the plate's axis that runs across the view
+    tall = "Z" if wide == "Y" else "Y"
+    d = world_dist.value
+    half = math.tan(math.radians(pc.GetFOVAngle()) / 2) * d
+    centre = [cam.X + fwd[0] * d - up[0] * GLOW_BELOW * half, cam.Y + fwd[1] * d - up[1] * GLOW_BELOW * half, cam.Z + fwd[2] * d - up[2] * GLOW_BELOW * half]
+    rot_struct = unrealsdk.make_struct("Rotator", Pitch=rot[0] & 0xFFFF, Yaw=rot[1] & 0xFFFF, Roll=rot[2] & 0xFFFF)
+    grow = 0.3 + 0.7 * ease
+    for c, (w_share, h_share, _) in zip(cells, GLOW_LAYERS):
+        sw = w_share * half * _aspect / ext["XYZ".index(wide)] * grow
+        sh = h_share * half / ext["XYZ".index(tall)] * grow
+        scale = {wide: sw, tall: sh, axis: 1.0}
+        off = [axes["X"][k] * origin[0] * scale["X"] + axes["Y"][k] * origin[1] * scale["Y"] + axes["Z"][k] * origin[2] * scale["Z"] for k in range(3)]
+        c.SetScale3D(unrealsdk.make_struct("Vector", X=scale["X"], Y=scale["Y"], Z=scale["Z"]))
+        c.SetRotation(rot_struct)
+        c.SetTranslation(unrealsdk.make_struct("Vector", X=centre[0] - off[0], Y=centre[1] - off[1], Z=centre[2] - off[2]))
+        c.SetHidden(False)
+
+
+_anchor: tuple[float, float, float] | None = None  # where the world cells were put last frame (their centre)
+
+
+def _anchor_offset(canvas: UObject, pc: UObject | None) -> tuple[float, float]:
+    """Where the cells' centre of last frame sits on the screen now, from the screen's middle: they go up one frame late, so on a turn they trail the
+    view; the outline and the glow follow the same way, to move with them as one piece."""
+    if _anchor is None or pc is None:
+        return 0.0, 0.0
+    pose = _view_pose(pc)
+    if pose is None:
+        return 0.0, 0.0
+    cam, pitch, yaw = pose
+    fwd, right, up = _axes(pitch, yaw, 0)
+    rel = (_anchor[0] - cam.X, _anchor[1] - cam.Y, _anchor[2] - cam.Z)
+    ahead = sum(a * b for a, b in zip(rel, fwd))
+    if ahead < 1.0:
+        return 0.0, 0.0
+    tan_v = math.tan(math.radians(pc.GetFOVAngle()) / 2)
+    return (sum(a * b for a, b in zip(rel, right)) / ahead / (tan_v * _aspect)) * canvas.SizeX / 2, -(sum(a * b for a, b in zip(rel, up)) / ahead / tan_v) * canvas.SizeY / 2
 
 
 def _hex_layout(count: int) -> list[tuple[int, int]]:
@@ -490,8 +746,9 @@ def _world_tick(pc: UObject | None, aiming: bool, now: float) -> None:
     if _world_open <= 0 and not breaking:
         for c in _live():
             c.SetHidden(True)
+        _glow_hide()
         return
-    count = int(world_cells.value)
+    count = _cell_count()
     cells = _ensure_cells(pc.Pawn, count)
     if not cells:
         return
@@ -502,6 +759,7 @@ def _world_tick(pc: UObject | None, aiming: bool, now: float) -> None:
     if not _measure(cells[0], cam):
         for c in cells[1:]:
             c.SetHidden(True)
+        _glow_hide()
         return
     ext, origin = _mesh_bounds[world_mesh.value]
     axis = _facing_axis(ext)
@@ -509,13 +767,18 @@ def _world_tick(pc: UObject | None, aiming: bool, now: float) -> None:
     plane = sorted((k for k in "XYZ" if k != flat), key=lambda k: -ext["XYZ".index(k)])
     wide, tall = plane  # flat-top hexes: the wider in-plane axis carries the 1.5x column step
     ew, eh = ext["XYZ".index(wide)] or 1.0, ext["XYZ".index(tall)] or 1.0
-    layout = _hex_layout(count)
-    rings = {1: 0, 7: 1, 19: 2}[count]
-    cluster_half = ew * (1 + 1.5 * rings)
+    bl3 = count == 6
+    scoped = bl3 and _scoped(held_weapon())  # a full-screen scope's black frame would hide the lower cells: they move in, up and shrink to sit in its window
+    kx, ky, kr = SCOPE_FIT if scoped else (1.0, 1.0, 1.0)
+    layout = BL3_CELLS if bl3 else _hex_layout(count)
+    cluster_half = 1.0 if bl3 else ew * (1 + 1.5 * {1: 0, 7: 1, 19: 2}[count])
 
     ease = 1 - (1 - _world_open) ** 3
     hit = max(0.0, 1 - (now - _last_hit) / 0.1)
     size = world_size.value / (2 * cluster_half) * (0.3 + 0.7 * ease) * (1 + 0.06 * hit)
+    if bl3:  # a screen pixel in world units at the shield's distance (the size option scales the lot, 70 being the default)
+        unit = math.tan(math.radians(pc.GetFOVAngle()) / 2) * _aspect * world_dist.value / 960 * world_size.value / 70
+        size = BL3_RADIUS * kr * unit / ew * (0.3 + 0.7 * ease) * (1 + 0.06 * hit)
     spread = 1.04
     if breaking:
         t = (now - _breaking_at) / WORLD_BREAK
@@ -526,18 +789,24 @@ def _world_tick(pc: UObject | None, aiming: bool, now: float) -> None:
     axes = dict(zip("XYZ", _axes(*rot)))
     fwd = _axes(cam_pitch, cam_yaw, 0)[0]
     d = world_dist.value
-    centre = (cam.X + fwd[0] * d, cam.Y + fwd[1] * d, cam.Z + fwd[2] * d + world_drop.value)
+    centre = (cam.X + fwd[0] * d, cam.Y + fwd[1] * d, cam.Z + fwd[2] * d + (0 if bl3 else world_drop.value))
+    global _anchor
+    _anchor = centre if bl3 else None
     rot_struct = unrealsdk.make_struct("Rotator", Pitch=rot[0] & 0xFFFF, Yaw=rot[1] & 0xFFFF, Roll=rot[2] & 0xFFFF)
     org = [origin[0] * size, origin[1] * size, origin[2] * size]
     org_world = [axes["X"][i] * org[0] + axes["Y"][i] * org[1] + axes["Z"][i] * org[2] for i in range(3)]
     tick = int(now * 12)
+    _place_glow(pc, pc.Pawn, variant_of(held_weapon()), cam, cam_pitch, cam_yaw, ease, bl3 and not scoped and not breaking)
     for i, cell in enumerate(cells):
         if i >= len(layout):
             cell.SetHidden(True)
             continue
-        q, r = layout[i]
-        u = 1.5 * q * ew * size * spread  # along the wide axis
-        v = 2 * eh * (r + q / 2) * size * spread  # along the tall axis
+        if bl3:
+            u, v = (c * k * unit * (0.3 + 0.7 * ease) * spread for c, k in zip(layout[i], (kx, ky)))
+        else:
+            q, r = layout[i]
+            u = 1.5 * q * ew * size * spread  # along the wide axis
+            v = 2 * eh * (r + q / 2) * size * spread  # along the tall axis
         pos = [centre[k] + axes[wide][k] * u + axes[tall][k] * v - org_world[k] for k in range(3)]
         cell.SetTranslation(unrealsdk.make_struct("Vector", X=pos[0], Y=pos[1], Z=pos[2]))
         cell.SetRotation(rot_struct)
@@ -578,13 +847,13 @@ def _world_burst(pc: UObject | None) -> None:
 
 
 def _world_reset() -> None:
-    global _cells, _world_open
+    global _cells, _world_open, _glow
     pc = get_pc(possibly_loading=True)
-    for c in _live():
+    for c in _live() + _glow_live():
         c.SetHidden(True)
         if pc is not None and pc.Pawn is not None and pc.Pawn._get_address() == _comp_owner:
             pc.Pawn.DetachComponent(c)
-    _cells, _world_open = [], 0.0
+    _cells, _world_open, _glow = [], 0.0, []
 
 
 # --------------------------------------------------------------------------- the HUD meter
@@ -601,11 +870,42 @@ HUD_HEIGHT = 720.0  # BL2's HUD stage height; the meter is laid out in those uni
 
 meter_height = SliderOption("Shield Meter Height", 90, 10, 160, 2, True, description="How far below the reticle the shield meter sits (HUD units, 720-high HUD).")
 show_percent = BoolOption("Shield Percent", True, description="Show the shield's % under the meter, in the HUD font.")
-OPTIONS += [meter_height, show_percent]
+meter_style = DropdownOption("Shield Meter Style", "BL2 HUD", ["Classic", "BL2 HUD"], description="Classic: a segmented bar with the shield % under it. BL2 HUD: a bar in the look of the game's own shield bar, with the shield points beside it.")
+OPTIONS += [meter_height, show_percent, meter_style]
+HUD_SHIELD = (82, 210, 232, 240)  # the game's shield bar cyan
+def _hud_bar(canvas: UObject, cx: float, top: float, w: float, h: float, frac: float,
+             color: tuple[int, int, int, int], backing: tuple[int, int, int, int], f: float) -> None:
+    """A bar in the look of BL2's own shield bar: leaning, light on top and darker below, in a thin pale frame; it empties from the right."""
+    slant = 0.45
+    bands = max(4, round(h / 2))  # a row every two pixels: the lean is smooth, and the calls few
+    sw = h * slant
+    x = cx - w / 2
+    a = color[3]
+    tex = canvas.DefaultTexture
+
+    def layer(left: float, y: float, width: float, height: float, rgba: tuple[int, int, int, int]) -> None:
+        canvas.SetDrawColor(*rgba)
+        row = height / bands
+        for i in range(bands):
+            canvas.SetPos(left + (bands - 1 - i) * row * slant, y + i * row, 0)
+            canvas.DrawRect(width, row + 0.5, tex)
+
+    layer(x - sw - 2 * f, top - 2 * f, w + 4 * f, h + 4 * f, hud.with_alpha((200, 232, 245, 230), a / 255))
+    layer(x - sw - 0.6 * f, top - 0.6 * f, w + 1.2 * f, h + 1.2 * f, backing)
+    band = h / bands
+    for i in range(bands):
+        t = i / (bands - 1)
+        tone = hud.lerp_color(hud.lerp_color(color[:3] + (a,), (255, 255, 255, a), 0.3), hud.lerp_color(color[:3] + (a,), (0, 0, 0, a), 0.35), t)
+        canvas.SetDrawColor(*(int(c) for c in tone))
+        canvas.SetPos(x - sw + (bands - 1 - i) * band * slant, top + i * band, 0)
+        canvas.DrawRect(w * max(0.0, min(1.0, frac)), band + 0.5, tex)
+
+
 # % label (v0.21.0, user request): BL2 HUD text in the HUD movie (hud.OutlinedLabel), centred under the
 # bar. The HUD stage is 1280x720 with the reticle at its centre.
 STAGE_CX, STAGE_CY = 640.0, 360.0
 PERCENT_SIZE = 28  # v0.21.1: user asked for double the first 14
+HUD_NUMBER_SIZE = 22  # the shield points, in the BL2 HUD style
 _label = hud.OutlinedLabel("bl3_shieldpct", width=180.0, height=44.0)
 _label_checked = -1e9
 
@@ -615,15 +915,22 @@ _last_draw = game_now()
 
 @hook("WillowGame.WillowGameViewportClient:PostRender")
 def draw_shield(_obj: UObject, args, *_: object) -> None:
-    global _fade, _last_draw
+    global _fade, _last_draw, _aspect
     now = game_now()
     dt, _last_draw = min(now - _last_draw, 0.1), now
     weapon = held_weapon()
     hyperion = weapon is not None and maker_of(weapon) == "Hyperion"
     canvas = args.Canvas
+    _aspect = canvas.SizeX / canvas.SizeY
     if visual_style.value == "On Screen" and hyperion:
         _draw_panel(canvas, now, dt, _aiming(weapon))
     global _world_error_logged
+    if fx_on.value and visual_style.value == "In World" and _world_open > 0 and _cell_count() == 6 and not _scoped(weapon):  # (a scope's frame takes the outline's place)
+        pc = get_pc(possibly_loading=True)
+        dx, dy = _anchor_offset(canvas, pc)
+        ease = 1 - (1 - _world_open) ** 3
+        line = VARIANTS[variant_of(weapon)]["line"]
+        _draw_frame(canvas, ease, dx, dy, line)
     try:
         _world_tick(get_pc(possibly_loading=True), hyperion and _aiming(weapon), now)
     except Exception as e:  # noqa: BLE001 - never let the world shield take the meter down
@@ -647,6 +954,12 @@ def draw_shield(_obj: UObject, args, *_: object) -> None:
     hit_flash = now - _last_hit < 0.12 and not broken
     f = canvas.SizeY / HUD_HEIGHT
     offset = max(10.0, min(HUD_HEIGHT / 2 - 30, float(meter_height.value)))
+    if meter_style.value == "BL2 HUD":
+        color = HIT_WHITE if hit_flash else (GREY if broken else VARIANTS[variant_of(weapon)]["ui"] + (240,))
+        w = 190 * f
+        _hud_bar(canvas, canvas.SizeX / 2, canvas.SizeY / 2 + offset * f, w, 12 * f, frac, hud.with_alpha(color, _fade), hud.with_alpha((6, 8, 14, 175), _fade), f)
+        _percent(f"{_hp:.0f}", _fade, offset, "#FFFFFF" if not broken else "#8C92A0", dx=-95 + 26, size=HUD_NUMBER_SIZE, lift=-26)
+        return
     color = HIT_WHITE if hit_flash else (GREY if broken else SHIELD_BLUE)
     hud.symmetric_bar(
         canvas, canvas.SizeX / 2, canvas.SizeY / 2 + offset * f, 150 * f, 6 * f, frac, hud.with_alpha(color, _fade),
@@ -656,8 +969,8 @@ def draw_shield(_obj: UObject, args, *_: object) -> None:
     _percent(f"{frac * 100:.0f}%", _fade, offset, "#FFFFFF" if not broken else "#8C92A0")
 
 
-def _percent(text: str | None, alpha: float, offset: float = 0.0, color: str = "#FFFFFF") -> None:
-    """The shield % in BL2's HUD font, centred just under the meter."""
+def _percent(text: str | None, alpha: float, offset: float = 0.0, color: str = "#FFFFFF", dx: float = 0.0, size: int = PERCENT_SIZE, lift: float = 6.0) -> None:
+    """The shield % in BL2's HUD font, centred just under the meter (dx: HUD units to the right of the middle; lift: below the meter)."""
     global _label_checked
     pc = get_pc(possibly_loading=True)
     movie = pc.myHUD.HUDMovie if pc is not None and pc.myHUD is not None else None
@@ -672,8 +985,8 @@ def _percent(text: str | None, alpha: float, offset: float = 0.0, color: str = "
         _label_checked = now
         if not _label.ensure(movie):
             return
-    _label.place_centered(movie, STAGE_CX, STAGE_CY + offset + 6)
-    _label.set_text(movie, text, size=PERCENT_SIZE, color=color)
+    _label.place_centered(movie, STAGE_CX + dx, STAGE_CY + offset + lift)
+    _label.set_text(movie, text, size=size, color=color)
     _label.set_alpha(movie, alpha)
 
 
