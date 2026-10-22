@@ -609,9 +609,15 @@ def on_tick(*_: object) -> None:
             radgear.tick(pawn)
         except Exception:  # noqa: BLE001
             log("radiation inventory check failed: " + traceback.format_exc()[-300:])
+    now = game_now()
+    try:
+        held = held_weapon()
+        if held is not None and held.DefinitionData.WeaponTypeDefinition is not None and held.GetFiringModeDefinition().Name == "FM_Rocket_Mongol" and is_radiation(held):
+            _radiate_children(held, now)
+    except Exception:  # noqa: BLE001
+        log("radiation Mongol children failed: " + traceback.format_exc()[-300:])
     if not _hot and not _clouds:
         return
-    now = game_now()
     if now - _last_scan < SCAN_EVERY:
         return
     _last_scan = now
@@ -620,6 +626,43 @@ def on_tick(*_: object) -> None:
             scan(pc)
     except Exception:  # noqa: BLE001
         log("radiation scan failed: " + traceback.format_exc()[-300:])
+
+
+_children_seen: dict[int, float] = {}  # a Mongol child rocket's address -> when it was made radioactive
+CHILD_SCAN_EVERY = 0.15
+
+
+def _radiate_children(weapon: UObject, now: float) -> None:
+    """The Mongol's small rockets burst out of its big one and take their damage type and explosion from their own definition, not from the gun, so
+    a radiation Mongol's children were plain explosive (the main rocket was radiation). Each new child gets radiation's while the gun is held.
+    shortcut: a child that comes out after the player has swapped guns stays explosive; it is only looked for while the radiation gun is held."""
+    global _child_scan
+    if now - _child_scan < CHILD_SCAN_EVERY:
+        return
+    _child_scan = now
+    for key in [k for k, t in _children_seen.items() if now - t > 10]:
+        _children_seen.pop(key, None)
+    built = _built
+    if built is None:
+        return
+    explosion = None
+    for p in unrealsdk.find_all("WillowProjectile", exact=False):
+        if p.Name.startswith("Default__") or p.Definition is None or not p.Definition.Name.endswith("Mongol_Child"):
+            continue
+        address = p._get_address()
+        if address in _children_seen:
+            continue
+        _children_seen[address] = now
+        if explosion is None:
+            from . import radfx  # noqa: PLC0415
+
+            explosion = radfx.radiation_explosion("GD_Explosions.corrosive.Explosion_CorrosiveMaster")
+        p.MyDamageTypeDefinition = built["impact"]
+        if explosion is not None:
+            p.MyExplosionDefinition = explosion
+
+
+_child_scan = 0.0
 
 
 def reset() -> None:

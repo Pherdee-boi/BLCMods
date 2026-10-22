@@ -64,6 +64,7 @@ RECIPE_CODE = {
     "cryotexts": ("cryotexts.py",),
     "icefx": ("icefx.py", "upkextract.py", "upk.py", "staticmesh.py", "findexport.py",
               "texdump.py", "props.py"),      # texdump reads the cryo icon's sheet
+    "shotfx": ("shotfx.py", "icefx.py", "upkextract.py", "upk.py", "findexport.py", "props.py"),      # TPS's cryo shot effects (muzzle flashes, tracer, trail, glow, impact)
     "radfx": ("radfx.py", "upkextract.py", "upk.py", "findexport.py", "texdump.py", "props.py"),   # the radiation element's particle systems, from BL2 alone
 }
 # Converter options per recipe (part of the stamp too). Her streaming package keeps its body's default head and
@@ -93,6 +94,15 @@ def _converter() -> Any:
         sys.path.insert(0, path)
     import icefx  # noqa: PLC0415 - found through tools_dir()
     return icefx
+
+
+def shotfx_tool() -> Any:
+    """The converter's cutter of TPS's cryo shot effects out of its Startup.upk and WillowGame.upk."""
+    path = str(tools_dir())
+    if path not in sys.path:
+        sys.path.insert(0, path)
+    import shotfx  # noqa: PLC0415 - found through tools_dir()
+    return shotfx
 
 
 def radfx_tool() -> Any:
@@ -267,7 +277,7 @@ class Target:
 
 
 def _cryo_targets(bl2: Path, tps: Path) -> list[Target]:
-    """Cryo's files: TPS's own frozen-enemy effects, ice explosions and cryo icon, cut from TPS's base packages (and, when the Baroness Pack is
+    """Cryo's files: TPS's own frozen-enemy effects, ice explosions, cryo icon and cryo shot effects (muzzle flash, tracer, trail, glow, impact), cut from TPS's base packages (and, when the Baroness Pack is
     there, her cryo slam's burst, which is where TPS keeps it: left out otherwise); and cryo's texts in the game's other languages, picked out
     of TPS's base localization files, one file for each language this BL2 has a folder of and TPS has cryo's texts in (extras)."""
     icefx = _converter()
@@ -276,6 +286,8 @@ def _cryo_targets(bl2: Path, tps: Path) -> list[Target]:
     sources = [startup, game] + ([hers] if slam else [])
     targets = [Target(f"{COOKED.as_posix()}/{icefx.PACKAGE}", "icefx", sources,
                       lambda tmp: icefx.build(startup, tmp, game, hers if slam else None))]
+    shotfx = shotfx_tool()
+    targets.append(Target(f"{COOKED.as_posix()}/{shotfx.PACKAGE}", "shotfx", [startup, game], lambda tmp: shotfx.build(startup, tmp, game)))
     cryotexts = texts_tool()
 
     def texts(language: str) -> Callable[[Path], str]:

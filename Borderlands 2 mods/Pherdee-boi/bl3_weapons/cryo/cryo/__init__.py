@@ -10,6 +10,7 @@ damage and react to freezes).
 - `noelement`: cryo counts as an element for BL2's skills that are for guns without one (Axton's Duty Calls).
 - `switches`: cryo in what BL2's projectiles switch by element (a grenade's cloud, a rocket's lingering area).
 - `frozenfx`, `frostlayer`, `cardicons`: a frozen enemy's look, and the cryo icon on item cards.
+- `shotfx`: TPS's cryo muzzle flashes, tracers, rocket trails, bullet impact and barrel glow on the cryo guns (built from the player's TPS install).
 - `proxies`: that look in a joined player's game, which is never told of the status itself.
 
 Marcus's cryo step of "Rock, Paper, Genocide" (0.3.0 to 0.6.1) is gone since 0.6.2, on the user's word: it asked for
@@ -24,7 +25,7 @@ carries (core/tpsports.py `carried`).
 from ..core.setup import Step
 from ... import radfx  # (BL3 Weapons' own module: it runs on Aurelia's core too)
 from . import (attributes, cardicons, element, explosions, freeze, frostlayer, frozenfx, gear, guns, noelement, proxies,
-               rules, switches)
+               rules, shotfx, switches)
 from .element import (AFTER_DAMAGE, BONUS_CAP, FROZEN_CRIT_BONUS, FROZEN_EXPLOSIVE, FROZEN_MELEE, IMMUNE, IMPACT,
                       IMPACT_NO_FREEZE, LOOK, ON_FREEZE, ON_FROZEN_KILL, ON_PLAYER_FROZEN, ON_SHATTER, ON_THAW, SKILL,
                       SLOW_FACTOR, STATUS, STATUS_DAMAGE, Hit, apply_status, cap_option, chill, ensure_objects, hit,
@@ -32,7 +33,7 @@ from .element import (AFTER_DAMAGE, BONUS_CAP, FROZEN_CRIT_BONUS, FROZEN_EXPLOSI
 
 # Hooks on the same game function run in the order listed; this is the order they had before the split.
 HOOKS = (*freeze.HOOKS, *element.HOOKS, *guns.HOOKS, *gear.HOOKS, *frozenfx.HOOKS, *cardicons.HOOKS, *noelement.HOOKS,
-         *proxies.HOOKS, *radfx.HOOKS)
+         *proxies.HOOKS, *radfx.HOOKS, *shotfx.HOOKS)
 OPTIONS = (guns.drops_option, *element.OPTIONS, guns.enemy_option)
 STEPS = (
     # at TPS's paths, before any converted package loads: its imports resolve to them
@@ -55,4 +56,4 @@ __all__ = ["AFTER_DAMAGE", "BONUS_CAP", "FROZEN_CRIT_BONUS", "FROZEN_EXPLOSIVE",
            "ON_SHATTER", "ON_THAW", "OPTIONS", "SKILL", "SLOW_FACTOR", "STATUS", "STATUS_DAMAGE", "STEPS",
            "apply_status", "attributes", "cap_option", "cardicons", "chill", "element", "ensure_objects", "explosions",
            "freeze", "frostlayer", "frozenfx", "gear", "guns", "hit", "is_cryo_damage", "is_frozen", "noelement",
-           "proxies", "recent_cryo_kill", "rules", "state", "switches", "thaw"]
+           "proxies", "recent_cryo_kill", "rules", "shotfx", "state", "switches", "thaw"]

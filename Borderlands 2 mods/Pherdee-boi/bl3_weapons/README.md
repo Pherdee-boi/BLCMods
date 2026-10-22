@@ -15,8 +15,8 @@ Single player and co-op (every player needs the mod).
   each: one that is off is not rolled (a gun type with every one of its own off rolls all of its own).
 - **Rocket launchers (in active development):** Vladof launchers roll a BL3 launcher underbarrel, deployed with the mode key: Rocket Salvo (twice the
   launcher's rockets per shot, fast, from the magazine), Big-Boy Rocket (one big rocket, two to three times the damage with a bigger explosion, from the
-  reserve ammo, then the gun is back to its normal rockets and the Big-Boy cools down) and Mortar (aims a ring on the ground or an enemy and lobs a burst of four
-  shells onto it). They keep the launcher's element and, for the Salvo and Big-Boy, its special rocket (E-tech, Mongol). **These are still being worked on:**
+  reserve ammo, then the gun is back to its normal rockets and the Big-Boy cools down) and Mortar (paints a reticle on the ground, a slope, a wall or an enemy, out to about 80 metres, and lobs a burst of four
+  shells onto it; "Mortar Reticle" in the options picks the look, needs texloader). They keep the launcher's element and, for the Salvo and Big-Boy, its special rocket (E-tech, Mongol). **These are still being worked on:**
   expect rough edges, and numbers and effects will change.
 - **Hyperion shields:** aiming a Hyperion gun raises a BL3-style frontal shield (six pale hexagons, a light on the gun and an outline), in the BL3 kinds: Hyperion
   (blue), Amped (purple: damage taken becomes weapon damage for a few seconds), Genesis (aqua: damage taken becomes a bullet in the magazine) and Redirect

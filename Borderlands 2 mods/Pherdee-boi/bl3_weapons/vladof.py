@@ -702,32 +702,156 @@ def _snap_enemy(cam, fwd) -> tuple[float, float, float] | None:
     return _snap["point"]
 
 
+_boxes: dict[float, UObject] = {}
+SURFACE_MAX = 4000.0      # uu: how far the aim is followed: beyond it the marking is hidden and the mortar has no target
+SURFACE_STEP = 28.0       # the march's step: less than the 32 a 16-unit box is thick, so a surface is never stepped over, near the player
+SURFACE_FAR = (900.0, 80.0)   # beyond this distance the step is the second number: what is far is big (a hill, a wall), and the sky must be cheap to find out
+SURFACE_RETRY = 0.12      # s: after the aim met nothing, it is looked at again this often
+SURFACE_BOX = 16.0
+_surface: dict = {"d": None, "normal": (0.0, 0.0, 1.0), "point": None, "retry": -1e9, "frame": 0}
+
+
+def _spot(pawn: UObject, x: float, y: float, z: float, half: float) -> tuple[float, tuple[float, float, float]]:
+    """How far Actor.FindSpot moves a box of this half size centred here (0 when it is clear of the world: the SDK's traces never report a hit, but this tells the truth,
+    and a surface has no thickness, so only a box touching it is moved), and where to. A box that touches a surface is pushed out along its normal."""
+    box = _boxes.get(half)
+    if box is None:
+        box = _boxes[half] = unrealsdk.make_struct("Vector", X=half, Y=half, Z=half)
+    ok, out = pawn.FindSpot(BoxExtent=box, SpotLocation=unrealsdk.make_struct("Vector", X=x, Y=y, Z=z))
+    if not ok:
+        return 1e9, (x, y, z)
+    return abs(out.X - x) + abs(out.Y - y) + abs(out.Z - z), (out.X, out.Y, out.Z)
+
+
+def _hit(pawn: UObject, cam, fwd, hint: float | None, floor: float = 160.0, ceil: float = SURFACE_MAX) -> float | None:
+    """How far along the ray a box first touches the world (None: nothing within floor..ceil, or the start is in geometry). The box is marched from `hint`, outward when it
+    is clear there and back when it is not, then halved down to about a unit."""
+    def touching(d: float) -> bool:
+        return _spot(pawn, cam.X + fwd[0] * d, cam.Y + fwd[1] * d, cam.Z + fwd[2] * d, SURFACE_BOX)[0] > 0.5
+
+    def stride(distance: float) -> float:
+        return SURFACE_STEP if distance < SURFACE_FAR[0] else SURFACE_FAR[1]
+
+    d = min(max(hint if hint is not None else 700.0, floor), ceil)
+    lo = hi = None
+    if not touching(d):
+        lo = d
+        while True:
+            d += stride(d)
+            if d > ceil:
+                return None
+            if touching(d):
+                hi = d
+                break
+            lo = d
+    else:
+        hi = d
+        while True:
+            d -= stride(d)
+            if d < floor:
+                return None          # the camera is in geometry
+            if not touching(d):
+                lo = d
+                break
+            hi = d
+    for _ in range(7):
+        mid = (lo + hi) / 2
+        if touching(mid):
+            hi = mid
+        else:
+            lo = mid
+    return hi
+
+
+def _cross(a, b) -> tuple[float, float, float]:
+    return a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]
+
+
+def _plane(pawn: UObject, cam, fwd, hi: float) -> tuple[float, float, float] | None:
+    """The surface's normal facing the player, from where two more rays, a little to the right and a little above the aim, meet it (FindSpot only ever pushes a box out
+    along an axis, so its direction says nothing about a slope). None when either misses the surface near this distance (an edge, or a grazing angle)."""
+    right = (fwd[1], -fwd[0], 0.0)
+    length = math.hypot(right[0], right[1])
+    right = (right[0] / length, right[1] / length, 0.0) if length > 1e-3 else (1.0, 0.0, 0.0)
+    up = _cross(right, fwd)
+    delta = min(0.1, max(0.015, 140.0 / hi))          # the rays are about 140 units apart at the surface
+    reach = 10.0 * delta * hi          # a flat surface seen at 6 degrees puts the two hits this far apart along the ray
+    points = []
+    for side in (right, up):
+        ray = tuple(f + delta * c for f, c in zip(fwd, side))
+        norm = math.sqrt(sum(c * c for c in ray))
+        ray = tuple(c / norm for c in ray)
+        d = _hit(pawn, cam, ray, hi, floor=max(hi - reach, 160.0), ceil=hi + reach)
+        if d is None:
+            return None
+        points.append(tuple(cam_c + r * d for cam_c, r in zip((cam.X, cam.Y, cam.Z), ray)))
+    here = (cam.X + fwd[0] * hi, cam.Y + fwd[1] * hi, cam.Z + fwd[2] * hi)
+    a, b = (tuple(p - h for p, h in zip(pt, here)) for pt in points)
+    if max(math.sqrt(sum(c * c for c in a)), math.sqrt(sum(c * c for c in b))) > reach:
+        return None          # the two hits are not on one surface
+    n = _cross(a, b)
+    length = math.sqrt(sum(c * c for c in n))
+    if length < 1e-6:
+        return None
+    n = tuple(c / length for c in n)
+    return tuple(-c for c in n) if sum(x * y for x, y in zip(n, fwd)) > 0 else n
+
+
+def surface_along(pawn: UObject, cam, fwd, hint: float | None, prev: tuple[float, float, float] = (0.0, 0.0, 1.0), plane: bool = True) -> tuple[tuple[float, float, float], tuple[float, float, float], float] | None:
+    """Where the aim first touches the world: (the point on the surface, the surface's normal facing the player, the distance), or None (the sky, or too far). The normal
+    is `prev` when it could not be worked out or `plane` is false (the caller skips it on alternate frames: the aim has not moved far, and it halves the cost)."""
+    hi = _hit(pawn, cam, fwd, hint)
+    if hi is None:
+        return None
+    n = _plane(pawn, cam, fwd, hi) if plane or hint is None or abs(hi - hint) > 100.0 else prev
+    if n is None:          # no plane found: a wall's last angle is not kept for the ground a shallow aim meets
+        n = (0.0, 0.0, 1.0) if fwd[2] < -0.02 else prev
+    reach = SURFACE_BOX * sum(abs(c) for c in n)          # a box's centre is this far from the surface it touches
+    return (cam.X + fwd[0] * hi - n[0] * reach, cam.Y + fwd[1] * hi - n[1] * reach, cam.Z + fwd[2] * hi - n[2] * reach), n, hi
+
+
 def mortar_cursor(weapon: UObject) -> tuple[float, float, float] | None:
-    """Where the mortar's cursor is: the game's own target distance when it has one; else on the enemy nearest the aim line; else where the aim line comes
-    down on the ground at the player's feet. None when it meets none of them (the sky, or looking up).
-    shortcut: the SDK's traces never report a hit (tediore.py found this too), so away from an enemy the cursor is the feet's level, not the real surface: on a slope it
-    sits too far or too near. Upgrade when a trace works."""
+    """Where the mortar's cursor is: on the enemy nearest the aim line, else on the surface the aim meets (the ground, a wall, a roof). None for the sky.
+    The surface's normal is left in `_surface["normal"]` (eased from frame to frame)."""
     ray = _view_ray()
     if ray is None:
         return None
     cam, fwd = ray
-    try:
-        distance = weapon.GetTargetDistance()
-    except Exception:  # noqa: BLE001
-        distance = 0.0
-    if 0 < distance < 20000:
-        return cam.X + fwd[0] * distance, cam.Y + fwd[1] * distance, cam.Z + fwd[2] * distance
     enemy = _snap_enemy(cam, fwd)
     if enemy is not None:
+        _surface["point"] = enemy
+        _surface["d"] = None
+        _surface["normal"] = _ease(_surface["normal"], (0.0, 0.0, 1.0), 0.4)
         return enemy
+    now = game_now()
+    if now < _surface["retry"]:
+        return None
     from mods_base import get_pc
 
     pc = get_pc(possibly_loading=True)
-    feet = pc.Pawn.Location.Z - 55.0 if pc is not None and pc.Pawn is not None else None
-    if feet is None or fwd[2] > -0.03:
+    pawn = pc.Pawn if pc is not None else None
+    if pawn is None:
         return None
-    t = (feet - cam.Z) / fwd[2]
-    return (cam.X + fwd[0] * t, cam.Y + fwd[1] * t, feet) if 150.0 < t < 9000.0 else None
+    try:
+        _surface["frame"] ^= 1
+        found = surface_along(pawn, cam, fwd, _surface["d"], _surface["normal"], _surface["frame"] == 0)
+    except Exception:  # noqa: BLE001 - no pawn to ask, or the call refused
+        found = None
+    if found is None:
+        _surface["d"] = None
+        _surface["retry"] = now + SURFACE_RETRY
+        return None
+    point, normal, distance = found
+    _surface["d"] = distance
+    _surface["point"] = point
+    _surface["normal"] = _ease(_surface["normal"], normal, 0.45)
+    return point
+
+
+def _ease(old: tuple[float, float, float], new: tuple[float, float, float], rate: float) -> tuple[float, float, float]:
+    mixed = tuple(o + (n - o) * rate for o, n in zip(old, new))
+    length = math.sqrt(sum(c * c for c in mixed)) or 1.0
+    return tuple(c / length for c in mixed)
 
 
 def _aim_mortar(weapon: UObject) -> None:
@@ -767,32 +891,171 @@ def _aim_mortar(weapon: UObject) -> None:
     _mortar_pending[0] = min(_mortar_pending[0], 8)
 
 
+# The mortar's cursor is painted on the ground, in the world (BL3's red ring): two flat planes with a ring texture on an additive material, one inside the other.
+RING_MESH = "FX_Shared_Mesh.Meshes.Planes.DecalPlane_LiquidDev"   # flat, 170 wide
+RING_MASTER = "FX_Shared_MasterShaders.Materials.Additive.Mat_FX_Unlit_Add_2-Sided_MS"
+RING_PLANE_HALF = 85.1                                             # the mesh's half width
+RING_TEXTURE = "FX_Shared_Gradients.Textures.Round_Ring_Distortion_Clamped_Dif"   # concentric rings (the other ring texture tints the ground inside it green)
+RINGS = ((RING_TEXTURE, 1.0, (2.5, 0.15, 0.1)), (RING_TEXTURE, 0.42, (2.5, 0.15, 0.1)))  # (texture, share of the radius, colour): the big ring and a small one in it
+RING_RADIUS = 190.0   # uu: the burst lands within about this of the cursor
+RING_LIFT = 6.0       # above the ground, so it does not flicker in it
+
+RING_ARTS = {"Badge": ("mortar_ring.png", "mortar_ring_inner.png"), "Rocket Brackets": ("mortar_ring_brackets.png",)}   # the pictures (bl3_weapons/art, see art/ASSETS.md): the big ring's and the small one's
+reticle_style = DropdownOption("Mortar Reticle", "Rocket Brackets", list(RING_ARTS), description="The marking the mortar paints on the ground: the badge between brackets, or four brackets round rocket volleys.")
+OPTIONS += [reticle_style]
+_ring_style = [""]          # the reticle the planes were built with
+RING_ART_COLOUR = (1.0, 1.0, 1.0)                          # their own colours, a little brighter (the ground adds them)
+_ring: list[WeakPointer] = []
+_ring_owner = 0
+_ring_shares: list[float] = []
+_ring_mics: list[UObject] = []
+_ring_colours: list[tuple[float, float, float]] = []
+
+
+def _ring_picture(name: str) -> UObject | None:
+    """The player's picture `name` as a texture (loaded by the texloader mod, which is optional), or None when there is none or it cannot be loaded."""
+    from . import assets
+
+    png = assets.DIR / "art" / name
+    if not png.is_file():
+        return None
+    try:
+        from texloader import api  # noqa: PLC0415 - optional: without it the ring keeps the game's own look
+
+        key = f"MortarRing{name.split('.')[0].title().replace('_', '')}{int(png.stat().st_mtime)}"   # new art is a new texture, not the old one still loaded
+        try:
+            return unrealsdk.find_object("Texture2D", f"Transient.{key}")
+        except ValueError:
+            return unrealsdk.find_object("Texture2D", api.load(str(png), key))
+    except Exception as e:  # noqa: BLE001
+        log(f"mortar ring: could not load {name} ({e!r}); the game's own rings are used")
+        return None
+
+
+def _ring_layers() -> list[tuple[UObject, float, tuple[float, float, float]]] | None:
+    """The planes of the ring: (texture, share of the radius, colour). The player's own pictures when there are any, else the game's rings."""
+    art = RING_ARTS.get(reticle_style.value, RING_ARTS["Badge"])
+    big = _ring_picture(art[0])
+    if big is not None:
+        small = _ring_picture(art[1]) if len(art) > 1 else None
+        return [(big, 1.0, RING_ART_COLOUR)] + ([(small, 0.42, RING_ART_COLOUR)] if small is not None else [])
+    layers = []
+    for texture, share, colour in RINGS:
+        try:
+            layers.append((unrealsdk.find_object("Texture2D", texture), share, colour))
+        except ValueError:
+            return None
+    return layers
+
+
+def _ring_cells(pawn: UObject) -> list[UObject] | None:
+    """The ring's planes on this pawn (made once, with their materials)."""
+    global _ring, _ring_owner
+    cells = [w() for w in _ring]
+    if _ring and (any(c is None for c in cells) or _ring_owner != pawn._get_address() or _ring_style[0] != reticle_style.value):
+        for c in cells:
+            if c is not None:
+                c.SetHidden(True)          # (the old planes stay in the world, hidden)
+        _ring = []
+    if _ring:
+        return [w() for w in _ring]
+    try:
+        mesh = unrealsdk.find_object("StaticMesh", RING_MESH)
+        master = unrealsdk.find_object("Material", RING_MASTER)
+    except ValueError:
+        return None
+    from . import hyperion
+
+    layers = _ring_layers()
+    if not layers:
+        return None
+    _ring_shares[:] = [share for _t, share, _c in layers]
+    _ring_colours[:] = [colour for _t, _s, colour in layers]
+    _ring_mics.clear()
+    for i, (tex, _share, colour) in enumerate(layers):
+        mic = unrealsdk.construct_object("MaterialInstanceConstant", master.Outer, f"BL3W_MortarRing_{i}")
+        mic.ObjectFlags = int(mic.ObjectFlags) | 0x4000
+        mic.SetParent(master)
+        mic.SetTextureParameterValue("Emissive_GP", tex)
+        mic.SetVectorParameterValue("p_color", unrealsdk.make_struct("LinearColor", R=colour[0], G=colour[1], B=colour[2], A=1.0))
+        _ring_mics.append(mic)
+        cell = hyperion._new_cell(pawn)
+        cell.SetStaticMesh(mesh, True)
+        cell.SetMaterial(0, mic)
+        _ring.append(WeakPointer(cell))
+    _ring_owner = pawn._get_address()
+    _ring_style[0] = reticle_style.value
+    return [w() for w in _ring]
+
+
+def _ring_hide() -> None:
+    for w in _ring:
+        c = w()
+        if c is not None:
+            c.SetHidden(True)
+
+
+RING_SPIN = 10.0        # degrees a second
+RING_PULSE = (3.6, 0.05, 0.14)   # period (s), how much its size and its brightness swing
+
+
+def _ring_rotation(normal: tuple[float, float, float], heading: tuple[float, float, float], spin: float) -> tuple[int, int, int]:
+    """The rotator (pitch, yaw, roll in the engine's units) of a plane whose up is `normal` and whose forward is `heading` flattened onto it, turned by `spin` radians
+    about the normal."""
+    dot = sum(a * b for a, b in zip(heading, normal))
+    x = tuple(a - dot * b for a, b in zip(heading, normal))
+    length = math.sqrt(sum(c * c for c in x)) or 1.0
+    x = tuple(c / length for c in x)
+    n_x = (normal[1] * x[2] - normal[2] * x[1], normal[2] * x[0] - normal[0] * x[2], normal[0] * x[1] - normal[1] * x[0])
+    c, s_ = math.cos(spin), math.sin(spin)
+    x = tuple(c * a + s_ * b for a, b in zip(x, n_x))
+    y = (normal[1] * x[2] - normal[2] * x[1], normal[2] * x[0] - normal[0] * x[2], normal[0] * x[1] - normal[1] * x[0])
+    pitch = math.asin(max(-1.0, min(1.0, x[2])))
+    if abs(x[2]) > 0.99999:        # its forward is straight up or down: yaw and roll are one angle then (the rotator's gimbal lock), taken all as yaw
+        yaw, roll = (math.atan2(-normal[1], -normal[0]) if x[2] > 0 else math.atan2(normal[1], normal[0])), 0.0
+    else:
+        yaw = math.atan2(x[1], x[0])
+        roll = math.atan2(-y[2], normal[2])
+    unit = 65536 / math.tau
+    return int(pitch * unit) & 0xFFFF, int(yaw * unit) & 0xFFFF, int(roll * unit) & 0xFFFF
+
+
 @hook("WillowGame.WillowGameViewportClient:PostRender", hook_identifier="bl3w_vladof_cursor")
 def draw_mortar_cursor(_obj: UObject, args, *_: object) -> None:
-    """A ring on the surface the mortar will land on."""
-    weapon = held_weapon()
-    if weapon is None or weapon.DefinitionData.UniqueId not in _mode or _mode[weapon.DefinitionData.UniqueId]["kind"] != "Mortar":
-        return
-    target = mortar_cursor(weapon)
-    if target is None:
-        return
-    canvas = args.Canvas
-    centre = canvas.Project(unrealsdk.make_struct("Vector", X=target[0], Y=target[1], Z=target[2]))
-    ray = _view_ray()
-    if ray is None or centre.Z < 0:
-        return
-    cam, _ = ray
-    distance = max(math.dist((cam.X, cam.Y, cam.Z), target), 50.0)
+    """Keep the red marking on the surface the mortar will land on, lying along it (the ground, a slope, a wall), turning and pulsing slowly (hidden when no mortar
+    is out or the aim meets nothing)."""
     from mods_base import get_pc
 
-    fov = get_pc(possibly_loading=True).GetFOVAngle()
-    radius = max(10.0, min(120.0, 190.0 * (canvas.SizeY / 2) / (math.tan(math.radians(fov) / 2) * distance)))  # a ring about 3.8 m across
-    ring = unrealsdk.make_struct("Color", R=255, G=210, B=120, A=235)
-    for k in range(20):
-        a1, a2 = k * math.tau / 20, (k + 1) * math.tau / 20
-        canvas.Draw2DLine(centre.X + math.cos(a1) * radius, centre.Y + math.sin(a1) * radius * 0.45, centre.X + math.cos(a2) * radius, centre.Y + math.sin(a2) * radius * 0.45, ring)
-    canvas.Draw2DLine(centre.X - radius * 0.25, centre.Y, centre.X + radius * 0.25, centre.Y, ring)
-    canvas.Draw2DLine(centre.X, centre.Y - radius * 0.12, centre.X, centre.Y + radius * 0.12, ring)
+    weapon = held_weapon()
+    target = None
+    if weapon is not None and weapon.DefinitionData.UniqueId in _mode and _mode[weapon.DefinitionData.UniqueId]["kind"] == "Mortar":
+        target = mortar_cursor(weapon)
+    pc = get_pc(possibly_loading=True)
+    pawn = pc.Pawn if pc is not None else None
+    if target is None or pawn is None:
+        if _ring:
+            _ring_hide()
+        return
+    cells = _ring_cells(pawn)
+    if not cells:
+        return
+    normal = _surface["normal"]
+    yaw = pc.Rotation.Yaw * math.tau / 65536
+    heading = (math.cos(yaw), math.sin(yaw), 0.0) if normal[2] > 0.6 else (0.0, 0.0, 1.0)   # on the ground the marking faces the player; on a wall its top is up
+    now = game_now()
+    rotator = None
+    period, swing, glow = RING_PULSE
+    wave = math.sin(now * math.tau / period)
+    rot = _ring_rotation(normal, heading, math.radians(RING_SPIN) * now)
+    rotator = unrealsdk.make_struct("Rotator", Pitch=rot[0], Yaw=rot[1], Roll=rot[2])
+    brightness = 1.0 - glow * (0.5 - 0.5 * wave)
+    for cell, share, mic, colour in zip(cells, _ring_shares, _ring_mics, _ring_colours):
+        lift = RING_LIFT + share
+        cell.SetScale(RING_RADIUS * share / RING_PLANE_HALF * (1.0 + swing * wave))
+        cell.SetRotation(rotator)
+        cell.SetTranslation(unrealsdk.make_struct("Vector", X=target[0] + normal[0] * lift, Y=target[1] + normal[1] * lift, Z=target[2] + normal[2] * lift))
+        mic.SetVectorParameterValue("p_color", unrealsdk.make_struct("LinearColor", R=colour[0] * brightness, G=colour[1] * brightness, B=colour[2] * brightness, A=1.0))
+        cell.SetHidden(False)
 
 
 def _big_explosion(explosion: UObject) -> UObject:
@@ -901,6 +1164,7 @@ def reset() -> None:
     """Put mode underbarrel attributes and the bipod pose back (mod disabled)."""
     for uid in list(_muzzle):
         _muzzle_off(uid)
+    _ring_hide()
     try:
         _loop_stop()
     except Exception:  # noqa: BLE001

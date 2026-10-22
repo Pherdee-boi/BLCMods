@@ -40,6 +40,10 @@ What a cryo gun fires is cryo too: a launcher's rockets, an E-tech gun's darts, 
 gun's splash. They explode with The Pre-Sequel's ice explosion, and a Maliwan launcher's rocket leaves a patch of cryo
 damage where it lands, as it leaves one of its own element for the others.
 
+Cryo guns shoot with The Pre-Sequel's cryo effects too: its muzzle flashes (their sprites pulled in towards the barrel, which BL2's guns have shorter),
+tracers, rocket trails, the barrel's glow and the ice bullet impact. They are cut from your own TPS copy with the other effects (a build, then one restart; nothing
+of TPS ships). The separate Cryo Shot FX mod that did this before is not needed any more: if it is still installed this stands aside for it, so remove it.
+
 A cryo gun's glow is The Pre-Sequel's plain white. A cryo E-tech gun, whose shell and sights are all glow, has a
 bright icy white there (since 0.5.5), the white of its shots' trails; up to 0.5.4 those parts were a dull grey. If
 another mod gives such a gun a glow of its own, that one is kept.
