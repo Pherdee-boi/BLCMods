@@ -184,6 +184,11 @@ def scale_damage(obj: UObject, args, _ret, func) -> type[Block] | None:
     from . import hyperion
 
     mult *= hyperion.amp_multiplier(weapon) if source in GUN_DAMAGE else 1.0
+    if source in GUN_DAMAGE:
+        try:
+            vladof.on_player_hit(obj, args.DamageType, weapon)
+        except Exception:  # noqa: BLE001
+            pass
     ub = vladof.damage_multiplier(weapon)
     if ub != 1.0:
         mult *= ub

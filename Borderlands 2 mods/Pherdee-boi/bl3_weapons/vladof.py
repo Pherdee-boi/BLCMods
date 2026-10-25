@@ -48,6 +48,7 @@ from unrealsdk.unreal import UObject, WeakPointer
 from .core import find_part, forget, held_weapon, log, active_maker_of as maker_of, now as game_now, pawns, rebuild, remembered, state
 
 AR_BARRELS = "GD_Weap_AssaultRifle.Barrel."
+SHOCK_STATUS = "GD_Shock.StatusEffect.Status_Shock"  # the taser's own shock (see on_player_hit)
 SHOCK_PART = {
     "AR": "GD_Weap_AssaultRifle.elemental.AR_Elemental_Shock",
     "Pistol": "GD_Weap_Pistol.elemental.Pistol_Elemental_Shock",
@@ -96,6 +97,7 @@ BIG_BOY_LOW = 2 / 3  # a Big-Boy rocket's damage is rolled between this share of
 MORTAR_BURST_GAP = 0.6  # seconds without a shot: the next one starts a new burst
 MORTAR_G = 1011.0  # a shell's own gravity in uu/s^2 (measured on a Dahl grenade: 809 at its 0.8 gravity scale)
 PISTOL_SHOTS = 2 / 3  # pistols get fewer underbarrel shots
+GRACE = 0.75  # seconds after a gun is taken out in which a deployed underbarrel is not ended by its reload / empty magazine
 BIPOD_SPEED = 0.15  # walk speed while the bipod is out
 
 grenade_damage = SliderOption(
@@ -193,6 +195,9 @@ _ammo_at_deploy: dict[int, int] = {}  # reserve when deployed (given back on sto
 _total_shots: dict[int, int] = {}  # shots in this deploy
 _mode: dict[int, dict] = {}  # deployed mode: {"kind", "ref", "base": {attr: v}, "written": {attr: v}, "until"}
 _reloading: set[int] = set()  # guns whose player pressed reload while an underbarrel was out (the next tick stows it)
+_was_held: set[int] = set()  # guns that were in the player's hands on the last tick
+_grace: dict[int, float] = {}  # a gun just taken out again: until when an empty magazine or a reload is not taken to be the underbarrel's end
+_last_rounds: dict[int, int] = {}  # a deployed gun's rounds on the last tick
 _hit_logged: set[str] = set()
 _big_boy_pending = [0, -1e9]  # Big-Boy rockets fired that are not given their damage and explosion yet, and when the last was fired
 _big_boy_seen: dict[int, float] = {}  # a rocket's address -> when it was
@@ -238,8 +243,7 @@ def damage_multiplier(weapon: UObject | None) -> float:
     """Extra damage while the held gun's underbarrel is deployed (1.0 otherwise)."""
     if weapon is None or maker_of(weapon) != "Vladof" or not _is_deployed(weapon):
         return 1.0
-    saved = _entry(weapon.DefinitionData.UniqueId)
-    option = DAMAGE.get(saved[1]) if saved else None
+    option = DAMAGE.get(_deployed_kind(weapon) or "")
     return option.value / 100 if option is not None else 1.0
 
 
@@ -311,15 +315,32 @@ def _entry(uid: int) -> list[str] | None:
     return [saved[0], _forced[uid]] if uid in _forced else saved
 
 
+def _launcher_barrel(weapon: UObject) -> str | None:
+    """The path of the barrel the gun wears if it is one an underbarrel puts on (the grenade launcher's), else None."""
+    barrel = weapon.DefinitionData.BarrelPartDefinition
+    path = barrel._path_name() if barrel is not None else ""
+    return path if path in [p for p in UNDERBARRELS.values() if p] else None
+
+
 def _is_deployed(weapon: UObject) -> bool:
+    """A mode is out, or the gun wears the underbarrel's own barrel instead of the one it was rolled with. It is the barrel that counts, not the kind
+    the saved roll now says: a roll that changed since the barrel went on (an underbarrel switched off in the menu, a save taken mid-deploy) used to
+    leave the launcher barrel on the gun for good, with its extra damage and magazine in the normal firing mode."""
     uid = weapon.DefinitionData.UniqueId
     if uid in _mode:
         return True
-    barrel = weapon.DefinitionData.BarrelPartDefinition
-    if barrel is None or "AR_Barrel_Torgue_" not in barrel.Name:
-        return False
     saved = _entry(uid)
-    return bool(saved) and UNDERBARRELS.get(saved[1]) is not None and barrel._path_name() == UNDERBARRELS[saved[1]] != saved[0]
+    on = _launcher_barrel(weapon)
+    return bool(saved) and on is not None and on != saved[0]
+
+
+def _deployed_kind(weapon: UObject) -> str | None:
+    """What is actually out: the mode's kind, or the grenade launcher when the gun wears its barrel."""
+    entry = _mode.get(weapon.DefinitionData.UniqueId)
+    if entry is not None:
+        return entry["kind"]
+    on = _launcher_barrel(weapon)
+    return next((k for k, p in UNDERBARRELS.items() if p == on), None) if on else None
 
 
 def _close(a: float, b: float) -> bool:
@@ -635,7 +656,8 @@ def _note_reload(obj: UObject) -> None:
     this was looked for in the weapon's state name (GetStateName is always None for a gun), so a manual reload never stowed the launcher: it
     simply refilled it, and pressing reload over and over kept it out for good with no cooldown."""
     uid = obj.DefinitionData.UniqueId
-    if uid in _deployed:
+    held = held_weapon()
+    if uid in _deployed and held is not None and held._get_address() == obj._get_address():  # (a gun being put away or taken out is not reloading)
         _reloading.add(uid)
 
 
@@ -1129,6 +1151,16 @@ def watch_underbarrel(*_: object) -> None:
             continue
         entry = _entry(uid)
         _stow(other, _mode[uid]["kind"], entry[0] if entry else "", 0, "put away")
+    if held_uid is not None and held_uid not in _was_held:  # taken out (swapped to, out of the inventory, off a ladder): not a reload, not a spent magazine
+        _reloading.discard(held_uid)
+        _grace[held_uid] = game_now() + GRACE
+        _last_rounds.pop(held_uid, None)
+    for uid in list(_was_held):
+        if uid != held_uid:
+            _reloading.discard(uid)  # (anything noted while the gun was away)
+    _was_held.clear()
+    if held_uid is not None:
+        _was_held.add(held_uid)
     if weapon is None or maker_of(weapon) != "Vladof":
         return
     if held_uid not in _mode and f"vladoftaser:{held_uid}" in state.value:
@@ -1153,10 +1185,14 @@ def watch_underbarrel(*_: object) -> None:
             _hold_speed()
         return
     timed = time_left(weapon)
+    rounds = int(weapon.ReloadCnt)
+    before = _last_rounds.get(held_uid)
+    _last_rounds[held_uid] = rounds
     if timed is not None:
         if timed <= 0:
             _stow(weapon, kind, original, 1, "time up")
-    elif weapon.ReloadCnt <= 0 or held_uid in _reloading:
+    elif game_now() >= _grace.get(held_uid, 0.0) and (held_uid in _reloading or (rounds <= 0 and before is not None and before > 0)):
+        # (empty only counts when the last round went in the hands: a gun that comes out of a holster with nothing in it is not one that ran dry)
         _stow(weapon, kind, original, 1, "reload" if held_uid in _reloading else "empty")
 
 
@@ -1459,3 +1495,30 @@ def _muzzle_tick() -> None:
 
 
 HOOKS = [watch_underbarrel, manual_reload, auto_reload, mode_firing_mode, pump_refire, single_shot, no_sprint_on_bipod, draw_mortar_cursor]
+
+
+_shocked: dict[int, float] = {}  # an enemy's address -> when the taser last shocked it
+
+
+def on_player_hit(victim: UObject, damage_type: UObject | None, weapon: UObject | None) -> None:
+    """The taser's bullets always shock (BL3): the shock is applied on every hit by name, not left to the gun's own status chance (a pistol's taser
+    rolled that chance and mostly did not proc, so it did no damage after the first hit). Its damage over time is the gun's status damage."""
+    if weapon is None or maker_of(weapon) != "Vladof":
+        return
+    entry = _mode.get(weapon.DefinitionData.UniqueId)
+    if entry is None or entry["kind"] != "Taser" or damage_type is None or damage_type.Name == "WillowDmgSource_StatusEffect":
+        return
+    now = game_now()
+    key = victim._get_address()
+    if now - _shocked.get(key, -1e9) < 0.25:
+        return
+    _shocked[key] = now
+    if len(_shocked) > 64:
+        _shocked.clear()
+    try:
+        from mods_base import get_pc
+
+        status = unrealsdk.find_object("StatusEffectDefinition", SHOCK_STATUS)
+        victim.GetStatusEffectsComponent().ApplyStatusEffect(get_pc(), damage_type, status, weapon, None, False)
+    except Exception as e:  # noqa: BLE001 - a hit must never fail over this
+        log(f"Vladof taser shock failed: {e!r}")

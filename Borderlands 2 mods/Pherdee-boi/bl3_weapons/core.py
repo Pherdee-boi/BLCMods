@@ -254,6 +254,7 @@ def rebuild(weapon: UObject, loaded: int | None = None, **parts: UObject) -> Non
         setattr(new_def, field, part)
     if loaded is None:
         loaded = weapon.ReloadCnt
+    reloading = int(weapon.ReplicatedReloadState) != 0
     reset_attributes(weapon)
     weapon.CrosshairFrameOverride = weapon.Class.ClassDefaultObject.CrosshairFrameOverride  # a part that sets it (the grenade launcher barrel) leaves it set for good otherwise
     running = _running_sequences(weapon, weapon.DefinitionData)
@@ -263,3 +264,11 @@ def rebuild(weapon: UObject, loaded: int | None = None, **parts: UObject) -> Non
         weapon.InitializeFromDefinitionData(new_def, weapon.Owner, False)
     _move_sequences(weapon, running, new_def)
     weapon.ReloadCnt = max(0, min(loaded, weapon.ClipSize))
+    if not reloading and weapon.ReloadCnt > 0 and int(weapon.ReplicatedReloadState) != 0:
+        # initialising the gun again can leave it in the reloading state (it had no rounds for a moment): a gun that was not reloading, and
+        # still has rounds, is not to start one because its element or underbarrel changed
+        try:
+            weapon.StopReloading()
+            weapon.StopReloadAnim()
+        except Exception:  # noqa: BLE001
+            pass
