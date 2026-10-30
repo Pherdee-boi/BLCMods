@@ -472,7 +472,21 @@ def moved_right(p, twips: int, depth: int):
     return p
 
 
-def add_list_icons(swf: Swf) -> int:
+TILE_PX = 23.0  # height of a tile icon in the list, pixels (list_icons.bin: build_list_icons.py)
+TILE_STATES = (1, *RARITY_TINT)  # a tile per rarity state: 1 plain, 2 uncommon ... 10 rainbow
+EXTRA_TILES = {"skull": (0, 1, 2), "logo": (0,), "map_pin": (1,)}  # single tiles: frames "skull", "n1_skull", "n2_skull" (boss rows), "logo" (expansion rows), "n1_map_pin" (map rows)
+
+
+def tile_places(info: dict, level: int) -> list[dict]:
+    """The PlaceObject2 dict (depth 10) of one tile shape, centred like the item icons and moved right by `level` indents."""
+    s = TILE_PX / info["h"]
+    f = int(round(s * 65536))
+    cx, cy = ICON_CENTER[0] + level * INDENT_TWIPS - 2 * 20, ICON_CENTER[1]  # (two pixels left: a square tile is wider than the gun icons it replaces)
+    m = {"scale": (sb_bits(f), f, f), "rot": None, "tx": int(round(cx - s * info["w"] * 10)), "ty": int(round(cy - s * info["h"] * 10))}
+    return [{"flags": 0x02 | 0x04, "depth": 10, "char": info["shape"], "matrix": m, "cx": None, "ratio": None, "name": None, "rest": b""}]
+
+
+def add_list_icons(swf: Swf, tiles: dict | None = None) -> int:
     """Append frames "<icon>", "<icon>_2".."<icon>_9" (plain / rarity tinted) to the mission list's type icon sprite, also moved right by one and three
     levels ("i_...", "i3_...": ITEM_INDENTS), and the list's own map and boss icons moved right ("n1_...", "n2_...": NATIVE_INDENTED)."""
     src = item_art(swf)
@@ -488,6 +502,10 @@ def add_list_icons(swf: Swf) -> int:
             places = src[lab]  # base (depth 1) and the tintable overlay (depth 2) of that icon
             for rarity in (None, *RARITY_TINT):
                 frame = []
+                tile = tiles and tiles["shapes"].get(ICON_NAME.get(lab, lab), {}).get(str(1 if rarity is None else rarity))
+                if tile:  # the user's own tile for this type and rarity replaces the game's pale icon
+                    specs.append((prefix + ICON_NAME.get(lab, lab) + ("" if rarity is None else f"_{rarity}"), tile_places(tile, level)))
+                    continue
                 for p in places:
                     q = scaled(p, ICON_SCALE, (ICON_CENTER[0] + level * INDENT_TWIPS, ICON_CENTER[1]))
                     q["depth"] += 9  # depths 10 and 11
@@ -501,6 +519,10 @@ def add_list_icons(swf: Swf) -> int:
                 specs.append((prefix + ICON_NAME.get(lab, lab) + ("" if rarity is None else f"_{rarity}"), frame))
     for level, lab in NATIVE_INDENTED:
         specs.append((f"n{level}_{lab}", [moved_right(p, level * INDENT_TWIPS, 10 + k) for k, p in enumerate(native[lab])]))
+    for name, levels in EXTRA_TILES.items():
+        if tiles and name in tiles["shapes"]:
+            for level in levels:
+                specs.append((("" if level == 0 else f"n{level}_") + name, tile_places(tiles["shapes"][name]["1"], level)))
     new_frames, first = 0, True
     for name, frame in specs:
         if first:
@@ -556,7 +578,7 @@ def trophy_tab_icon(swf: Swf, sid: int) -> Tag:
 # ---- the patch ---------------------------------------------------------------------------------------------------------------
 
 
-def patch(orig: bytes, logo_tags: bytes | None = None) -> bytes:
+def patch(orig: bytes, logo_tags: bytes | None = None, tile_tags: bytes | None = None, tiles: dict | None = None) -> bytes:
     """The status menu SWF with the sixth tab. logo_tags: pre-encoded tags (bitmaps, shapes and the sprite NEW_ICON_ID) of a
     custom tab icon, or None for the built-in trophy."""
     swf = Swf(orig)
@@ -620,7 +642,9 @@ def patch(orig: bytes, logo_tags: bytes | None = None) -> bytes:
     assert done == {3, 4}, "root frame scripts not found"
 
     relocate_item_art(swf)
-    add_list_icons(swf)
+    if tile_tags and tiles:  # the user's icon tiles (bitmaps and the shapes that show them) go in front of the list icon sprite that places them
+        swf.tags[swf.sprite(LIST_ICON_SPRITE) : swf.sprite(LIST_ICON_SPRITE)] = parse_tags(tile_tags, 0)
+    add_list_icons(swf, tiles if tile_tags else None)
     add_header_icons(swf)
     return swf.to_bytes()
 

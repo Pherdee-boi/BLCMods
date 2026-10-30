@@ -33,6 +33,7 @@ HOOKS = (
     (SM + "HitEnterOnLog", Type.PRE, "ag_enter"),
     (SM + "extLogListTrack", Type.PRE, "ag_track"),
     (SM + "OnClose", Type.PRE, "ag_close"),
+    ("WillowGame.ItemInspectionGFxMovie:OnClose", Type.POST, "ag_inspect_close"),
     (SM + "Start", Type.PRE, "ag_start"),
     (SM + "SetActiveMission", Type.PRE, "ag_active"),
     (SM + "SetRewardsTotalCredits", Type.PRE, "ag_credits"),
@@ -63,6 +64,7 @@ MAX_QUERY = 32
 SECTIONS = (("dedicated", "DEDICATED DROPS"), ("generic", "GENERIC DROPS"))
 INDENT = "   "  # text indent of drop rows under their boss (their icon frames are indented too: "i_<icon>")
 ICON_DLC = "new"
+TILE_GAP = "  "  # extra space between a square tile icon and its row's text (the tiles are wider than the game's icons)
 ICON_ZONE = "n1_inprogress"  # a map row's icon, one level to the right of the DLC row's (swf_patch.NATIVE_INDENTED)
 ITEM_PREFIX = {1: "i_", 3: "i3_"}  # item icon frames by level (swf_patch.ITEM_INDENTS)
 EXTRA_ZONES = ("Special Enemies", "Mission Rewards", "Vendors", "Other Sources", "World Drops", "Chests & Machines")  # zones that hold non-boss sources (see bl2_guide/build_guide_v2.py)
@@ -262,13 +264,51 @@ def make_virtual_item(drop: dict):
     return _last_virtual
 
 
+RF_ROOTSET = 0x4000
+_inspect_movie = None  # the open inspect viewer, rooted: nothing in the game refers to a movie opened from here, so a garbage collection destroyed it
+# while it was on screen, and its 3D gun and the lights it had changed stayed behind (a floating gun, a world washed out white)
+
+
+def _set_root(obj, on: bool) -> None:
+    flags = int(obj.ObjectFlags)
+    obj.ObjectFlags = (flags | RF_ROOTSET) if on else (flags & ~RF_ROOTSET)
+
+
+def _release_inspect(closed: bool = False) -> bool:
+    """Let go of the rooted viewer once it is no longer open (`closed`: it just said so). True if none is open any more."""
+    global _inspect_movie
+    movie = _inspect_movie
+    if movie is None:
+        return True
+    try:
+        if not closed and movie.bMovieIsOpen:
+            return False
+        _inspect_movie = None
+        _set_root(movie, False)
+    except Exception:  # noqa: BLE001
+        _inspect_movie = None
+        log("unroot failed: " + traceback.format_exc()[-300:])
+    return True
+
+
+def _inspect_closed(obj, args, ret, func) -> None:
+    """The inspect viewer closed itself (Escape): it may be collected now."""
+    if _inspect_movie is not None and _inspect_movie._get_address() == obj._get_address():
+        _release_inspect(True)
+
+
 def inspect_drop(drop: dict) -> None:
     """Open the game's own item inspection (3D model + item card) for a generated copy of this drop.
     Start and InspectItem must happen in the same call, and nothing may touch the movie afterwards."""
+    global _inspect_movie
+    if not _release_inspect():  # one viewer at a time: a new item would destroy the one the open viewer shows
+        return
     pc = get_pc()
     item = make_virtual_item(drop)
     d = unrealsdk.find_object("ItemInspectionGFxMovieDefinition", "UI_ItemInspect.ItemInspectDefinition")
     movie = d.SpawnPlayerMovie(pc, None, None)
+    _set_root(movie, True)
+    _inspect_movie = movie
     movie.Start(False)
     movie.InspectItem(item, -1, 0)
 
@@ -515,15 +555,15 @@ def fill(m, select: tuple | None = None) -> None:
 
     def boss_rows(ci: int, rec: dict, label: str | None = None, level: int = 0) -> None:
         """A boss row at `level` steps from the left edge (text and icon both moved right), and its drops one step further when it is open."""
-        add(ci, INDENT * level + (label or rec["name"]), PLAIN, ICON_BOSS if level == 0 else f"n{level}_{ICON_BOSS}", ("boss", rec, None))
+        add(ci, INDENT * level + TILE_GAP + (label or rec["name"]), PLAIN, ICON_BOSS if level == 0 else f"n{level}_{ICON_BOSS}", ("boss", rec, None))
         if _boss_key(rec) in expanded:
             for d in rec.get("drops", []):
                 info = item_info(d)
-                add(ci, INDENT * (level + 1) + info["title"], info["color"], ITEM_PREFIX[level + 1] + (_icon_frame(info) or "none"), ("drop", rec, d))
+                add(ci, INDENT * (level + 1) + TILE_GAP + info["title"], info["color"], ITEM_PREFIX[level + 1] + (_icon_frame(info) or "none"), ("drop", rec, d))
 
     def drop_row(ci: int, boss: dict, d: dict) -> None:
         info = item_info(d)
-        add(ci, info["title"], info["color"], _icon_frame(info) or "none", ("drop", boss, d))
+        add(ci, TILE_GAP + info["title"], info["color"], _icon_frame(info) or "none", ("drop", boss, d))
 
     def rarity_groups(pairs: list) -> None:
         groups: dict[int, list] = {}
@@ -554,13 +594,13 @@ def fill(m, select: tuple | None = None) -> None:
                 if ci is None:
                     ci = header(label)
                 folded = (group, dlc) in collapsed
-                add(ci, f"{'+' if folded else '-'} {dlc.upper()}", DLC_COLOR, ICON_DLC, ("dlc", (group, dlc), None))
+                add(ci, dlc.upper(), DLC_COLOR, ICON_DLC, ("dlc", (group, dlc), None))
                 if folded:
                     continue
                 for zone, bosses in zs:
                     zkey = (group, dlc, zone)
                     shown = zkey in open_zones
-                    add(ci, f"{INDENT}{'-' if shown else '+'} {zone}", ZONE_COLOR, ICON_ZONE, ("zone", zkey, None))
+                    add(ci, f"{INDENT}{zone}", ZONE_COLOR, ICON_ZONE, ("zone", zkey, None))
                     if shown:
                         for rec in bosses:
                             boss_rows(ci, rec, level=2)
@@ -849,6 +889,7 @@ def _on_menu_edge(obj, args, ret, func) -> None:
     """A status menu opens or closes: every session starts on a real tab."""
     global guide_mode, _entering, query, typing
     guide_mode = _entering = typing = False
+    _release_inspect()  # (a viewer the menu closed without telling us)
     _eaten.clear()
     query = ""
     _pending.clear()
@@ -1193,7 +1234,7 @@ def _on_tick(obj, args, ret, func):
 FUNCS = {
     "ag_fill": _on_fill, "ag_tips_post": _on_tips_post, "ag_enter": _on_enter, "ag_track": _on_track,
     "ag_close": _on_menu_edge, "ag_start": _on_menu_edge, "ag_active": _on_active, "ag_credits": _on_credits, "ag_other": _on_other, "ag_sort": _on_sort, "ag_ignore": _on_ignore, "ag_nav": _on_nav, "ag_screen": _on_screen,
-    "ag_next": _on_next, "ag_prev": _on_prev, "ag_key": _on_key, "ag_tick": _on_tick,
+    "ag_next": _on_next, "ag_prev": _on_prev, "ag_key": _on_key, "ag_tick": _on_tick, "ag_inspect_close": _inspect_closed,
 }
 
 _tab_tries = 0
@@ -1235,7 +1276,19 @@ def enable_tab() -> bool:
             logo = _read("tab_logo.bin")
         except OSError:
             logo = None
-        swf.RawData = list(patcher.patch(orig, logo))
+        tile_tags = tiles = None
+        try:  # the icon tiles (build_list_icons.py): the list's item icons and the boss skull; without the files the game's own pale icons stay
+            tile_tags, tiles = _read("list_icons.bin"), json.loads(_read("list_icons.json"))
+        except (OSError, ValueError):
+            pass
+        swf.RawData = list(patcher.patch(orig, logo, tile_tags, tiles))
+        global ICON_BOSS, ICON_DLC, ICON_ZONE
+        if tiles and "skull" in tiles.get("shapes", {}):
+            ICON_BOSS = "skull"
+        if tiles and "logo" in tiles.get("shapes", {}):
+            ICON_DLC = "logo"
+        if tiles and "map_pin" in tiles.get("shapes", {}):
+            ICON_ZONE = "n1_map_pin"
         TAB_MODE = True
         log(f"guide tab enabled (status menu movie patched in memory: {len(orig):,} -> {len(swf.RawData):,} bytes, attempt {_tab_tries})")
         return True
