@@ -22,10 +22,14 @@ v0.34.0 adds (BL3-style):
 """
 
 
+import copy
+from types import SimpleNamespace
+
+import unrealsdk
 from mods_base import BoolOption, DropdownOption, get_pc, hook, keybind
 from ui_utils import show_hud_message
 from unrealsdk.hooks import Block, Type, prevent_hooking_direct_calls
-from unrealsdk.unreal import UObject
+from unrealsdk.unreal import UObject, WeakPointer
 
 from .core import describe, held_weapon, log, maker_of, now as game_now, remembered
 
@@ -153,11 +157,52 @@ def _announce(weapon: UObject, msg: str) -> None:
         show_hud_message("Anointment", msg, 2)
 
 
+SPLASH_KINDS = {"Rocket Launcher", "Grenade Launcher", "Zip Rockets", "Rocket Salvo", "Mortar"}  # Vladof underbarrels whose hits are explosions
+MAX_PENDING = 64
+_pending: list[tuple] = []  # scaled explosion hits waiting for the next frame: (victim, damage, instigator, location, momentum, damage type, hit info, causer)
+_deferred_logged = 0
+
+
+def _defer(victim: UObject, args, damage: float) -> bool:
+    """Queue a scaled explosion hit instead of re-issuing it from inside the blast's loop over the enemies it hurts (see _flush_pending: a Vladof rocket at several
+    enemies froze the game). Queued hits are applied by the next frame's tick."""
+    if len(_pending) >= MAX_PENDING:
+        return False
+    causer = args.DamageCauser
+    _pending.append((WeakPointer(victim), damage, WeakPointer(args.InstigatedBy), copy.copy(args.HitLocation), copy.copy(args.Momentum), args.DamageType,
+                     copy.copy(args.HitInfo), WeakPointer(causer) if causer is not None else None))
+    return True
+
+
+def _flush_pending() -> None:
+    """Apply the queued hits (hits queued while these run wait for the next frame)."""
+    global _pending, _deferred_logged
+    batch, _pending = _pending, []
+    for victim_ref, damage, instigator_ref, location, momentum, damage_type, hit_info, causer_ref in batch:
+        try:
+            victim = victim_ref()
+            if victim is None or victim.bDeleteMe or not victim.IsAliveAndWell():
+                continue
+            instigator = instigator_ref()
+            causer = causer_ref() if causer_ref is not None else None
+            with prevent_hooking_direct_calls():
+                victim.TakeDamage(damage, instigator, location, momentum, damage_type, hit_info, causer, None)  # (Pipeline None: the game's damage object is shared by every enemy in the blast, and handing it back a second time froze the game)
+            on_hit_done(victim, SimpleNamespace(InstigatedBy=instigator, DamageType=damage_type), None, None)  # (the kill check ran when the hit was queued, before it landed)
+            _deferred_logged += 1
+            if _deferred_logged in (1, 10, 100):
+                log(f"explosion hit applied after the blast (#{_deferred_logged}): {damage:.0f}")
+        except Exception as e:  # noqa: BLE001 - one bad hit must not stop the rest
+            log(f"explosion hit failed: {e!r}")
+
+
 @hook("WillowGame.WillowAIPawn:TakeDamage")
 def scale_damage(obj: UObject, args, _ret, func) -> type[Block] | None:
     """The one place the mod scales the player's damage to enemies: anointment bonus x Torgue sticky
     stacking, re-issued once. (Two separate block-and-re-call hooks would apply a hit twice.)"""
     if not _is_player_pc(args.InstigatedBy):
+        return None
+    causer = args.DamageCauser
+    if causer is not None and causer.Class._inherits(unrealsdk.find_class("WillowAIPawn")):
         return None
     mult = 1.0
     weapon = held_weapon()
@@ -195,6 +240,8 @@ def scale_damage(obj: UObject, args, _ret, func) -> type[Block] | None:
         vladof.log_hit(weapon, args.Damage * mult)
     if mult == 1.0:
         return None
+    if ub != 1.0 and (vladof._deployed_kind(weapon) in SPLASH_KINDS) and _defer(obj, args, args.Damage * mult):  # noqa: SLF001
+        return Block
     args.Damage = args.Damage * mult
     with prevent_hooking_direct_calls():
         func(args)
@@ -292,6 +339,8 @@ def watch_moves(*_: object) -> None:
     import math
     import sys
 
+    if _pending:
+        _flush_pending()
     pc = get_pc(possibly_loading=True)
     pawn = pc.Pawn if pc is not None else None
     if pawn is None:
