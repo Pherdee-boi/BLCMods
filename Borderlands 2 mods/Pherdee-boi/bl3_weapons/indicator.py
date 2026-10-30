@@ -21,7 +21,7 @@ from mods_base import DropdownOption, get_pc, hook
 from unrealsdk.unreal import UObject
 
 from . import dahl, hud, maliwan, tediore, torgue, vladof
-from .core import held_weapon, log, active_maker_of as maker_of, now as game_now, state
+from .core import held_frame, log, active_maker_of as maker_of, now as game_now, state
 
 mode_option = DropdownOption(
     "Mode Indicator",
@@ -49,6 +49,7 @@ _checked_at = -1e9
 _field_ok = False
 _font_checked = False
 _last_html = ""
+_last_alpha = None  # the alpha last written to the HUD box (None = write it again)
 _flick_at = -1e9
 _flick_color = ""
 _arms_rest = None  # (mesh address, (pitch, yaw, roll), (x, y, z)) while a flick plays
@@ -128,7 +129,7 @@ def _make_field(box, name: str, depth: int, x: float, y: float) -> None:
 def _ensure_field(movie) -> bool:
     """Create the outlined label in the HUD movie (again after a map load) and keep it under the ammo
     number."""
-    global _field_ok, _last_html, _font_checked
+    global _field_ok, _last_html, _font_checked, _last_alpha
     g = movie.GetVariableNumber
     if movie.GetVariableObject(MAIN) is None:
         p1 = movie.GetVariableObject("_root.p1")
@@ -151,7 +152,7 @@ def _ensure_field(movie) -> bool:
         for path in [MAIN] + [f"{BOX}.o{i}" for i in range(len(OUTLINE_OFFSETS))]:
             for prop, value in (("html", True), ("embedFonts", True), ("selectable", False), ("multiline", False), ("wordWrap", False)):
                 movie.SetVariableBool(f"{path}.{prop}", value)
-        _last_html, _font_checked = "", False
+        _last_html, _font_checked, _last_alpha = "", False, None
     num = "_root.p1.bullets.bullet_c"
     right = g("_root.p1.bullets._x") + g(num + "._x") + g(num + "._width") - 4
     below = g("_root.p1.bullets._y") + g(num + "._y") + g(num + "._height") - 6
@@ -170,8 +171,10 @@ def _html(segs: list[tuple[str, str]], size: int, color: str | None = None) -> s
 def _arms_flick(now: float) -> None:
     """Quick twist-and-dip of the first-person gun after a Maliwan element change (~0.32 s)."""
     global _arms_rest
+    if _arms_rest is None and not 0 <= now - _flick_at < 0.32:
+        return  # no flick playing and none to put back: the arms are not even looked up
     pc = get_pc(possibly_loading=True)
-    arms = pc.Pawn.Arms if pc is not None and pc.Pawn is not None else None
+    arms = getattr(pc.Pawn, "Arms", None) if pc is not None and pc.Pawn is not None else None  # a vehicle has no arms
     mesh = arms.SkeletalMesh if arms is not None else None
     if mesh is None:
         return
@@ -195,7 +198,7 @@ def _arms_flick(now: float) -> None:
 
 @hook("WillowGame.WillowGameViewportClient:PostRender", hook_identifier="bl3w_mode_indicator")
 def draw_indicator(*_: object) -> None:
-    global _checked_at, _last_html, _font_checked
+    global _checked_at, _last_html, _font_checked, _last_alpha
     now = game_now()
     _arms_flick(now)
     movie = _movie()
@@ -205,7 +208,7 @@ def draw_indicator(*_: object) -> None:
         _checked_at = now
         if not _ensure_field(movie):
             return
-    weapon = held_weapon()
+    weapon = held_frame()
     segs = _segments(weapon) if weapon is not None and mode_option.value != "Off" else None
     since = now - _changed_at
     if not segs:
@@ -216,7 +219,9 @@ def draw_indicator(*_: object) -> None:
         alpha = 1.0
     else:
         alpha = max(QUIET, 1 - (since - POP_TIME) / SETTLE_TIME * (1 - QUIET))
-    movie.SetVariableNumber(BOX + "._alpha", alpha * 100)
+    if alpha != _last_alpha:
+        _last_alpha = alpha
+        movie.SetVariableNumber(BOX + "._alpha", alpha * 100)
     if not segs:
         return
     size = POP_SIZE if since < 0.2 else FONT_SIZE
@@ -237,6 +242,8 @@ def draw_indicator(*_: object) -> None:
 
 
 def reset() -> None:
+    global _last_alpha
+    _last_alpha = None
     movie = _movie()
     box = movie.GetVariableObject(BOX) if movie is not None else None
     if box is not None:

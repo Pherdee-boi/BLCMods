@@ -25,7 +25,7 @@ from mods_base import BoolOption, SliderOption, get_pc, hook
 from unrealsdk.hooks import Type
 from unrealsdk.unreal import UObject, WeakPointer
 
-from .core import held_weapon, log, mesh_guards, rebuild
+from .core import held_frame, held_weapon, log, mesh_guards, rebuild
 
 HERE = Path(__file__).parent
 EXEC = HERE / "exec.now.py"
@@ -632,16 +632,18 @@ def on_world(*_: object) -> None:
 
 
 _checked = 0.0
+_dev_checked = 0.0
+_dev_on = False
 _draw_failures = 0  # a failing draw must not build a new component every check
 
 
 @hook("WillowGame.WillowGameViewportClient:Tick", hook_identifier="bl3w_sights_tick")
 def tick(*_: object) -> None:
-    global _checked, _draw_failures
+    global _checked, _draw_failures, _dev_checked, _dev_on
     t = time.monotonic()
     if _drawn and _draw_failures < 3:
         try:
-            held = held_weapon()
+            held = held_frame()
             if held is not None:
                 follow(held)
         except Exception:  # noqa: BLE001
@@ -653,13 +655,15 @@ def tick(*_: object) -> None:
             for addr, entry in list(_drawn.items()):
                 if entry["weapon"]() is None:
                     _drawn.pop(addr, None)
-            weapon = held_weapon()
+            weapon = held_frame()
             if weapon is not None:
                 draw(weapon)
         except Exception:  # noqa: BLE001
             _draw_failures += 1
             unrealsdk.logging.error(f"[BL3Weapons] sights draw ({_draw_failures}/3): " + traceback.format_exc())
-    if not DEV_FLAG.exists() or not EXEC.exists():
+    if t - _dev_checked > 1.0:
+        _dev_checked, _dev_on = t, DEV_FLAG.exists()
+    if not _dev_on or not EXEC.exists():
         return
     try:
         code = EXEC.read_text(encoding="utf-8")

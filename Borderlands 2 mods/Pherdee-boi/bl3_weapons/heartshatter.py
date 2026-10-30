@@ -38,6 +38,7 @@ Used with Grim Reader's permission, on the condition that they are credited.
 
 import copy
 import random
+import time
 import traceback
 
 import unrealsdk
@@ -751,12 +752,20 @@ def tune(weapon: UObject) -> None:
         weapon.ReloadCnt = magazine.value
 
 
+_tuned_at = 0.0
+
+
 @hook("WillowGame.WillowGameViewportClient:Tick", hook_identifier="bl3w_heartshatter_tick")
 def on_tick(*_: object) -> None:
+    global _tuned_at
     try:
         detonate_due()
     except Exception:  # noqa: BLE001
         log("heartshatter bombs failed: " + traceback.format_exc()[-300:])
+    t = time.monotonic()
+    if t - _tuned_at < 0.1:
+        return
+    _tuned_at = t
     try:
         pc = get_pc(possibly_loading=True)
         pawn = pc.Pawn if pc is not None else None

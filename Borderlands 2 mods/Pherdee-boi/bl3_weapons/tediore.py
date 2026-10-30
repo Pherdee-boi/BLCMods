@@ -42,7 +42,7 @@ from mods_base import DropdownOption, get_pc, hook
 from unrealsdk.hooks import Block, Type
 from unrealsdk.unreal import UObject, WeakPointer
 
-from .core import describe, forget, held_weapon, log, active_maker_of as maker_of, now as game_now, pawns, remembered
+from .core import describe, forget, held_frame, held_weapon, log, active_maker_of as maker_of, now as game_now, pawns, remembered
 
 BASE_THROWS = {
     "Projectile_TedioreReloadPistol",
@@ -176,7 +176,7 @@ def apply_throw(*_: object) -> None:
     global _active, _active_throw
     _tick_turrets()
     _tick_thrown()
-    weapon = held_weapon()
+    weapon = held_frame()
     wtype = weapon.DefinitionData.WeaponTypeDefinition if weapon is not None else None
     if weapon is None or wtype is None or maker_of(weapon) != "Tediore":
         restore()

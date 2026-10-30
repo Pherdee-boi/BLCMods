@@ -20,6 +20,7 @@ Visuals:
 
 import math
 import random
+import time
 
 import unrealsdk
 from mods_base import BoolOption, DropdownOption, SliderOption, get_pc, hook
@@ -27,7 +28,7 @@ from unrealsdk.hooks import Block, prevent_hooking_direct_calls
 from unrealsdk.unreal import UObject, WeakPointer
 
 from . import hud
-from .core import held_weapon, log, active_maker_of as maker_of, now as game_now, remembered
+from .core import held_frame, held_weapon, log, active_maker_of as maker_of, now as game_now, remembered
 
 FRONT_ANGLE = 60.0  # degrees either side of the view direction
 REGEN_DELAY, BROKEN_DELAY, REGEN_TIME = 2.5, 5.0, 2.0  # seconds
@@ -141,10 +142,18 @@ _broken_at = -1e9
 _last_tick = game_now()
 
 
+_max_hp_seen = [0.0, 0.0, 0]  # [when, health, the shield setting it was worked out with]
+
+
 def _max_hp() -> float:
+    t = time.monotonic()
+    if t - _max_hp_seen[0] < 0.25 and _max_hp_seen[2] == shield_pct.value:
+        return _max_hp_seen[1]
     pc = get_pc(possibly_loading=True)
     pawn = pc.Pawn if pc else None
-    return pawn.GetMaxHealth() * shield_pct.value / 100 if pawn else 0.0
+    value = pawn.GetMaxHealth() * shield_pct.value / 100 if pawn else 0.0
+    _max_hp_seen[:] = [t, value, shield_pct.value]
+    return value
 
 
 def _aiming(weapon: UObject | None) -> bool:
@@ -908,6 +917,7 @@ PERCENT_SIZE = 28  # v0.21.1: user asked for double the first 14
 HUD_NUMBER_SIZE = 22  # the shield points, in the BL2 HUD style
 _label = hud.OutlinedLabel("bl3_shieldpct", width=180.0, height=44.0)
 _label_checked = -1e9
+_label_hidden = False
 
 _fade = 0.0
 _last_draw = game_now()
@@ -918,7 +928,7 @@ def draw_shield(_obj: UObject, args, *_: object) -> None:
     global _fade, _last_draw, _aspect
     now = game_now()
     dt, _last_draw = min(now - _last_draw, 0.1), now
-    weapon = held_weapon()
+    weapon = held_frame()
     hyperion = weapon is not None and maker_of(weapon) == "Hyperion"
     canvas = args.Canvas
     _aspect = canvas.SizeX / canvas.SizeY
@@ -971,16 +981,21 @@ def draw_shield(_obj: UObject, args, *_: object) -> None:
 
 def _percent(text: str | None, alpha: float, offset: float = 0.0, color: str = "#FFFFFF", dx: float = 0.0, size: int = PERCENT_SIZE, lift: float = 6.0) -> None:
     """The shield % in BL2's HUD font, centred just under the meter (dx: HUD units to the right of the middle; lift: below the meter)."""
-    global _label_checked
+    global _label_checked, _label_hidden
+    hide = text is None or not show_percent.value
+    if hide and _label_hidden:
+        return  # already hidden: not looked up again every frame
     pc = get_pc(possibly_loading=True)
     movie = pc.myHUD.HUDMovie if pc is not None and pc.myHUD is not None else None
     if movie is None:
         return
     now = game_now()
-    if text is None or not show_percent.value:
+    if hide:
         if movie.GetVariableObject(_label.box) is not None:
             _label.set_alpha(movie, 0.0)
+        _label_hidden = True  # (a label that does not exist yet is as hidden as one at zero)
         return
+    _label_hidden = False
     if now - _label_checked > 0.5:
         _label_checked = now
         if not _label.ensure(movie):

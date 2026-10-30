@@ -22,6 +22,7 @@ legendary-drop sound of its own).
 """
 
 import math
+import time
 
 import unrealsdk
 from mods_base import BoolOption, DropdownOption, SliderOption, get_pc, hook
@@ -104,6 +105,11 @@ _owner = 0
 _mics: dict[tuple, WeakPointer] = {}
 _scanned_for = 0
 _seen_levels: set[int] = set()
+SCAN_EVERY = 0.25  # s: which pickups wear a beam (one lands, is picked up, the player walks away) is worked out four times a second
+YAW_STEP = 256  # a beam is turned to the camera again when the camera has gone round it by this much (1.4 degrees of 65536 = a turn)
+_keep: list[tuple[int, str, tuple[float, float, float]]] = []  # (pickup address, rarity name, where it lies) of the pickups wearing a beam
+_applied: dict[int, tuple] = {}  # pickup address -> ((where it lies, the settings), the turn) last written to its beam and glow (nothing is written again while it is the same)
+_scan_at = 0.0
 
 
 def _find(cls: str, path: str) -> UObject | None:
@@ -165,6 +171,7 @@ def _component(pawn: UObject, mesh_path: str) -> UObject | None:
 
 
 def _recycle(addr: int) -> None:
+    _applied.pop(addr, None)
     for k, ref in enumerate(_parts.pop(addr, [])):
         comp = ref()
         if comp is not None:
@@ -222,6 +229,8 @@ def _drop_all() -> None:
     _levels.clear()
     _spare.clear()
     _tracked.clear()
+    _keep.clear()
+    _applied.clear()
     _owner = 0
 
 
@@ -286,9 +295,31 @@ def _glow(pc: UObject, addr: int, name: str, at) -> None:
     psc.SetScale(glow_size.value / GLOW_BASE_SIZE)
 
 
+def _rescan(cam) -> None:
+    """Which tracked pickups wear a beam (the nearest MAX_BEAMS that are worth one); the beams of all others are put away."""
+    global _keep
+    live: list[tuple[float, int, str, tuple[float, float, float]]] = []
+    for addr, ref in list(_tracked.items()):
+        pickup = ref()
+        name = _wanted(pickup) if pickup is not None else None
+        if name is None:
+            if pickup is None or pickup.Inventory is None:
+                _tracked.pop(addr, None)
+                _sounded.discard(addr)
+            continue
+        loc = pickup.Location
+        live.append(((loc.X - cam.X) ** 2 + (loc.Y - cam.Y) ** 2 + (loc.Z - cam.Z) ** 2, addr, name, (loc.X, loc.Y, loc.Z)))
+    live.sort(key=lambda t: t[0])
+    _keep = [(addr, name, loc) for _d, addr, name, loc in live[:MAX_BEAMS]]
+    keep = {addr for addr, _n, _l in _keep}
+    for addr in [a for a in set(_parts) | set(_glows) if a not in keep]:  # picked up / out of range
+        _recycle(addr)
+        _levels.pop(addr, None)
+
+
 @hook("WillowGame.WillowGameViewportClient:Tick", hook_identifier="bl3w_loot_beams")
 def beams_tick(*_: object) -> None:
-    global _owner, _scanned_for
+    global _owner, _scanned_for, _scan_at
     pc = get_pc(possibly_loading=True)
     pawn = pc.Pawn if pc is not None else None
     if pawn is None or not enabled.value:
@@ -304,27 +335,20 @@ def beams_tick(*_: object) -> None:
             if pickup.Inventory is not None and pickup.Physics != 2:  # not falling (PHYS_Falling)
                 track(pickup)
                 _sounded.add(pickup._get_address())  # already lying here: no drop sound
-
+    now = time.monotonic()
+    due = now - _scan_at >= SCAN_EVERY
+    if not due and not _keep:
+        return  # nothing lies about: not even the camera is read
     cam = pc.GetPlayerViewPoint(unrealsdk.make_struct("Vector"), unrealsdk.make_struct("Rotator"))[1]
-    live: list[tuple[float, int, UObject, str]] = []
-    for addr, ref in list(_tracked.items()):
-        pickup = ref()
-        name = _wanted(pickup) if pickup is not None else None
-        if name is None:
-            if pickup is None or pickup.Inventory is None:
-                _tracked.pop(addr, None)
-                _sounded.discard(addr)
+    if due:
+        _scan_at = now
+        _rescan(cam)
+    settings = (height.value, width.value, glow_on.value, glow_height.value, glow_size.value, brightness.value)
+    for addr, name, loc in _keep:
+        ref = _tracked.get(addr)
+        pickup = ref() if ref is not None else None
+        if pickup is None or pickup.bDeleteMe:
             continue
-        loc = pickup.Location
-        live.append(((loc.X - cam.X) ** 2 + (loc.Y - cam.Y) ** 2 + (loc.Z - cam.Z) ** 2, addr, pickup, name))
-    live.sort(key=lambda t: t[0])
-    keep = {addr for _d, addr, _p, _n in live[:MAX_BEAMS]}
-    for addr in [a for a in set(_parts) | set(_glows) if a not in keep]:  # picked up / out of range
-        _recycle(addr)
-        _levels.pop(addr, None)
-
-    beam_scale = unrealsdk.make_struct("Vector", X=height.value / BEAM_LENGTH, Y=width.value / BEAM_WIDTH, Z=1.0)
-    for _d, addr, pickup, name in live[:MAX_BEAMS]:
         comps = [r() for r in _parts.get(addr, [])]
         if len(comps) != 2 or any(c is None for c in comps):
             built = _build(pawn, name)
@@ -332,18 +356,30 @@ def beams_tick(*_: object) -> None:
                 return
             comps = built
             _parts[addr] = [WeakPointer(c) for c in comps]
+            _applied.pop(addr, None)
             if len(_parts) == 1:
-                log(f"Loot beams: built beam + glow for {name} at z {pickup.Location.Z:.0f}")
-        loc = pickup.Location
-        yaw = int(math.atan2(cam.Y - loc.Y, cam.X - loc.X) * 32768 / math.pi)
+                log(f"Loot beams: built beam + glow for {name} at z {loc[2]:.0f}")
+        yaw = round(math.atan2(cam.Y - loc[1], cam.X - loc[0]) * 32768 / math.pi / YAW_STEP) * YAW_STEP
+        glow = _glows.get(addr)
+        glow_ok = not glow_on.value or (glow is not None and glow() is not None)
+        static = (loc, settings)
+        last = _applied.get(addr)
+        _applied[addr] = (static, yaw)
+        if last is not None and last[0] == static and glow_ok:
+            if last[1] != yaw:  # only the camera moved: the beam is turned to it again, nothing else is touched
+                for k in range(2):
+                    comps[k].SetRotation(unrealsdk.make_struct("Rotator", Pitch=16384, Yaw=yaw + 32768 * k, Roll=0))
+            continue
+        at = unrealsdk.make_struct("Vector", X=loc[0], Y=loc[1], Z=loc[2])
+        beam_scale = unrealsdk.make_struct("Vector", X=height.value / BEAM_LENGTH, Y=width.value / BEAM_WIDTH, Z=1.0)
         for k in range(2):
             beam = comps[k]
-            beam.SetTranslation(loc)
+            beam.SetTranslation(at)
             beam.SetRotation(unrealsdk.make_struct("Rotator", Pitch=16384, Yaw=yaw + 32768 * k, Roll=0))
             beam.SetScale3D(beam_scale)
             beam.SetHidden(False)
         if glow_on.value:
-            _glow(pc, addr, name, unrealsdk.make_struct("Vector", X=loc.X, Y=loc.Y, Z=loc.Z + glow_height.value))
+            _glow(pc, addr, name, unrealsdk.make_struct("Vector", X=loc[0], Y=loc[1], Z=loc[2] + glow_height.value))
         elif addr in _glows:
             psc = _glows.pop(addr)()
             if psc is not None:

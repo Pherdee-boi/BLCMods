@@ -38,7 +38,7 @@ from unrealsdk.hooks import Type, prevent_hooking_direct_calls
 from unrealsdk.unreal import UObject, WeakPointer
 
 from . import radiation_fx
-from .core import find_part, held_weapon, log, now as game_now, pawns, rebuild, state
+from .core import find_part, held_frame, held_weapon, log, now as game_now, pawns, rebuild, state
 from .jakobs import GUN_DAMAGE
 
 TYPES = {"Pistol": "GD_Weap_Pistol", "SMG": "GD_Weap_SMG", "AR": "GD_Weap_AssaultRifle", "Shotgun": "GD_Weap_Shotgun",
@@ -591,7 +591,7 @@ def on_hit(obj: UObject, args, *_: object) -> None:
 
 @hook("WillowGame.WillowGameViewportClient:Tick", hook_identifier="bl3w_radiation_tick")
 def on_tick(*_: object) -> None:
-    global _last_scan
+    global _last_scan, _mongol_at
     radiation_fx.tick()
     if _built is not None and not _built.get("impact_done"):
         try:
@@ -611,9 +611,11 @@ def on_tick(*_: object) -> None:
             log("radiation inventory check failed: " + traceback.format_exc()[-300:])
     now = game_now()
     try:
-        held = held_weapon()
-        if held is not None and held.DefinitionData.WeaponTypeDefinition is not None and held.GetFiringModeDefinition().Name == "FM_Rocket_Mongol" and is_radiation(held):
-            _radiate_children(held, now)
+        if now - _mongol_at >= 0.1:
+            _mongol_at = now
+            held = held_frame()
+            if held is not None and held.DefinitionData.WeaponTypeDefinition is not None and held.GetFiringModeDefinition().Name == "FM_Rocket_Mongol" and is_radiation(held):
+                _radiate_children(held, now)
     except Exception:  # noqa: BLE001
         log("radiation Mongol children failed: " + traceback.format_exc()[-300:])
     if not _hot and not _clouds:
@@ -663,6 +665,7 @@ def _radiate_children(weapon: UObject, now: float) -> None:
 
 
 _child_scan = 0.0
+_mongol_at = 0.0
 
 
 def reset() -> None:

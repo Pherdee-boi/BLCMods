@@ -48,10 +48,38 @@ def held_weapon() -> UObject | None:
     return weapon
 
 
+FRAME_TTL = 0.004  # s: the per-frame hooks all run within a few ms of each other
+_frame_gun: list = [0.0, None]  # [perf_counter stamp, the held gun]
+
+
+def held_frame() -> UObject | None:
+    """held_weapon for the per-frame hooks (Tick / PostRender): the ten of them used to look the gun up ten times a frame (each lookup is a handful of
+    native reads), now the first one does and the rest reuse it. A gun swapped within these few ms is seen by the next frame's hooks.
+    Hooks on game events (a hit, a shot, an equip) keep calling held_weapon: they must see the gun as it is right now."""
+    t = time.perf_counter()
+    if t - _frame_gun[0] > FRAME_TTL:
+        _frame_gun[0], _frame_gun[1] = t, held_weapon()
+    return _frame_gun[1]
+
+
+MAKER_TTL = 0.02
+_makers: dict[int, tuple[float, str]] = {}  # gun address -> (when, maker): a gun's maker does not change, but its address can be reused
+
+
 def maker_of(weapon: UObject) -> str:
-    """'Maliwan', 'Vladof', ... or '' if unknown."""
+    """'Maliwan', 'Vladof', ... or '' if unknown. Remembered for a few frames: every per-frame hook asks it of the held gun, and reading
+    DefinitionData copies a whole struct from the game each time."""
+    t = time.perf_counter()
+    key = weapon._get_address()
+    hit = _makers.get(key)
+    if hit is not None and t - hit[0] < MAKER_TTL:
+        return hit[1]
     maker = weapon.DefinitionData.ManufacturerDefinition
-    return maker.Name if maker is not None else ""
+    name = maker.Name if maker is not None else ""
+    if len(_makers) > 64:
+        _makers.clear()
+    _makers[key] = (t, name)
+    return name
 
 
 # One switch for each manufacturer's add-on (v0.64.8): a player can keep only the ones they like. A switched-off maker's guns are not seen by the

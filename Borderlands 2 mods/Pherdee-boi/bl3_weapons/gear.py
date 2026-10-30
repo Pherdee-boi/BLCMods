@@ -15,6 +15,8 @@ Damage bonuses are read by anoint.scale_damage (the mod's single damage hook); t
 anoint's grenade / kill hooks.
 """
 
+import time
+
 from mods_base import DropdownOption, get_pc, hook
 from ui_utils import show_hud_message
 from unrealsdk.unreal import UObject
@@ -110,9 +112,19 @@ def _equipped(kind: str) -> UObject | None:
     return None
 
 
+_active_seen: dict[str, tuple[float, str | None]] = {}  # kind -> (when, anointment): a swapped item is seen within a quarter second
+ACTIVE_TTL = 0.25
+
+
 def _active(kind: str) -> str | None:
+    t = time.monotonic()
+    hit = _active_seen.get(kind)
+    if hit is not None and t - hit[0] < ACTIVE_TTL:
+        return hit[1]
     item = _equipped(kind)
-    return anointment_of(item) if item is not None else None
+    found = anointment_of(item) if item is not None else None
+    _active_seen[kind] = (t, found)
+    return found
 
 
 def _pawn() -> UObject | None:
@@ -176,13 +188,18 @@ def on_kill() -> None:
 
 
 _last_shield = -1.0
+_shield_at = 0.0
 
 
 @hook("WillowGame.WillowGameViewportClient:Tick", hook_identifier="bl3w_gear_tick")
 def watch_shield(*_: object) -> None:
     """Shield break = the shield hitting 0 from above. (v0.35.0 hooked WillowPawn.OnShieldDepleted, which
     never fired for the player from Python; polling the strength works.)"""
-    global _break_at, _last_shield
+    global _break_at, _last_shield, _shield_at
+    t = time.monotonic()
+    if t - _shield_at < 0.05:  # twenty looks a second catch a shield break as well as sixty
+        return
+    _shield_at = t
     pawn = _pawn()
     if pawn is None or pawn.GetMaxShieldStrength() <= 0:
         _last_shield = -1.0

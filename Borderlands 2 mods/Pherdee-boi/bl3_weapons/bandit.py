@@ -27,7 +27,7 @@ from unrealsdk.hooks import Block, Type
 from unrealsdk.unreal import UObject
 
 from . import hud
-from .core import held_weapon, log, active_maker_of as maker_of, now as game_now
+from .core import held_frame, held_weapon, log, active_maker_of as maker_of, now as game_now
 
 AS_TYPE = unrealsdk.find_enum("ASType")
 
@@ -340,7 +340,7 @@ def _slanted(canvas: UObject, x: float, y: float, w: float, h: float, rgba: tupl
 @hook("WillowGame.WillowGameViewportClient:PostRender")
 def draw_gauge(_obj: UObject, args: object, *_: object) -> None:
     global _checked_at
-    weapon = held_weapon()
+    weapon = held_frame()
     cov = _is_cov(weapon)
     _take_over(cov)
     if not cov:

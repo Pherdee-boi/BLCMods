@@ -45,7 +45,7 @@ from ui_utils import show_hud_message
 from unrealsdk.hooks import Block, Type
 from unrealsdk.unreal import UObject, WeakPointer
 
-from .core import find_part, forget, held_weapon, log, active_maker_of as maker_of, now as game_now, pawns, rebuild, remembered, state
+from .core import find_part, forget, held_frame, held_weapon, log, active_maker_of as maker_of, now as game_now, pawns, rebuild, remembered, state
 
 AR_BARRELS = "GD_Weap_AssaultRifle.Barrel."
 SHOCK_STATUS = "GD_Shock.StatusEffect.Status_Shock"  # the taser's own shock (see on_player_hit)
@@ -1048,7 +1048,7 @@ def draw_mortar_cursor(_obj: UObject, args, *_: object) -> None:
     is out or the aim meets nothing)."""
     from mods_base import get_pc
 
-    weapon = held_weapon()
+    weapon = held_frame()
     target = None
     if weapon is not None and weapon.DefinitionData.UniqueId in _mode and _mode[weapon.DefinitionData.UniqueId]["kind"] == "Mortar":
         target = mortar_cursor(weapon)
@@ -1133,7 +1133,7 @@ def _retag_big_boy() -> None:
 def watch_underbarrel(*_: object) -> None:
     """Auto-stow when the shots/time run out or a reload starts; keep mode attributes on; stow a mode
     whose gun was put away (its attributes must not stay); repair a taser element left by a save."""
-    weapon = held_weapon()
+    weapon = held_frame()
     held_uid = weapon.DefinitionData.UniqueId if weapon is not None else None
     try:
         _retag_big_boy()
