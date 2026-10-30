@@ -1,6 +1,6 @@
 [project]
 name = "adventure_guide"
-version = "0.9.2"
+version = "0.9.3"
 description = "A sixth status-menu tab in Borderlands 2 that lists bosses, special enemies, vendors and chests, by DLC and map, with every legendary and unique item they drop."
 authors = [{ name = "Pherdee" }, { name = "Claude" }]
 

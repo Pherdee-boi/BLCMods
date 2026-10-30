@@ -1,4 +1,4 @@
-ADVENTURE GUIDE  v0.9.2 (beta)   for Borderlands 2 (Steam, PC)
+ADVENTURE GUIDE  v0.9.3 (beta)   for Borderlands 2 (Steam, PC)
 =============================================================
 
 A sixth tab in the status menu (after Badass Rank) that lists where the good loot comes from:

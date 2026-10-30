@@ -116,7 +116,6 @@ _hay: dict[str, str] = {}
 LEVELS: dict[str, list[int]] = {}  # drop path -> [lowest, highest] game stage it can be generated at; only drops with a real floor (item_levels.json)  # drop path -> lower-case text the search matches against
 sources: dict[str, list[dict]] = {}  # drop path -> the bosses that drop it
 _info: dict[str, dict] = {}  # balance path -> {title, type, mfr, color, icon, rarity}
-_stats: dict[str, str] = {}  # balance path -> special-effects text (level-dependent, so never persisted)
 _counter = 0
 _dirty = False
 _last_virtual = None
@@ -398,13 +397,6 @@ def _read_item(inv, path: str) -> dict:
     return info
 
 
-def _stats_text(inv) -> str:
-    try:
-        return str(inv.GenerateFunStatsText()).replace(chr(13), "").replace(chr(10), "<br>")
-    except Exception:  # noqa: BLE001
-        return ""
-
-
 def item_info(drop: dict) -> dict:
     """Name, type, manufacturer, icon and colour of a drop: from the catalog, generated once if it is missing."""
     global _dirty
@@ -416,7 +408,6 @@ def item_info(drop: dict) -> dict:
     try:
         inv = make_item(drop)
         info = _read_item(inv, path)
-        _stats[path] = _stats_text(inv)
         _dirty = True
     except Exception:
         log(f"item_info {path}: " + traceback.format_exc()[-200:])
@@ -424,22 +415,6 @@ def item_info(drop: dict) -> dict:
         _destroy(inv)
     _info[path] = info
     return info
-
-
-def item_stats(drop: dict) -> str:
-    """The item's special-effects text at the player's level (generated on first hover)."""
-    path = drop["path"]
-    if path not in _stats:
-        inv = None
-        try:
-            inv = make_item(drop)
-            _stats[path] = _stats_text(inv)
-        except Exception:
-            log(f"item_stats {path}: " + traceback.format_exc()[-200:])
-            _stats[path] = ""
-        finally:
-            _destroy(inv)
-    return _stats[path]
 
 
 # ---- the list ------------------------------------------------------------------------------------------------------------------
@@ -699,6 +674,39 @@ def level_text(lv) -> str:
     return f"DROPS FROM LEVEL {lo}" if hi >= 100 else f"DROPS AT LEVEL {lo}-{hi}"
 
 
+LABEL_COLOR = "#999999"  # the small section label of the item panel and the place lines
+BASE_GAME = "Borderlands 2"
+MAX_SOURCES = 5  # sources shown before "+N more" (the box scrolls, but the first ones are what matters)
+# kind of source -> (tag, colour): the tag opens each source line (the extra zones hold the non-boss sources)
+SOURCE_TAGS = {"Special Enemies": ("ENEMY", "#FF9A3D"), "Mission Rewards": ("MISSION", "#FFD24D"), "Vendors": ("VENDOR", "#7FC4FF"),
+               "Other Sources": ("OTHER", "#BBBBBB"), "World Drops": ("WORLD", "#5BE05B"), "Chests & Machines": ("CHEST", "#E6B450")}
+BOSS_TAG, RAID_TAG, RAID_PREFIX = ("BOSS", "#FF5A4F"), ("RAID", "#C79BFF"), "Raid drop: "
+
+
+def _sources_text(bosses: list[dict]) -> str:
+    """One entry per source: a coloured tag and the name, and under it in grey the map (bosses) and the expansion (left out for the base game
+    alone). The same source in several expansions is one entry listing them all."""
+    merged: dict[tuple, list[str]] = {}
+    for b in bosses:
+        merged.setdefault((b["name"], b["zone"]), []).append(b["dlc"])
+    entries = []
+    for (name, zone), dlcs in merged.items():
+        tag, color = SOURCE_TAGS.get(zone, BOSS_TAG)
+        if name.startswith(RAID_PREFIX):
+            tag, color, name = *RAID_TAG, name.removeprefix(RAID_PREFIX)
+        dlcs = list(dict.fromkeys(dlcs))
+        where = [] if zone in SOURCE_TAGS else [zone]
+        if dlcs != [BASE_GAME] and dlcs != [zone]:
+            where.append(", ".join(d.replace("Upgrade Pack", "Pack") for d in dlcs))
+        entry = f"<font color='{color}'>{tag}</font> {name}"
+        if where:
+            entry += f"<br><font color='{LABEL_COLOR}'>{INDENT}{' - '.join(where)}</font>"
+        entries.append(entry)
+    if len(entries) > MAX_SOURCES:
+        entries = entries[:MAX_SOURCES] + [f"<font color='{LABEL_COLOR}'>+{len(entries) - MAX_SOURCES} more</font>"]
+    return "<br><font size='6'>&nbsp;</font><br>".join(entries)
+
+
 def _zone_bosses(zkey: tuple) -> list[dict]:
     """The sources of one map (or of one of the extra zones) in one section of one DLC."""
     group, dlc, zone = zkey
@@ -737,10 +745,7 @@ def _details(row: tuple) -> dict:
         i = item_info(drop)
         head = " - ".join(x for x in (i["type"], i["mfr"]) if x)
         bosses = sources.get(drop["path"], [rec])
-        where = "<br>".join(
-            f"{b['name']} <font color='{ZONE_COLOR}'>{b['zone'] if b['zone'] == b['dlc'] else b['zone'] + ' (' + b['dlc'] + ')'}</font>" for b in bosses
-        )
-        body = f"<font color='{ZONE_COLOR}'>{head}</font><br><font color='#BBBBBB'>Dropped by</font><br>{where}<br><br>{item_stats(drop)}"
+        body = f"<font color='{ZONE_COLOR}'>{head}</font><br><br><font color='{LABEL_COLOR}'>DROPPED BY</font><br>{_sources_text(bosses)}"
         lv = LEVELS.get(drop["path"])
         return {"title": i["title"], "frame": _icon_frame(i) or "new", "body": body, "level": i["type"].upper(), "diff": level_text(lv), "xp": "",
                 "head": "ITEM", "tag": rec["dlc"].upper(), "icons": [i]}
