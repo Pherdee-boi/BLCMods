@@ -158,7 +158,7 @@ def _announce(weapon: UObject, msg: str) -> None:
 
 
 SPLASH_KINDS = {"Rocket Launcher", "Grenade Launcher", "Zip Rockets", "Rocket Salvo", "Mortar"}  # Vladof underbarrels whose hits are explosions
-MAX_PENDING = 64
+MAX_PENDING = 1024  # (27 stickies popping at once hit every enemy near each of them)
 _pending: list[tuple] = []  # scaled explosion hits waiting for the next frame: (victim, damage, instigator, location, momentum, damage type, hit info, causer)
 _deferred_logged = 0
 
@@ -240,7 +240,8 @@ def scale_damage(obj: UObject, args, _ret, func) -> type[Block] | None:
         vladof.log_hit(weapon, args.Damage * mult)
     if mult == 1.0:
         return None
-    if ub != 1.0 and (vladof._deployed_kind(weapon) in SPLASH_KINDS) and _defer(obj, args, args.Damage * mult):  # noqa: SLF001
+    splash = ub != 1.0 and vladof._deployed_kind(weapon) in SPLASH_KINDS  # noqa: SLF001
+    if (splash or torgue._releasing) and _defer(obj, args, args.Damage * mult):  # noqa: SLF001 - sticky blasts too (27 popped at once froze the game, like the rockets)
         return Block
     args.Damage = args.Damage * mult
     with prevent_hooking_direct_calls():
