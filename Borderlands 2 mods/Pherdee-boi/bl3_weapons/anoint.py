@@ -163,6 +163,28 @@ _pending: list[tuple] = []  # scaled explosion hits waiting for the next frame: 
 _deferred_logged = 0
 
 
+def _lethal(victim: UObject, damage: float) -> bool:
+    """Would a hit of this size kill the victim (health + shield)? Armour and critical hits move the real figure a little; it only has to be close."""
+    try:
+        return damage >= float(victim.GetHealth()) + float(victim.GetShieldStrength())
+    except Exception:  # noqa: BLE001
+        return False
+
+
+_issuing = [False]  # a hit this mod delivers itself (already scaled) passes scale_damage untouched
+
+
+def _take_off(victim: UObject, extra: float) -> None:
+    """Take `extra` damage off the victim's shield, then its health (never below 1: the hit that follows kills it). Used instead of re-issuing a hit that kills: a kill made from inside
+    `prevent_hooking_direct_calls` froze the game (reported 2026-11-01 on EXP Loaders, reproduced in the game: the death explosion's damage to the enemies next to it spun forever)."""
+    shield = float(victim.GetShieldStrength())
+    cut = min(shield, extra)
+    if cut > 0:
+        victim.SetShieldStrength(shield - cut)
+    if extra > cut:
+        victim.SetHealth(NewHealth=max(1.0, float(victim.GetHealth()) - (extra - cut)))
+
+
 def _defer(victim: UObject, args, damage: float) -> bool:
     """Queue a scaled explosion hit instead of re-issuing it from inside the blast's loop over the enemies it hurts (see _flush_pending: a Vladof rocket at several
     enemies froze the game). Queued hits are applied by the next frame's tick."""
@@ -185,9 +207,16 @@ def _flush_pending() -> None:
                 continue
             instigator = instigator_ref()
             causer = causer_ref() if causer_ref is not None else None
-            with prevent_hooking_direct_calls():
-                victim.TakeDamage(damage, instigator, location, momentum, damage_type, hit_info, causer, None)  # (Pipeline None: the game's damage object is shared by every enemy in the blast, and handing it back a second time froze the game)
-            on_hit_done(victim, SimpleNamespace(InstigatedBy=instigator, DamageType=damage_type), None, None)  # (the kill check ran when the hit was queued, before it landed)
+            if _lethal(victim, damage):  # a kill must not be made inside prevent_hooking_direct_calls (see _take_off): a plain call, scale_damage standing aside, the hooks run as for any hit
+                _issuing[0] = True
+                try:
+                    victim.TakeDamage(damage, instigator, location, momentum, damage_type, hit_info, causer, None)
+                finally:
+                    _issuing[0] = False
+            else:
+                with prevent_hooking_direct_calls():
+                    victim.TakeDamage(damage, instigator, location, momentum, damage_type, hit_info, causer, None)  # (Pipeline None: the game's damage object is shared by every enemy in the blast, and handing it back a second time froze the game)
+                on_hit_done(victim, SimpleNamespace(InstigatedBy=instigator, DamageType=damage_type), None, None)  # (the kill check ran when the hit was queued, before it landed)
             _deferred_logged += 1
             if _deferred_logged in (1, 10, 100):
                 log(f"explosion hit applied after the blast (#{_deferred_logged}): {damage:.0f}")
@@ -199,7 +228,7 @@ def _flush_pending() -> None:
 def scale_damage(obj: UObject, args, _ret, func) -> type[Block] | None:
     """The one place the mod scales the player's damage to enemies: anointment bonus x Torgue sticky
     stacking, re-issued once. (Two separate block-and-re-call hooks would apply a hit twice.)"""
-    if not _is_player_pc(args.InstigatedBy):
+    if _issuing[0] or not _is_player_pc(args.InstigatedBy):
         return None
     causer = args.DamageCauser
     if causer is not None and causer.Class._inherits(unrealsdk.find_class("WillowAIPawn")):
@@ -241,6 +270,12 @@ def scale_damage(obj: UObject, args, _ret, func) -> type[Block] | None:
     if mult == 1.0:
         return None
     splash = ub != 1.0 and vladof._deployed_kind(weapon) in SPLASH_KINDS  # noqa: SLF001
+    if _lethal(obj, args.Damage * mult):  # a hit that kills goes through as the game's own call (below, the re-call would kill inside prevent_hooking_direct_calls), the extra damage taken off first
+        try:
+            _take_off(obj, args.Damage * (mult - 1.0))
+        except Exception as e:  # noqa: BLE001 - the hit still lands, unscaled
+            log(f"extra damage of a killing hit not applied: {e!r}")
+        return None
     if (splash or torgue._releasing) and _defer(obj, args, args.Damage * mult):  # noqa: SLF001 - sticky blasts too (27 popped at once froze the game, like the rockets)
         return Block
     args.Damage = args.Damage * mult
